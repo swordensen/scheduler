@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { join } from "path";
-import { ScheduleRunner } from "../src/schedulerRunner"
+import { ScheduleRunner } from "../src/scheduleRunner"
 import {  Task } from "../src/types";
 
 
@@ -59,8 +59,8 @@ describe('scheduler after config initialized', ()=>{
         }, 15000)
     }).timeout(15100)
 
-    // it('should clean up', async()=>{
-    //     await scheduleRunner.deleteConfig();
-    //     await scheduleRunner.scheduleFileManager.deleteScheduleFile();
-    // })
+    it('should clean up', async()=>{
+        await scheduleRunner.deleteConfig();
+        await scheduleRunner.scheduleFileManager.deleteScheduleFile();
+    })
 })
