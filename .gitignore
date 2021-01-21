@@ -1,4 +1,5 @@
 node_modules
 logs
-config.json
 schedule.json
+config.json
+build

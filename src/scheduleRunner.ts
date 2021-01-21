@@ -1,6 +1,6 @@
-import { existsSync, readFileSync, unlink, writeFile } from 'fs';
+import { existsSync, fstat, readFileSync, unlink, writeFile, writeFileSync } from 'fs';
 import path from 'path';
-import { DEFAULT_CONFIG } from './defaults';
+import { DEFAULT_CONFIG, DEFAULT_CONFIG_PATH } from './defaults';
 import { Config, Schedule, Task } from './types';
 import { exec } from 'child_process';
 import { ScheduleFileManager } from './scheduleFileManager';
@@ -11,7 +11,7 @@ import LOGGER from './logger';
  * and calling on methods of the config manager to update the config accordingly
  */
 export class ScheduleRunner {
-    private configPath = path.resolve(__dirname, '../config.json');
+    private configPath = DEFAULT_CONFIG_PATH;
     private config = this.getConfig();
     public scheduleFileManager = new ScheduleFileManager(this.config);
     private startListeners: Function[] = [];
@@ -49,10 +49,19 @@ export class ScheduleRunner {
             LOGGER.info('MAIN INTERVAL LOOP')
             let updated = false;
             this.schedule.map((task => {
-                LOGGER.info(task.name)
+                LOGGER.info(`checking task ${task.name}`)
                 if (this.timeToRun(task)) {
+                    if(!existsSync(task.commandPath)){
+                        LOGGER.error(`could not find task ${task.commandPath}`);
+                        return task;
+                    }
+                    LOGGER.info(`attempting to run task ${task.name}`)
+                    exec(task.commandPath, (err, stdout, stderr)=>{
+                        LOGGER.error(err);
+                        LOGGER.info(stdout);
+                        LOGGER.error(stderr)
+                    });
                     updated = true;
-                    exec(task.commandPath);
                     return {
                         ...task,
                         lastExecuted: Date.now()
