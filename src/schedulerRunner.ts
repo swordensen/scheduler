@@ -15,8 +15,9 @@ export class ScheduleRunner {
     private config = this.getConfig();
     public scheduleFileManager = new ScheduleFileManager(this.config);
     private startListeners: Function[] = [];
-    private interval?: NodeJS.Timeout = this.mainInterval();
     private INTERVAL_PERIOD = 15000 // 1 MINUTE
+    private interval?: NodeJS.Timeout = this.mainInterval();
+
 
     get schedule():Schedule{
         return this.scheduleFileManager.readScheduleFile();
@@ -46,20 +47,20 @@ export class ScheduleRunner {
     private mainInterval(): NodeJS.Timeout {
         return setInterval(() => {
             LOGGER.info('MAIN INTERVAL LOOP')
-            // let updated = false;
-            // this.schedule.map((task => {
-            //     LOGGER.info(task.name)
-            //     if (this.timeToRun(task)) {
-            //         updated = true;
-            //         exec(task.commandPath);
-            //         return {
-            //             ...task,
-            //             lastExecuted: Date.now()
-            //         }
-            //     }
-            //     return task
-            // }))
-            // if(updated) this.scheduleFileManager.writeScheduleFile(this.schedule)
+            let updated = false;
+            this.schedule.map((task => {
+                LOGGER.info(task.name)
+                if (this.timeToRun(task)) {
+                    updated = true;
+                    exec(task.commandPath);
+                    return {
+                        ...task,
+                        lastExecuted: Date.now()
+                    }
+                }
+                return task
+            }))
+            if(updated) this.scheduleFileManager.writeScheduleFile(this.schedule)
             LOGGER.info('MAIN INTERVAL LOOP END')
         }, this.INTERVAL_PERIOD)
     }

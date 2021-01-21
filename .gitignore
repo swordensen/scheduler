@@ -1,2 +1,4 @@
 node_modules
 logs
+config.json
+schedule.json
