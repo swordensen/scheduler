@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import { DEFAULT_SCHEDULE_FILE } from '../src/defaults';
 import { ScheduleFileManager } from '../src/scheduleFileManager';
-import { Schedule } from '../src/types';
+import { Schedule, Task } from '../src/types';
 
 
 describe('Schedule File Manager', ()=>{
@@ -15,7 +15,7 @@ describe('Schedule File Manager', ()=>{
     })
 
     it('it should be able to write to schedule file', async ()=>{
-        const newSchedule:Schedule = {
+        const newSchedule:Task = {
             name: 'test command', 
             description: 'this is just a test of the schedule file manager',
             commandPath: join(__dirname, 'test.sh'),

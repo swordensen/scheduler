@@ -1,4 +1,4 @@
-export interface Schedule{
+export interface Task{
     name:string;
     description?:string;
     commandPath:string;
@@ -6,7 +6,7 @@ export interface Schedule{
     lastExecuted:number;
 }
 
-export type ScheduleFile = Schedule[];
+export type Schedule = Task[];
 
 export interface Config{
     scheduleFilePath:string;

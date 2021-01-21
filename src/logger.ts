@@ -3,7 +3,7 @@ import { Console, File } from "winston/lib/winston/transports";
 
 export const LOGGER = createLogger({
     level: 'info', 
-    format: format.json(),
+    format: format.combine(format.timestamp(), format.json()),
     defaultMeta: {service: 'scheduler'},
     transports: [
         new File({filename: './logs/error.log', level: 'error'}),

@@ -1,7 +1,7 @@
-import { existsSync, readFile, unlink, writeFile, writeFileSync } from "fs";
+import { existsSync, readFile, readFileSync, unlink, writeFile, writeFileSync } from "fs";
 import { DEFAULT_CONFIG, DEFAULT_SCHEDULE_FILE } from "./defaults";
 import LOGGER from "./logger";
-import { Config, ScheduleFile } from "./types";
+import { Config, Schedule } from "./types";
 
 /**
  * this singleton is responsible for managing the schedule file to ensure no 
@@ -18,34 +18,24 @@ export class ScheduleFileManager{
     /**
      * reads the schedule file
      */
-    public readScheduleFile():Promise<ScheduleFile>{
+    public readScheduleFile():Schedule{
         LOGGER.info(`reading schedule file ${this.config.scheduleFilePath}...`)
-        return new Promise((resolve, reject)=>{
-            readFile(this.config.scheduleFilePath, 'utf8', (err, data)=>{
-                if(err) {
-                    LOGGER.error(`unable to read schedule file ${this.config.scheduleFilePath}`)
-                    reject(err)
-                };
-                resolve(JSON.parse(data))
-            })
-        })
+        try{
+            return JSON.parse(readFileSync(this.config.scheduleFilePath, 'utf8'))
+        }catch(e){
+            LOGGER.error(`unable to parse schedule file ${this.config.scheduleFilePath}`);
+            throw e;
+        }
     }
 
     /**
      * writes the schedule file
      * @param scheduleFile 
      */
-    public writeScheduleFile(scheduleFile:ScheduleFile):Promise<ScheduleFile>{
-        LOGGER.info( `writing to schedule file ${this.config.scheduleFilePath}`)
-        return new Promise((resolve, reject)=>{
-            writeFile(this.config.scheduleFilePath, JSON.stringify(scheduleFile), 'utf8', (err)=>{
-                if(err) {
-                    LOGGER.error(`unable to write ${JSON.stringify(scheduleFile)} to ${this.config.scheduleFilePath}`)
-                    reject(err);
-                };
-                resolve(scheduleFile)
-            })
-        })
+    public writeScheduleFile(scheduleFile:Schedule):Schedule{
+        LOGGER.info( `writing to ${JSON.stringify(scheduleFile)} schedule file ${this.config.scheduleFilePath}`)
+        writeFileSync(this.config.scheduleFilePath, JSON.stringify(scheduleFile), 'utf8');
+        return scheduleFile;
     }
     /**
      * deletes schedule file
@@ -71,7 +61,7 @@ export class ScheduleFileManager{
         LOGGER.info(`initializing schedule file`)
         if(!existsSync(this.config.scheduleFilePath)){
             LOGGER.info(`schedule file does not exist. Creating one with default values.`)
-            writeFileSync(this.config.scheduleFilePath, JSON.stringify(DEFAULT_SCHEDULE_FILE), 'utf8')
+            writeFileSync(this.config.scheduleFilePath, '[]', 'utf8')
         }
     }
 }

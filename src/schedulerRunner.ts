@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, unlink, writeFile } from 'fs';
 import path from 'path';
 import { DEFAULT_CONFIG } from './defaults';
-import { Config, Schedule } from './types';
+import { Config, Schedule, Task } from './types';
 import { exec } from 'child_process';
 import { ScheduleFileManager } from './scheduleFileManager';
 import LOGGER from './logger';
@@ -10,29 +10,20 @@ import LOGGER from './logger';
  * this singleton is responsible for running the commands at the appropriate time
  * and calling on methods of the config manager to update the config accordingly
  */
-export class Scheduler {
+export class ScheduleRunner {
     private configPath = path.resolve(__dirname, '../config.json');
     private config = this.getConfig();
     public scheduleFileManager = new ScheduleFileManager(this.config);
-    public scheduleCollection: Schedule[] = [];
     private startListeners: Function[] = [];
-    private interval?: NodeJS.Timeout;
+    private interval?: NodeJS.Timeout = this.mainInterval();
+    private INTERVAL_PERIOD = 15000 // 1 MINUTE
 
-    constructor() {
-        LOGGER.info('creating scheduler')
-        this.init().then(()=>{
-            this.start();
-        });
+    get schedule():Schedule{
+        return this.scheduleFileManager.readScheduleFile();
     }
 
-    public onStart(cb:Function){
-        LOGGER.info('registering start listener...')
-        this.startListeners?.push(cb);
-    }
-
-    private async init() {
-        LOGGER.info('initializing scheduler')
-        await this.loadScheduleCollectionFromFile();
+    set schedule(schedule:Schedule){
+        this.scheduleFileManager.writeScheduleFile(schedule);
     }
 
     public start() {
@@ -55,22 +46,22 @@ export class Scheduler {
     private mainInterval(): NodeJS.Timeout {
         return setInterval(() => {
             LOGGER.info('MAIN INTERVAL LOOP')
-            let updated = false;
-            this.scheduleCollection = this.scheduleCollection.map((schedule => {
-                LOGGER.info(schedule.name)
-                if (this.timeToRun(schedule)) {
-                    updated = true;
-                    exec(schedule.commandPath);
-                    return {
-                        ...schedule,
-                        lastExecuted: Date.now()
-                    }
-                }
-                return schedule
-            }))
-            if(updated) this.scheduleFileManager.writeScheduleFile(this.scheduleCollection)
+            // let updated = false;
+            // this.schedule.map((task => {
+            //     LOGGER.info(task.name)
+            //     if (this.timeToRun(task)) {
+            //         updated = true;
+            //         exec(task.commandPath);
+            //         return {
+            //             ...task,
+            //             lastExecuted: Date.now()
+            //         }
+            //     }
+            //     return task
+            // }))
+            // if(updated) this.scheduleFileManager.writeScheduleFile(this.schedule)
             LOGGER.info('MAIN INTERVAL LOOP END')
-        }, 1000)
+        }, this.INTERVAL_PERIOD)
     }
 
     /**
@@ -78,25 +69,20 @@ export class Scheduler {
      * and the time it was last ran
      * @param schedule 
      */
-    private timeToRun(schedule: Schedule): boolean {
-        if (schedule.interval !== 'startup') {
+    private timeToRun(task:Task): boolean {
+        if (task.interval !== 'startup') {
             const currentTime = Date.now();
-            const scheduledTime = schedule.lastExecuted + schedule.interval;
+            const scheduledTime = task.lastExecuted + task.interval;
             if (currentTime > scheduledTime) return true;
         }
         return false;
     }
 
 
-    private async loadScheduleCollectionFromFile() {
-        LOGGER.info('loading schedule collection from scheduleFileManager...')
-        this.scheduleCollection = await this.scheduleFileManager.readScheduleFile();
-    }
 
-    public addSchedule(schedule: Schedule) {
-        LOGGER.info(`Adding a new schedule ${schedule.name}`)
-        this.scheduleCollection = [...this.scheduleCollection, schedule];
-        this.scheduleFileManager.writeScheduleFile(this.scheduleCollection);
+    public addTask(task: Task) {
+        LOGGER.info(`Adding a new schedule ${task.name}`)
+        this.schedule = [...this.schedule, task];
     }
 
     private getConfig(): Config {
