@@ -3,3 +3,4 @@ logs
 schedule.json
 config.json
 build
+bin
