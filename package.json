@@ -10,9 +10,11 @@
     "package": "tsc && pkg . --out-path ./bin",
     "pkg": "pkg",
     "tsc": "tsc",
-    "delete-logs": "rm ./logs/error.log ./logs/combined.log"
+    "delete-logs": "rm ./logs/error.log ./logs/combined.log",
+    "build-front-end": "tsc --p ./tsconfig.frontend.json",
+    "start-front-end": "concurrently \"tsc -w --preserveWatchOutput\" \"electron ./build/front_end/index.js\""
   },
-  "pkg":{
+  "pkg": {
     "assets": [
       "*.json"
     ]
@@ -25,6 +27,8 @@
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.22",
     "chai": "^4.2.0",
+    "concurrently": "^5.3.0",
+    "electron": "^11.2.1",
     "mocha": "^8.2.1",
     "pkg": "^4.4.9",
     "ts-node": "^9.1.1",
