@@ -30,6 +30,7 @@
     "concurrently": "^5.3.0",
     "css-loader": "^5.0.1",
     "electron": "^11.2.1",
+    "electron-packager": "^15.2.0",
     "electron-reload": "^1.5.0",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.2.0",
@@ -48,7 +49,10 @@
   "dependencies": {
     "@material/button": "^9.0.0",
     "@material/card": "^9.0.0",
+    "@material/fab": "^9.0.0",
     "@material/icon-button": "^9.0.0",
+    "@material/linear-progress": "^9.0.0",
+    "@material/progress-indicator": "^9.0.0",
     "@material/select": "^9.0.0",
     "@material/textfield": "^9.0.0",
     "@material/theme": "^9.0.0",

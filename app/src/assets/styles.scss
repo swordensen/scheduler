@@ -22,12 +22,15 @@
 @use "@material/icon-button";
 @use "@material/top-app-bar/mdc-top-app-bar";
 @use "@material/button";
+@use "@material/fab";
+@use "@material/linear-progress";
 
+@include fab.core-styles;
 @include button.core-styles;
-
 @include icon-button.core-styles;
 @include textfield.core-styles;
 @include card.core-styles;
+@include linear-progress.core-styles;
 
 /* fallback */
 @font-face {
@@ -85,14 +88,11 @@ main {
 }
 
 aside {
-  width: 300px;
+  width: 400px;
   height: 100%;
   border-right: 2px solid #03dac6;
   > div {
-    margin: 0.5em;
-    p {
-      margin: 0.5em;
-    }
+    margin: 1em;
   }
 }
 
@@ -109,6 +109,18 @@ aside {
   font-family: "Ropoto", sans-serif;
   font-size: 17px;
   color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em;
+  p {
+    margin: 0.5em 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
 }
 
 .row:not(:last-child) {
@@ -119,8 +131,6 @@ aside {
 }
 
 form {
-  display: flex;
-  flex-direction: row;
   button,
   #interval {
     margin-left: 1em;
@@ -135,10 +145,9 @@ form {
     }
   }
 
-  > div:last-child {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30%;
+  #addTask {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
   }
 }
