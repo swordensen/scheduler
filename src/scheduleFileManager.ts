@@ -1,7 +1,7 @@
-import { existsSync, readFile, readFileSync, unlink, writeFile, writeFileSync } from "fs";
+import { existsSync, readFile, readFileSync, unlink, watchFile, writeFile, writeFileSync } from "fs";
 import { DEFAULT_CONFIG, DEFAULT_SCHEDULE_FILE } from "./defaults";
 import LOGGER from "./logger";
-import { Config, Schedule } from "./types";
+import { Config, Schedule, Task } from "./types";
 
 /**
  * this singleton is responsible for managing the schedule file to ensure no
@@ -9,16 +9,18 @@ import { Config, Schedule } from "./types";
  */
 export class ScheduleFileManager {
   config: Config;
+  schedule: Schedule;
   constructor(config?: Config) {
     LOGGER.info("creating schedule file manager...");
     this.config = config || DEFAULT_CONFIG;
     this.initScheduleFile();
+    this.schedule = this.readScheduleFile();
   }
 
   /**
    * reads the schedule file
    */
-  public readScheduleFile(): Schedule {
+  private readScheduleFile(): Schedule {
     LOGGER.info(`reading schedule file ${this.config.scheduleFilePath}...`);
     try {
       return JSON.parse(readFileSync(this.config.scheduleFilePath, "utf8"));
@@ -29,10 +31,63 @@ export class ScheduleFileManager {
   }
 
   /**
+   * returns a schedule whenever the schedule file changes
+   * @param cb
+   */
+  public onChange(cb: (schedule: Schedule) => void) {
+    try {
+      watchFile(this.config.scheduleFilePath, (curr, prev) => {
+        const newSchedule = this.readScheduleFile();
+        this.schedule = newSchedule;
+        cb(newSchedule);
+      });
+    } catch (e) {
+      LOGGER.error("unable to establish schedule watch file listener");
+    }
+  }
+
+  /**
+   * adds a task to the schedule file
+   * @param task
+   */
+  public addTask(task: Task) {
+    const newSchedule = [
+      ...this.schedule,
+      {
+        ...task,
+        lastExecuted: 0,
+      },
+    ];
+    this.writeScheduleFile(newSchedule);
+  }
+
+  /**
+   * deletes a task from the schedule file
+   * @param index
+   */
+  public deleteTask(index: number) {
+    const newSchedule = [...this.schedule.slice(0, index), ...this.schedule.slice(index + 1)];
+    this.writeScheduleFile(newSchedule);
+  }
+
+  public updateLastExecutedTime(index: number, lastExecuted: number) {
+    const newSchedule = this.schedule.map((task, i) => {
+      if (i === index) {
+        return {
+          ...task,
+          lastExecuted,
+        };
+      }
+      return task;
+    });
+    this.writeScheduleFile(newSchedule);
+  }
+
+  /**
    * writes the schedule file
    * @param scheduleFile
    */
-  public writeScheduleFile(scheduleFile: Schedule): Schedule {
+  private writeScheduleFile(scheduleFile: Schedule): Schedule {
     LOGGER.info(`writing to ${JSON.stringify(scheduleFile)} schedule file ${this.config.scheduleFilePath}`);
     writeFileSync(this.config.scheduleFilePath, JSON.stringify(scheduleFile), "utf8");
     return scheduleFile;

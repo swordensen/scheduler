@@ -11,7 +11,8 @@
     "pkg": "pkg",
     "tsc": "tsc",
     "delete-logs": "rm ./logs/error.log ./logs/combined.log",
-    "start-front-end": "concurrently \"webpack -w -c ./app/webpack.config.js\" \"electron ./app\""
+    "build-css": "webpack -w -c ./app/webpack.style.config.js",
+    "start-front-end": "concurrently \"webpack -w -c ./app/webpack.config.js\" \"npm run build-css\" \"electron ./app\""
   },
   "pkg": {
     "assets": [
@@ -27,9 +28,16 @@
     "@types/node": "^14.14.22",
     "chai": "^4.2.0",
     "concurrently": "^5.3.0",
+    "css-loader": "^5.0.1",
     "electron": "^11.2.1",
+    "electron-reload": "^1.5.0",
+    "extract-loader": "^5.1.0",
+    "file-loader": "^6.2.0",
     "mocha": "^8.2.1",
     "pkg": "^4.4.9",
+    "sass": "^1.32.5",
+    "sass-loader": "^10.1.1",
+    "style-loader": "^2.0.0",
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.1",
@@ -38,6 +46,15 @@
     "webpack-cli": "^4.4.0"
   },
   "dependencies": {
+    "@material/button": "^9.0.0",
+    "@material/card": "^9.0.0",
+    "@material/icon-button": "^9.0.0",
+    "@material/select": "^9.0.0",
+    "@material/textfield": "^9.0.0",
+    "@material/theme": "^9.0.0",
+    "@material/top-app-bar": "^9.0.0",
+    "@svgdotjs/svg.js": "^3.0.16",
+    "resolve-url-loader": "^3.1.2",
     "winston": "^3.3.3"
   }
 }

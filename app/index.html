@@ -4,17 +4,96 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link
-      href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <link href="assets/styles.css" rel="stylesheet" />
   </head>
   <body>
-    <h1>HELLO WORLD</h1>
-    <script>
-      var exports = { __esModule: true };
-    </script>
+    <header class="mdc-top-app-bar">
+      <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+          <span class="mdc-top-app-bar__title">Scheduler</span>
+        </section>
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar"></section>
+      </div>
+    </header>
+    <main class="mdc-top-app-bar--fixed-adjust">
+      <aside id="schedule"></aside>
+      <div>
+        <section id="clock"></section>
+        <section id="newTask">
+          <form id="taskForm">
+            <div>
+              <div class="row">
+                <!-- Task -->
+                <label id="task" class="mdc-text-field mdc-text-field--outlined">
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span class="mdc-floating-label" id="my-label-id">Task</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" name="commandPath" />
+                </label>
+                <button class="mdc-button mdc-button--raised">
+                  <span class="mdc-button__label">Browse...</span>
+                </button>
+              </div>
+
+              <div class="row">
+                <!-- Name -->
+                <label id="name" class="mdc-text-field mdc-text-field--outlined">
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span class="mdc-floating-label" id="my-label-id">Name</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" name="name" />
+                </label>
+
+                <!-- interval -->
+                <label id="interval" class="mdc-text-field mdc-text-field--outlined">
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span class="mdc-floating-label" id="my-label-id">Interval</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" name="interval" />
+                </label>
+              </div>
+
+              <div class="row">
+                <!-- Description -->
+                <label
+                  id="description"
+                  class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label"
+                >
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span class="mdc-floating-label" id="my-label-id">Description</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                  <span class="container">
+                    <textarea class="mdc-text-field__input" rows="4" aria-label="Label" name="description"></textarea>
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <button class="mdc-button mdc-button--raised" type="submit">
+                <span class="mdc-button__label">Add Task</span>
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
     <script src="assets/bundle.js"></script>
   </body>
 </html>

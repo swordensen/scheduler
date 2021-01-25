@@ -1,0 +1,144 @@
+@use "@material/theme" with (
+  $primary: #3700B3,
+  $secondary: #03DAC6,
+  $background:#121212,
+  $surface: #1e1e1e,
+  $error: #CF6679,
+  $on-primary: #ffffff,
+  $on-secondary: #000000,
+  $on-surface: #ffffff,
+  $on-error: #000000
+);
+
+@use "@material/list/mdc-list";
+@use "@material/menu-surface/mdc-menu-surface";
+@use "@material/menu/mdc-menu";
+@use "@material/select/styles";
+@use "@material/card";
+@use "@material/floating-label/mdc-floating-label";
+@use "@material/line-ripple/mdc-line-ripple";
+@use "@material/notched-outline/mdc-notched-outline";
+@use "@material/textfield";
+@use "@material/icon-button";
+@use "@material/top-app-bar/mdc-top-app-bar";
+@use "@material/button";
+
+@include button.core-styles;
+
+@include icon-button.core-styles;
+@include textfield.core-styles;
+@include card.core-styles;
+
+/* fallback */
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url(./icons.woff2) format("woff2");
+}
+
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+header {
+  -webkit-app-region: drag;
+}
+header.mdc-top-app-bar {
+  background-color: #1e1e1e;
+}
+html,
+body {
+  margin: 0px;
+  background-color: #121212;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  display: flex;
+  flex: 1 1 auto;
+  > div {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+aside {
+  width: 300px;
+  height: 100%;
+  border-right: 2px solid #03dac6;
+  > div {
+    margin: 0.5em;
+    p {
+      margin: 0.5em;
+    }
+  }
+}
+
+#clock {
+  flex: 1 1 auto;
+  border-bottom: 2px solid #03dac6;
+}
+
+#newTask {
+  padding: 1em;
+}
+
+.task {
+  font-family: "Ropoto", sans-serif;
+  font-size: 17px;
+  color: #fff;
+}
+
+.row:not(:last-child) {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding-bottom: 1em;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  button,
+  #interval {
+    margin-left: 1em;
+  }
+  .mdc-text-field--textarea {
+    width: 100%;
+    .container {
+      width: 100%;
+      textarea {
+        width: 100%;
+      }
+    }
+  }
+
+  > div:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+  }
+}
