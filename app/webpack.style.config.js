@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = [
   {
-    entry: "./app/src/assets/styles.scss",
+    entry: "./src/assets/styles.scss",
     output: {
       // This is necessary for webpack to compile
       // But we never use style-bundle.js

@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { existsSync, fstat, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { Config, Schedule, Task } from "../../../src/types";
 import { ScheduleFileManager } from "../../../src/scheduleFileManager";
@@ -7,9 +7,14 @@ import { MDCTopAppBar } from "@material/top-app-bar";
 
 import "./clock";
 import { MDCLinearProgress } from "@material/linear-progress";
+import { DEFAULT_CONFIG } from "../../../src/defaults";
+const configFilePath = resolve(process.cwd(), "config.json");
+if (!existsSync(configFilePath)) {
+  const defaultConfig: Config = DEFAULT_CONFIG;
+  writeFileSync(configFilePath, JSON.stringify(defaultConfig), "utf8");
+}
 
-const configFile = readFileSync(resolve(process.cwd(), "config.json"), "utf8");
-
+const configFile = readFileSync(configFilePath, "utf8");
 const config: Config = JSON.parse(configFile);
 
 const scheduleFileManager = new ScheduleFileManager(config);
