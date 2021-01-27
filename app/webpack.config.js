@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = {
   mode: "development",
   entry: "./src/assets/index.ts",
-  target: "node",
+  target: "electron-renderer",
   module: {
     rules: [
       {

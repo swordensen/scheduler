@@ -58,6 +58,9 @@
 
 header {
   -webkit-app-region: drag;
+  button {
+    -webkit-app-region: no-drag;
+  }
 }
 header.mdc-top-app-bar {
   background-color: #1e1e1e;

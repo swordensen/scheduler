@@ -4,6 +4,7 @@ import { Config, Schedule, Task } from "../../../src/types";
 import { ScheduleFileManager } from "../../../src/scheduleFileManager";
 import { MDCTextField } from "@material/textfield";
 import { MDCTopAppBar } from "@material/top-app-bar";
+import { remote } from "electron";
 
 import "./clock";
 import { MDCLinearProgress } from "@material/linear-progress";
@@ -22,6 +23,9 @@ const scheduleFileManager = new ScheduleFileManager(config);
 const schedule = scheduleFileManager.schedule;
 
 const scheduleContainer = document.getElementById("schedule");
+
+const progressBarElem = document.querySelector("#loader") as HTMLElement;
+const linearProgress = new MDCLinearProgress(progressBarElem);
 
 renderSchedule(schedule);
 
@@ -56,6 +60,7 @@ function renderSchedule(schedule: Schedule) {
           `;
     scheduleContainer.append(taskElem);
   });
+  linearProgress.close();
 }
 const taskElem = document.querySelector("#task");
 if (taskElem) {
@@ -90,14 +95,41 @@ if (form) {
     const data: any = Object.fromEntries(formData.entries());
     data.interval = parseInt(data.interval);
     scheduleFileManager.addTask(data);
+    linearProgress.open();
   });
 }
 
 (window as any).deleteTask = (index: number) => {
   scheduleFileManager.deleteTask(index);
+  linearProgress.open();
 };
 
-const progressBarElem = document.querySelector("loader");
-if (progressBarElem) {
-  const linearProgress = new MDCLinearProgress(progressBarElem);
+const commandPathElem = document.querySelector("#commandPath") as HTMLInputElement;
+const browseButtonElem = document.querySelector("#browse") as HTMLButtonElement;
+if (browseButtonElem) {
+  browseButtonElem.onclick = async (e) => {
+    e.preventDefault();
+    const response = await remote.dialog.showOpenDialog({ properties: ["openFile"] });
+    commandPathElem.value = response.filePaths[0] || "";
+  };
 }
+
+const minimizeButton = document.querySelector("#minimize") as HTMLButtonElement;
+const maximizeButton = document.querySelector("#maximize") as HTMLButtonElement;
+const closeButton = document.querySelector("#close") as HTMLButtonElement;
+
+minimizeButton.addEventListener("click", () => {
+  remote.getCurrentWindow().minimize();
+});
+
+maximizeButton.addEventListener("click", () => {
+  const window = remote.getCurrentWindow();
+  if (window.isMaximized()) {
+    return window.restore();
+  }
+  window.maximize();
+});
+
+closeButton.addEventListener("click", () => {
+  remote.getCurrentWindow().close();
+});

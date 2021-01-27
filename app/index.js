@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require("electron");
+require("electron-reload")(__dirname + "/assets");
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -6,6 +7,7 @@ function createWindow() {
     height: 720,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
     frame: false,
   });

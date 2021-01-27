@@ -13,29 +13,44 @@
         <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
           <span class="mdc-top-app-bar__title">Scheduler</span>
         </section>
-        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar"></section>
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+          <button
+            id="minimize"
+            class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
+            aria-label="Favorite"
+          >
+            minimize
+          </button>
+          <button id="maximize" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">
+            maximize
+          </button>
+          <button id="close" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Options">
+            close
+          </button>
+        </section>
+      </div>
+      <div
+        id="loader"
+        role="progressbar"
+        class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed"
+        aria-label="Example Progress Bar"
+        aria-valuemin="0"
+        aria-valuemax="1"
+        aria-valuenow="0"
+      >
+        <div class="mdc-linear-progress__buffer">
+          <div class="mdc-linear-progress__buffer-bar"></div>
+          <div class="mdc-linear-progress__buffer-dots"></div>
+        </div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+          <span class="mdc-linear-progress__bar-inner"></span>
+        </div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+          <span class="mdc-linear-progress__bar-inner"></span>
+        </div>
       </div>
     </header>
-    <div
-      id="loader"
-      role="progressbar"
-      class="mdc-linear-progress"
-      aria-label="Example Progress Bar"
-      aria-valuemin="0"
-      aria-valuemax="1"
-      aria-valuenow="0"
-    >
-      <div class="mdc-linear-progress__buffer">
-        <div class="mdc-linear-progress__buffer-bar"></div>
-        <div class="mdc-linear-progress__buffer-dots"></div>
-      </div>
-      <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-        <span class="mdc-linear-progress__bar-inner"></span>
-      </div>
-      <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-        <span class="mdc-linear-progress__bar-inner"></span>
-      </div>
-    </div>
+
     <main class="mdc-top-app-bar--fixed-adjust">
       <aside id="schedule"></aside>
       <div>
@@ -53,9 +68,15 @@
                     </span>
                     <span class="mdc-notched-outline__trailing"></span>
                   </span>
-                  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" name="commandPath" />
+                  <input
+                    id="commandPath"
+                    type="text"
+                    class="mdc-text-field__input"
+                    aria-labelledby="my-label-id"
+                    name="commandPath"
+                  />
                 </label>
-                <button class="mdc-button mdc-button--raised">
+                <button class="mdc-button mdc-button--raised" id="browse">
                   <span class="mdc-button__label">Browse...</span>
                 </button>
               </div>
