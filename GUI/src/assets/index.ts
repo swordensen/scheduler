@@ -5,11 +5,12 @@ import { ScheduleFileManager } from "../../../scheduler/src/scheduleFileManager"
 import { MDCTextField } from "@material/textfield";
 import { MDCTopAppBar } from "@material/top-app-bar";
 import { remote } from "electron";
+import "./isSchedulerRunning";
 
 import "./clock";
 import { MDCLinearProgress } from "@material/linear-progress";
 import { DEFAULT_CONFIG } from "../../../scheduler/src/defaults";
-const configFilePath = resolve(process.cwd(), "config.json");
+const configFilePath = resolve(process.cwd(), "../files/config.json");
 if (!existsSync(configFilePath)) {
   const defaultConfig: Config = DEFAULT_CONFIG;
   writeFileSync(configFilePath, JSON.stringify(defaultConfig), "utf8");
@@ -41,7 +42,6 @@ function renderSchedule(schedule: Schedule) {
     const taskElem = document.createElement("div");
     taskElem.classList.add("mdc-card");
     const scheduled = new Date(task.lastExecuted + task.interval);
-    console.log(task.lastExecuted + task.interval);
     taskElem.innerHTML = `
           <div class="task">
             <div class="taskDetails">

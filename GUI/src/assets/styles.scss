@@ -1,3 +1,12 @@
+$primary: #3700b3;
+$secondary: #03dac6;
+$background: #121212;
+$surface: #1e1e1e;
+$error: #cf6679;
+$on-primary: #ffffff;
+$on-secondary: #000000;
+$on-surface: #ffffff;
+$on-error: #000000;
 @use "@material/theme" with (
   $primary: #3700B3,
   $secondary: #03DAC6,
@@ -58,6 +67,7 @@
 
 header {
   -webkit-app-region: drag;
+  span,
   button {
     -webkit-app-region: no-drag;
   }
@@ -153,4 +163,15 @@ form {
     bottom: 2em;
     right: 2em;
   }
+}
+
+#runningStatus {
+  cursor: pointer;
+}
+
+#runningStatus.running {
+  color: $secondary;
+}
+#runningStatus.notrunning {
+  color: $error;
 }

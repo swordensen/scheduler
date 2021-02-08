@@ -7,7 +7,7 @@
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
     "start": "ts-node ./src/index.ts",
     "build": "tsc",
-    "package-runner": "tsc && pkg . --out-path ../bin",
+    "package": "tsc && pkg . --out-path ../bin",
     "pkg": "pkg",
     "tsc": "tsc",
     "electron": "electron",
