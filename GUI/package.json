@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/ps-node": "^0.1.0",
     "concurrently": "^5.3.0",
     "css-loader": "^5.0.1",
     "electron": "^11.2.1",
@@ -39,6 +40,7 @@
     "@material/theme": "^9.0.0",
     "@material/top-app-bar": "^9.0.0",
     "@svgdotjs/svg.js": "^3.0.16",
+    "ps-node": "^0.1.6",
     "resolve-url-loader": "^3.1.2"
   }
 }

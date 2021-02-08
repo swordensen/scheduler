@@ -1,7 +1,7 @@
 export interface Task {
   name: string;
   description?: string;
-  commandPath: string;
+  command: string;
   interval: number | "startup";
   lastExecuted: number;
 }

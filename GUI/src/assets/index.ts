@@ -1,14 +1,14 @@
 import { existsSync, fstat, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import { Config, Schedule, Task } from "../../../src/types";
-import { ScheduleFileManager } from "../../../src/scheduleFileManager";
+import { Config, Schedule, Task } from "../../../scheduler/src/types";
+import { ScheduleFileManager } from "../../../scheduler/src/scheduleFileManager";
 import { MDCTextField } from "@material/textfield";
 import { MDCTopAppBar } from "@material/top-app-bar";
 import { remote } from "electron";
 
 import "./clock";
 import { MDCLinearProgress } from "@material/linear-progress";
-import { DEFAULT_CONFIG } from "../../../src/defaults";
+import { DEFAULT_CONFIG } from "../../../scheduler/src/defaults";
 const configFilePath = resolve(process.cwd(), "config.json");
 if (!existsSync(configFilePath)) {
   const defaultConfig: Config = DEFAULT_CONFIG;
@@ -46,7 +46,7 @@ function renderSchedule(schedule: Schedule) {
           <div class="task">
             <div class="taskDetails">
               <p>${task.name}</p>
-              <p>${task.commandPath}</p>
+              <p>${task.command}</p>
               <p>${scheduled.toLocaleString()}</p>
             </div>
             <div class="mdc-touch-target-wrapper">
@@ -104,13 +104,13 @@ if (form) {
   linearProgress.open();
 };
 
-const commandPathElem = document.querySelector("#commandPath") as HTMLInputElement;
+const commandElem = document.querySelector("#command") as HTMLInputElement;
 const browseButtonElem = document.querySelector("#browse") as HTMLButtonElement;
 if (browseButtonElem) {
   browseButtonElem.onclick = async (e) => {
     e.preventDefault();
     const response = await remote.dialog.showOpenDialog({ properties: ["openFile"] });
-    commandPathElem.value = response.filePaths[0] || "";
+    commandElem.value = response.filePaths[0] || "";
   };
 }
 

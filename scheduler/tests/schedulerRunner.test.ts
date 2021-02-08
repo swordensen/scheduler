@@ -1,3 +1,4 @@
+import "mocha";
 import { expect } from "chai";
 import { join } from "path";
 import { ScheduleRunner } from "../src/scheduleRunner";
@@ -6,24 +7,24 @@ import { Task } from "../src/types";
 const task_one: Task = {
   name: "test command",
   description: "this is just a test of the schedule file manager",
-  commandPath: join(__dirname, "test.sh"),
-  interval: 5000,
+  command: "echo 'hola mi amigo'",
+  interval: 1000,
   lastExecuted: 0,
 };
 
 const task_two: Task = {
   name: "test command 2",
   description: "this is just a test 2 of the schedule file manager",
-  commandPath: join(__dirname, "test_2.sh"),
-  interval: 3000,
+  command: join(__dirname, "test_2.sh"),
+  interval: 2000,
   lastExecuted: 0,
 };
 
 describe("Schedule Runner", () => {
-  let scheduleRunner: ScheduleRunner;
+  const scheduleRunner = new ScheduleRunner();
+  let index: number;
   it("it should be able to add a task", () => {
-    scheduleRunner = new ScheduleRunner();
-    scheduleRunner.addTask(task_one);
+    index = scheduleRunner.scheduleFileManager.addTask(task_one);
     expect(scheduleRunner.schedule).to.deep.include.members([task_one]);
   });
 
@@ -33,18 +34,17 @@ describe("Schedule Runner", () => {
       done();
     }, 15000);
   }).timeout(15100);
+
+  it("it should be able to remove task ", () => {
+    scheduleRunner.scheduleFileManager.deleteTask(index);
+  });
 });
 
 describe("scheduler after config initialized", () => {
-  let scheduleRunner: ScheduleRunner;
-
-  it("the scheduler should have the script from before", () => {
-    scheduleRunner = new ScheduleRunner();
-    expect(scheduleRunner.schedule).to.deep.include.members([task_one]);
-  });
-
+  const scheduleRunner = new ScheduleRunner();
+  let index: number;
   it("it should be able to add a schedule", () => {
-    scheduleRunner.addTask(task_two);
+    index = scheduleRunner.scheduleFileManager.addTask(task_two);
     expect(scheduleRunner.schedule).to.deep.include.members([task_two]);
   });
 
@@ -55,8 +55,7 @@ describe("scheduler after config initialized", () => {
     }, 15000);
   }).timeout(15100);
 
-  // it('should clean up', async()=>{
-  //     await scheduleRunner.deleteConfig();
-  //     await scheduleRunner.scheduleFileManager.deleteScheduleFile();
-  // })
+  it("it should be able to remove task", () => {
+    scheduleRunner.scheduleFileManager.deleteTask(index);
+  });
 });

@@ -1,20 +1,23 @@
 import { existsSync, readFile, readFileSync, unlink, watchFile, writeFile, writeFileSync } from "fs";
+import { createLogger, Logger } from "winston";
+import { File } from "winston/lib/winston/transports";
 import { DEFAULT_CONFIG, DEFAULT_SCHEDULE_FILE } from "./defaults";
 import LOGGER from "./logger";
 import { Config, Schedule, Task } from "./types";
-
 /**
  * this singleton is responsible for managing the schedule file to ensure no
  * race conditions
  */
 export class ScheduleFileManager {
   config: Config;
-  schedule: Schedule;
+
+  get schedule() {
+    return this.readScheduleFile();
+  }
   constructor(config?: Config) {
     LOGGER.info("creating schedule file manager...");
     this.config = config || DEFAULT_CONFIG;
     this.initScheduleFile();
-    this.schedule = this.readScheduleFile();
   }
 
   /**
@@ -38,7 +41,6 @@ export class ScheduleFileManager {
     try {
       watchFile(this.config.scheduleFilePath, (curr, prev) => {
         const newSchedule = this.readScheduleFile();
-        this.schedule = newSchedule;
         cb(newSchedule);
       });
     } catch (e) {
@@ -50,7 +52,7 @@ export class ScheduleFileManager {
    * adds a task to the schedule file
    * @param task
    */
-  public addTask(task: Task) {
+  public addTask(task: Task): number {
     const newSchedule = [
       ...this.schedule,
       {
@@ -59,6 +61,8 @@ export class ScheduleFileManager {
       },
     ];
     this.writeScheduleFile(newSchedule);
+
+    return this.schedule.length - 1;
   }
 
   /**
@@ -89,7 +93,7 @@ export class ScheduleFileManager {
    */
   private writeScheduleFile(scheduleFile: Schedule): Schedule {
     LOGGER.info(`writing to ${JSON.stringify(scheduleFile)} schedule file ${this.config.scheduleFilePath}`);
-    writeFileSync(this.config.scheduleFilePath, JSON.stringify(scheduleFile), "utf8");
+    writeFileSync(this.config.scheduleFilePath, JSON.stringify(scheduleFile));
     return scheduleFile;
   }
   /**

@@ -1,10 +1,11 @@
 import { existsSync, fstat, readFileSync, unlink, writeFile, writeFileSync } from "fs";
-import path from "path";
 import { DEFAULT_CONFIG, DEFAULT_CONFIG_PATH } from "./defaults";
 import { Config, Schedule, Task } from "./types";
-import { exec } from "child_process";
+import { exec, spawn } from "child_process";
 import { ScheduleFileManager } from "./scheduleFileManager";
 import LOGGER from "./logger";
+import { createLogger, Logger } from "winston";
+import { File } from "winston/lib/winston/transports";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -41,20 +42,22 @@ export class ScheduleRunner {
   private mainInterval(): NodeJS.Timeout {
     return setInterval(() => {
       LOGGER.info("MAIN INTERVAL LOOP");
-      let updated = false;
       this.schedule.forEach((task, index) => {
         LOGGER.info(`checking task ${task.name}`);
         if (this.timeToRun(task)) {
-          if (!existsSync(task.commandPath)) {
-            LOGGER.error(`could not find task ${task.commandPath}`);
-            return task;
-          }
           LOGGER.info(`attempting to run task ${task.name}`);
-          exec(task.commandPath, (err, stdout, stderr) => {
-            LOGGER.error(err);
-            LOGGER.info(stdout);
-            LOGGER.error(stderr);
+          const process = exec(task.command);
+          const logger = createLogger({
+            level: "info",
+            transports: [
+              new File({ filename: `../logs/commands/${task.name}.log` }),
+              new File({ filename: `../logs/commands/${task.name}-error.log`, level: "error" }),
+            ],
           });
+          logger.info(`attempting to execute ${task.command}`);
+          process.stdout?.on("data", (data) => logger.info(data.toString()));
+          process.stderr?.on("data", (data) => logger.error(data.toString()));
+          process.on("exit", (code) => logger.info(`process exited with code ${code?.toString()}`));
           this.scheduleFileManager.updateLastExecutedTime(index, Date.now());
         }
         return task;
