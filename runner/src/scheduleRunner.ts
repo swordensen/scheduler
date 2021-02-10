@@ -1,20 +1,19 @@
 import { existsSync, fstat, readFileSync, unlink, writeFile, writeFileSync } from "fs";
-import { DEFAULT_CONFIG, DEFAULT_CONFIG_PATH } from "./defaults";
 import { Config, Schedule, Task } from "./types";
 import { exec, spawn } from "child_process";
 import { ScheduleFileManager } from "./scheduleFileManager";
 import LOGGER from "./logger";
 import { createLogger, Logger } from "winston";
 import { File } from "winston/lib/winston/transports";
+import { resolve } from "path";
+import { logFolder } from "./defaults";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
  * and calling on methods of the config manager to update the config accordingly
  */
 export class ScheduleRunner {
-  private configPath = DEFAULT_CONFIG_PATH;
-  private config = this.getConfig();
-  public scheduleFileManager = new ScheduleFileManager(this.config);
+  public scheduleFileManager = new ScheduleFileManager();
   private startListeners: Function[] = [];
   private INTERVAL_PERIOD = 15000; // 1 MINUTE
   private interval?: NodeJS.Timeout = this.mainInterval();
@@ -50,8 +49,8 @@ export class ScheduleRunner {
           const logger = createLogger({
             level: "info",
             transports: [
-              new File({ filename: `../logs/commands/${task.name}.log` }),
-              new File({ filename: `../logs/commands/${task.name}-error.log`, level: "error" }),
+              new File({ filename: resolve(logFolder, `./commands/${task.name}.log`) }),
+              new File({ filename: resolve(logFolder, `./commands/${task.name}-error.log`), level: "error" }),
             ],
           });
           logger.info(`attempting to execute ${task.command}`);
@@ -78,35 +77,5 @@ export class ScheduleRunner {
       if (currentTime > scheduledTime) return true;
     }
     return false;
-  }
-
-  private getConfig(): Config {
-    LOGGER.info("getting scheduler config");
-    if (existsSync(this.configPath)) {
-      LOGGER.info("config file exists!");
-      const configStr = readFileSync(this.configPath, "utf8");
-      try {
-        return JSON.parse(configStr);
-      } catch (e) {
-        LOGGER.error(`unable to parse config file text: ${configStr}`);
-      }
-    }
-    LOGGER.info("creating a new config file with default values");
-    writeFile(this.configPath, JSON.stringify(DEFAULT_CONFIG), () => {
-      /*done writing file */
-    });
-    return DEFAULT_CONFIG;
-  }
-
-  public deleteConfig(): Promise<void> {
-    LOGGER.info(`deleting config file! ${this.configPath}`);
-    return new Promise((resolve, reject) => {
-      unlink(this.configPath, (err) => {
-        if (err) {
-          LOGGER.error(`unable to delete config file ${this.configPath}`);
-        }
-        resolve();
-      });
-    });
   }
 }

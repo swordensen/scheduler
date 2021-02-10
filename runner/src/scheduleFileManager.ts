@@ -1,7 +1,5 @@
-import { existsSync, readFile, readFileSync, unlink, watchFile, writeFile, writeFileSync } from "fs";
-import { createLogger, Logger } from "winston";
-import { File } from "winston/lib/winston/transports";
-import { DEFAULT_CONFIG, DEFAULT_SCHEDULE_FILE } from "./defaults";
+import { existsSync, readFileSync, unlink, watchFile, writeFileSync } from "fs";
+import { scheduleFile } from "./defaults";
 import LOGGER from "./logger";
 import { Config, Schedule, Task } from "./types";
 /**
@@ -9,14 +7,11 @@ import { Config, Schedule, Task } from "./types";
  * race conditions
  */
 export class ScheduleFileManager {
-  config: Config;
-
   get schedule() {
     return this.readScheduleFile();
   }
-  constructor(config?: Config) {
+  constructor() {
     LOGGER.info("creating schedule file manager...");
-    this.config = config || DEFAULT_CONFIG;
     this.initScheduleFile();
   }
 
@@ -24,11 +19,11 @@ export class ScheduleFileManager {
    * reads the schedule file
    */
   private readScheduleFile(): Schedule {
-    LOGGER.info(`reading schedule file ${this.config.scheduleFilePath}...`);
+    LOGGER.info(`reading schedule file ${scheduleFile}...`);
     try {
-      return JSON.parse(readFileSync(this.config.scheduleFilePath, "utf8"));
+      return JSON.parse(readFileSync(scheduleFile, "utf8"));
     } catch (e) {
-      LOGGER.error(`unable to parse schedule file ${this.config.scheduleFilePath}`);
+      LOGGER.error(`unable to parse schedule file ${scheduleFile}`);
       throw e;
     }
   }
@@ -39,7 +34,7 @@ export class ScheduleFileManager {
    */
   public onChange(cb: (schedule: Schedule) => void) {
     try {
-      watchFile(this.config.scheduleFilePath, (curr, prev) => {
+      watchFile(scheduleFile, (curr, prev) => {
         const newSchedule = this.readScheduleFile();
         cb(newSchedule);
       });
@@ -91,20 +86,20 @@ export class ScheduleFileManager {
    * writes the schedule file
    * @param scheduleFile
    */
-  private writeScheduleFile(scheduleFile: Schedule): Schedule {
-    LOGGER.info(`writing to ${JSON.stringify(scheduleFile)} schedule file ${this.config.scheduleFilePath}`);
-    writeFileSync(this.config.scheduleFilePath, JSON.stringify(scheduleFile));
-    return scheduleFile;
+  private writeScheduleFile(tasks: Schedule): Schedule {
+    LOGGER.info(`writing to ${JSON.stringify(scheduleFile)} schedule file ${scheduleFile}`);
+    writeFileSync(scheduleFile, JSON.stringify(scheduleFile));
+    return tasks;
   }
   /**
    * deletes schedule file
    */
   public deleteScheduleFile(): Promise<void> {
-    LOGGER.info(`deleting schedule file ${this.config.scheduleFilePath}`);
+    LOGGER.info(`deleting schedule file ${scheduleFile}`);
     return new Promise((resolve, reject) => {
-      unlink(this.config.scheduleFilePath, (err) => {
+      unlink(scheduleFile, (err) => {
         if (err) {
-          LOGGER.error(`unable to delete ${this.config.scheduleFilePath}`);
+          LOGGER.error(`unable to delete ${scheduleFile}`);
           reject(err);
         }
         resolve();
@@ -118,9 +113,9 @@ export class ScheduleFileManager {
    */
   private initScheduleFile() {
     LOGGER.info(`initializing schedule file`);
-    if (!existsSync(this.config.scheduleFilePath)) {
+    if (!existsSync(scheduleFile)) {
       LOGGER.info(`schedule file does not exist. Creating one with default values.`);
-      writeFileSync(this.config.scheduleFilePath, "[]", "utf8");
+      writeFileSync(scheduleFile, "[]", "utf8");
     }
   }
 }
