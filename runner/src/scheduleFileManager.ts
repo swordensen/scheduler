@@ -1,26 +1,38 @@
 import { existsSync, readFileSync, unlink, watchFile, writeFileSync } from "fs";
-import { scheduleFile } from "./defaults";
+import { defaultSchedule, scheduleFile } from "./defaults";
 import LOGGER from "./logger";
-import { Config, Schedule, Task } from "./types";
+import { Schedule, Task } from "./types";
 /**
  * this singleton is responsible for managing the schedule file to ensure no
  * race conditions
  */
 export class ScheduleFileManager {
+  /**
+   * returns a readonly schedule. The values in this array should not be changed.
+   */
   get schedule() {
     return this.readScheduleFile();
   }
+
+  private set _schedule(schedule: Schedule) {
+    this.writeScheduleFile(schedule);
+  }
+
+  private get _scheduleFileExists() {
+    return existsSync(scheduleFile);
+  }
   constructor() {
-    LOGGER.info("creating schedule file manager...");
-    this.initScheduleFile();
+    LOGGER.info(`creating schedule file manager...`);
   }
 
   /**
-   * reads the schedule file
+   * creates the schedule file if it doesn't exist.
+   * returns schedule
    */
-  private readScheduleFile(): Schedule {
+  private readScheduleFile(): Readonly<Schedule> {
     LOGGER.info(`reading schedule file ${scheduleFile}...`);
     try {
+      if (!this._scheduleFileExists) this.initScheduleFile();
       return JSON.parse(readFileSync(scheduleFile, "utf8"));
     } catch (e) {
       LOGGER.error(`unable to parse schedule file ${scheduleFile}`);
@@ -32,11 +44,11 @@ export class ScheduleFileManager {
    * returns a schedule whenever the schedule file changes
    * @param cb
    */
-  public onChange(cb: (schedule: Schedule) => void) {
+  public onChange(cb: (schedule: Readonly<Schedule>) => void) {
+    LOGGER.info(`registering schedule file listener...`);
     try {
       watchFile(scheduleFile, (curr, prev) => {
-        const newSchedule = this.readScheduleFile();
-        cb(newSchedule);
+        cb(this.schedule);
       });
     } catch (e) {
       LOGGER.error("unable to establish schedule watch file listener");
@@ -44,34 +56,53 @@ export class ScheduleFileManager {
   }
 
   /**
-   * adds a task to the schedule file
+   * adds a task to the schedule file.
+   * Keep in mind we only want to read from the file once.
    * @param task
    */
   public addTask(task: Task): number {
-    const newSchedule = [
-      ...this.schedule,
+    const currentSchedule = this.schedule;
+    this._schedule = [
+      ...currentSchedule,
       {
         ...task,
         lastExecuted: 0,
       },
     ];
-    this.writeScheduleFile(newSchedule);
 
-    return this.schedule.length - 1;
+    return currentSchedule.length;
   }
 
   /**
    * deletes a task from the schedule file
+   * also notifies any listeners, the index of the task that was deleted
    * @param index
    */
   public deleteTask(index: number) {
-    const newSchedule = [...this.schedule.slice(0, index), ...this.schedule.slice(index + 1)];
-    this.writeScheduleFile(newSchedule);
+    const currentSchedule = this.schedule;
+    this._schedule = [...currentSchedule.slice(0, index), ...currentSchedule.slice(index + 1)];
   }
 
+  public updateTask(index: number, updatedTask: Partial<Task>) {
+    this._schedule = this.schedule.map((task, i) => {
+      if (index == i) {
+        return {
+          ...task,
+          ...updatedTask,
+        };
+      }
+      return task;
+    });
+  }
+
+  /**
+   * updates the last executed time.
+   * @param index
+   * @param lastExecuted
+   */
   public updateLastExecutedTime(index: number, lastExecuted: number) {
-    const newSchedule = this.schedule.map((task, i) => {
-      if (i === index) {
+    this._schedule = this.schedule.map((task, i) => {
+      if (index == i) {
         return {
           ...task,
           lastExecuted,
@@ -79,7 +110,6 @@ export class ScheduleFileManager {
       }
       return task;
     });
-    this.writeScheduleFile(newSchedule);
   }
 
   /**
@@ -87,35 +117,25 @@ export class ScheduleFileManager {
    * @param scheduleFile
    */
   private writeScheduleFile(tasks: Schedule): Schedule {
-    LOGGER.info(`writing to ${JSON.stringify(scheduleFile)} schedule file ${scheduleFile}`);
-    writeFileSync(scheduleFile, JSON.stringify(scheduleFile));
+    LOGGER.info(`writing to ${JSON.stringify(scheduleFile)} schedule file ${tasks}`);
+    writeFileSync(scheduleFile, JSON.stringify(tasks));
     return tasks;
-  }
-  /**
-   * deletes schedule file
-   */
-  public deleteScheduleFile(): Promise<void> {
-    LOGGER.info(`deleting schedule file ${scheduleFile}`);
-    return new Promise((resolve, reject) => {
-      unlink(scheduleFile, (err) => {
-        if (err) {
-          LOGGER.error(`unable to delete ${scheduleFile}`);
-          reject(err);
-        }
-        resolve();
-      });
-    });
   }
 
   /**
-   * checks to see if a schedule file exists
-   * otherwise creates one with default config
+   * empties schedule file
+   */
+  public clearSchedule() {
+    LOGGER.info(`clearing schedule file`);
+    this._schedule = [];
+  }
+
+  /**
+   * inits the schedule file with an empty array
+   * (same as clear schedule)
    */
   private initScheduleFile() {
     LOGGER.info(`initializing schedule file`);
-    if (!existsSync(scheduleFile)) {
-      LOGGER.info(`schedule file does not exist. Creating one with default values.`);
-      writeFileSync(scheduleFile, "[]", "utf8");
-    }
+    this._schedule = [];
   }
 }

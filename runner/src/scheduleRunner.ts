@@ -1,43 +1,26 @@
-import { existsSync, fstat, readFileSync, unlink, writeFile, writeFileSync } from "fs";
-import { Config, Schedule, Task } from "./types";
-import { exec, spawn } from "child_process";
+import { Task } from "./types";
+import { exec } from "child_process";
 import { ScheduleFileManager } from "./scheduleFileManager";
-import LOGGER from "./logger";
-import { createLogger, Logger } from "winston";
-import { File } from "winston/lib/winston/transports";
-import { resolve } from "path";
-import { logFolder } from "./defaults";
+import LOGGER, { taskLogger } from "./logger";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
- * and calling on methods of the config manager to update the config accordingly
+ * and calling on methods of the config manager to update the config accordingly.
+ *
+ * If you don't thinks should be a singleton u can F off
  */
 export class ScheduleRunner {
   public scheduleFileManager = new ScheduleFileManager();
-  private startListeners: Function[] = [];
   private INTERVAL_PERIOD = 15000; // 1 MINUTE
   private interval?: NodeJS.Timeout = this.mainInterval();
 
-  get schedule(): Schedule {
+  private get schedule() {
     return this.scheduleFileManager.schedule;
   }
 
-  public start() {
-    LOGGER.info("starting main interval...");
-    this.interval = this.mainInterval();
-    LOGGER.info("calling start listeners");
-    this.startListeners.forEach((listener) => listener());
-  }
-
-  public stop() {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = undefined;
-    } else {
-      throw "interval is not defined. Cannot stop. Good Luck.";
-    }
-  }
-
+  /**
+   * this is our main interval loop
+   */
   private mainInterval(): NodeJS.Timeout {
     return setInterval(() => {
       LOGGER.info("MAIN INTERVAL LOOP");
@@ -46,20 +29,9 @@ export class ScheduleRunner {
         if (this.timeToRun(task)) {
           LOGGER.info(`attempting to run task ${task.name}`);
           const process = exec(task.command);
-          const logger = createLogger({
-            level: "info",
-            transports: [
-              new File({ filename: resolve(logFolder, `./commands/${task.name}.log`) }),
-              new File({ filename: resolve(logFolder, `./commands/${task.name}-error.log`), level: "error" }),
-            ],
-          });
-          logger.info(`attempting to execute ${task.command}`);
-          process.stdout?.on("data", (data) => logger.info(data.toString()));
-          process.stderr?.on("data", (data) => logger.error(data.toString()));
-          process.on("exit", (code) => logger.info(`process exited with code ${code?.toString()}`));
+          taskLogger(task, process); //investigate potential memory leak
           this.scheduleFileManager.updateLastExecutedTime(index, Date.now());
         }
-        return task;
       });
       LOGGER.info("MAIN INTERVAL LOOP END");
     }, this.INTERVAL_PERIOD);
