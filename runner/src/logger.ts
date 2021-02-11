@@ -3,6 +3,7 @@ import { resolve } from "path";
 import { createLogger, format } from "winston";
 import { Console, File } from "winston/lib/winston/transports";
 import { logFolder } from "./defaults";
+import { Task } from "./types";
 
 export const LOGGER = createLogger({
   level: "info",
@@ -15,12 +16,12 @@ export const LOGGER = createLogger({
   ],
 });
 
-export function taskLogger(name: string, process: ChildProcess) {
+export function taskLogger(task: Task, process: ChildProcess) {
   const logger = createLogger({
     level: "info",
     transports: [
-      new File({ filename: resolve(logFolder, `./commands/${name}.log`) }),
-      new File({ filename: resolve(logFolder, `./commands/${name}-error.log`), level: "error" }),
+      new File({ filename: resolve(logFolder, `./commands/${task.name}.log`) }),
+      new File({ filename: resolve(logFolder, `./commands/${task.name}-error.log`), level: "error" }),
     ],
   });
   logger.info(`attempting to execute ${task.command}`);
