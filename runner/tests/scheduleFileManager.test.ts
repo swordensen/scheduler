@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import "mocha";
-import { defaultSchedule, scheduleFile } from "../src/defaults";
-import { ScheduleFileManager } from "../src/scheduleFileManager";
-import { Task } from "../src/types";
+import { defaultSchedule, scheduleFile } from "../../fileManager/src/defaults";
+import { ScheduleFileManager } from "../../fileManager/src/scheduleFileManager";
+import { Task } from "../../fileManager/src/types";
 
 describe("Schedule File Manager", () => {
   const testTask: Task = {

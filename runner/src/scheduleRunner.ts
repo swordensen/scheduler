@@ -1,13 +1,12 @@
-import { Task } from "./types";
+import { Task } from "../../fileManager/src/types";
 import { exec } from "child_process";
-import { ScheduleFileManager } from "./scheduleFileManager";
-import LOGGER, { taskLogger } from "./logger";
+import { ScheduleFileManager } from "../../fileManager/src/scheduleFileManager";
+import LOGGER, { taskLogger } from "../../fileManager/src/logger";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
  * and calling on methods of the config manager to update the config accordingly.
  *
- * If you don't thinks should be a singleton u can F off
  */
 export class ScheduleRunner {
   public scheduleFileManager = new ScheduleFileManager();

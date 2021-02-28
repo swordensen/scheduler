@@ -2,7 +2,7 @@ import "mocha";
 import { expect } from "chai";
 import { join } from "path";
 import { ScheduleRunner } from "../src/scheduleRunner";
-import { Task } from "../src/types";
+import { Task } from "../../fileManager/src/types";
 
 const task_one: Task = {
   name: "test command",
