@@ -3,8 +3,12 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import psList from "ps-list";
 import { spawn } from "child_process";
 import { ScheduleFileManager } from "../../fileManager/lib/scheduleFileManager";
-import { openLogFile } from "../../fileManager/lib/helpers";
 import { join, dirname } from "path";
+import { Task } from "../../fileManager/lib/types";
+import { existsSync } from "fs";
+import { resolve } from "path";
+import { logFolder } from "../../fileManager/lib/defaults";
+import open from "open";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: any;
@@ -66,8 +70,13 @@ function createWindow() {
     scheduleFileManager.deleteTask(index);
   });
 
-  ipcMain.on("open-log", (event, task) => {
+  ipcMain.on("open-log", (event, index) => {
+    const task = scheduleFileManager.schedule[index];
     openLogFile(task);
+  });
+
+  ipcMain.on("get-schedule", (event) => {
+    win.webContents.send("schedule", scheduleFileManager.schedule);
   });
 
   scheduleFileManager.onChange((schedule) => {
@@ -78,3 +87,11 @@ function createWindow() {
   win.webContents.openDevTools();
 }
 app.on("ready", createWindow);
+
+/**
+ * this function opens up the log file for viewing
+ */
+export function openLogFile(task: Task) {
+  const path = resolve(logFolder, `./commands/${task.name}.log`);
+  if (existsSync(path)) open(path);
+}

@@ -35,7 +35,7 @@ function renderSchedule(schedule: readonly Task[]) {
             </div>
             <div>
               <div class="mdc-touch-target-wrapper">
-                <button class="mdc-fab mdc-fab--mini mdc-fab--touch" onclick="openLog(${JSON.stringify(task)})">
+                <button class="mdc-fab mdc-fab--mini mdc-fab--touch" onclick="openLog(${i})">
                   <div class="mdc-fab__ripple"></div>
                   <span class="material-icons mdc-fab__icon">text_snippet</span>
                   <div class="mdc-fab__touch"></div>
@@ -97,8 +97,8 @@ if (form) {
   linearProgress.open();
 };
 
-(window as any).openLog = (taskString: string) => {
-  ipcRenderer.send("open-log", JSON.parse(taskString));
+(window as any).openLog = (index: number) => {
+  ipcRenderer.send("open-log", index);
 };
 
 const commandElem = document.querySelector("#command") as HTMLInputElement;
@@ -130,3 +130,5 @@ maximizeButton.addEventListener("click", () => {
 closeButton.addEventListener("click", () => {
   remote.getCurrentWindow().close();
 });
+
+ipcRenderer.send("get-schedule");
