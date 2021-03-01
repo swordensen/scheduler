@@ -13,7 +13,7 @@ export const LOGGER = createLogger({
   transports: [
     new File({ filename: resolve(logFolder, "error.log"), level: "error" }),
     new File({ filename: resolve(logFolder, "combined.log") }),
-    new Console({ format: format.simple() }),
+    // new Console({ format: format.simple() }),
   ],
 });
 
