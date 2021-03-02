@@ -1,10 +1,9 @@
 import { resolve } from "path";
-
+import { app } from "electron";
 import { createFolderIfNotExist } from "./helpers";
 import { Schedule } from "./types";
 
-import getPath from "platform-folders";
-export const userDataFolder = getPath("userData");
+export const userDataFolder = app.getPath("userData");
 
 if (!userDataFolder) throw "Unknown operating system detected. Unable to locate configuration folder.";
 

@@ -1,7 +1,7 @@
-import { Task } from "../../fileManager/src/types";
+import { Task } from "../fileManager/types";
 import { exec } from "child_process";
-import { ScheduleFileManager } from "../../fileManager/src/scheduleFileManager";
-import LOGGER, { taskLogger } from "../../fileManager/src/logger";
+import { ScheduleFileManager } from "../fileManager/scheduleFileManager";
+import LOGGER, { taskLogger } from "../fileManager/logger";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time

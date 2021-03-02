@@ -2,13 +2,16 @@ import { app, BrowserWindow, ipcMain, Menu, Tray } from "electron";
 
 import psList from "ps-list";
 import { spawn } from "child_process";
-import { ScheduleFileManager } from "../../fileManager/lib/scheduleFileManager";
-import { join, dirname } from "path";
-import { Task } from "../../fileManager/lib/types";
+import { ScheduleFileManager } from "./fileManager/scheduleFileManager";
+import { join } from "path";
+import { Task } from "./fileManager/types";
 import { existsSync } from "fs";
 import { resolve } from "path";
-import { logFolder } from "../../fileManager/lib/defaults";
+import { logFolder } from "./fileManager/defaults";
 import open from "open";
+import scheduleRunner from "./runner";
+
+new scheduleRunner();
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: any;
@@ -23,22 +26,37 @@ const pathToRunner = join(__dirname, "extraResources", "runner.exe");
 let tray = null;
 app.on("ready", () => {
   const iconPath = resolve(__dirname, "assets/icon.png");
-  console.log(iconPath);
   tray = new Tray(iconPath);
   tray.setToolTip("scheduler");
-  const contextMenu = Menu.buildFromTemplate([{ label: "quit", type: "radio" }]);
+  tray.on("click", (e) => {
+    win.show();
+  });
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "quit",
+      click: () => {
+        app.quit();
+      },
+    },
+  ]);
   tray.setContextMenu(contextMenu);
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1080,
     height: 720,
     webPreferences: {
+      contextIsolation: true,
       nodeIntegration: true,
       enableRemoteModule: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
     title: "scheduler",
     frame: false,
+    show: false,
+  });
+  win.on("minimize", (event: any) => {
+    event.preventDefault();
+    win.hide();
   });
   // app.getPath(MAIN_WINDOW_WEBPACK_ENTRY);
   // and load the index.html of the app.

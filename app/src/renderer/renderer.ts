@@ -1,6 +1,6 @@
 import "./styles.scss";
 
-import { Task } from "../../../fileManager/src/types";
+import { Task } from "../fileManager/types";
 import { MDCTextField } from "@material/textfield";
 import { MDCTopAppBar } from "@material/top-app-bar";
 import { ipcRenderer, remote } from "electron";
