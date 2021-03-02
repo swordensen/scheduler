@@ -1,9 +1,6 @@
 import { app, BrowserWindow, ipcMain, Menu, Tray } from "electron";
 
-import psList from "ps-list";
-import { spawn } from "child_process";
 import { ScheduleFileManager } from "./fileManager/scheduleFileManager";
-import { join } from "path";
 import { Task } from "./fileManager/types";
 import { existsSync } from "fs";
 import { resolve } from "path";
@@ -22,7 +19,6 @@ if (require("electron-squirrel-startup")) {
 }
 
 const scheduleFileManager = new ScheduleFileManager();
-const pathToRunner = join(__dirname, "extraResources", "runner.exe");
 let tray = null;
 app.on("ready", () => {
   const iconPath = resolve(__dirname, "assets/icon.png");
@@ -45,7 +41,7 @@ app.on("ready", () => {
     width: 1080,
     height: 720,
     webPreferences: {
-      contextIsolation: true,
+      // contextIsolation: true,
       nodeIntegration: true,
       enableRemoteModule: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -63,27 +59,6 @@ app.on("ready", () => {
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   win.webContents.once("dom-ready", () => {
     win.webContents.send("schedule", scheduleFileManager.schedule);
-  });
-
-  let isRunning: boolean | null = null;
-  const interval = setInterval(async () => {
-    try {
-      const list = await psList();
-      const scheduler = list.find((process) => process.name === "runner.exe");
-
-      win.webContents.send("update-running-status", scheduler);
-    } catch (e) {
-      console.log("unable to retrieve process list");
-      console.log(e);
-    }
-  }, 5000);
-
-  ipcMain.on("start-scheduler", () => {
-    if (!isRunning) {
-      const child = spawn(pathToRunner, { detached: true, windowsHide: true, shell: false });
-      child.unref();
-    }
-    isRunning = true;
   });
 
   ipcMain.on("add-task", (event, task) => {

@@ -4,7 +4,6 @@ import { Task } from "../fileManager/types";
 import { MDCTextField } from "@material/textfield";
 import { MDCTopAppBar } from "@material/top-app-bar";
 import { ipcRenderer, remote } from "electron";
-import "./isSchedulerRunning";
 
 import "./clock";
 import { MDCLinearProgress } from "@material/linear-progress";
