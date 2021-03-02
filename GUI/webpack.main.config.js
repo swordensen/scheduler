@@ -1,4 +1,3 @@
-const copyWebpackPlugin = require("copy-webpack-plugin");
 const { resolve, join } = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
@@ -16,8 +15,8 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: join("src", "extraResources"),
-          to: "extraResources",
+          from: join("src", "assets"),
+          to: "assets",
           globOptions: {
             ignore: [".gitkeep"],
           },

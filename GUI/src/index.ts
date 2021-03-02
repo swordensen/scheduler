@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, Tray } from "electron";
 
 import psList from "ps-list";
 import { spawn } from "child_process";
@@ -20,9 +20,14 @@ if (require("electron-squirrel-startup")) {
 
 const scheduleFileManager = new ScheduleFileManager();
 const pathToRunner = join(__dirname, "extraResources", "runner.exe");
-console.log(__dirname);
-
-function createWindow() {
+let tray = null;
+app.on("ready", () => {
+  const iconPath = resolve(__dirname, "assets/icon.png");
+  console.log(iconPath);
+  tray = new Tray(iconPath);
+  tray.setToolTip("scheduler");
+  const contextMenu = Menu.buildFromTemplate([{ label: "quit", type: "radio" }]);
+  tray.setContextMenu(contextMenu);
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1080,
@@ -32,6 +37,7 @@ function createWindow() {
       enableRemoteModule: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
+    title: "scheduler",
     frame: false,
   });
   // app.getPath(MAIN_WINDOW_WEBPACK_ENTRY);
@@ -85,8 +91,7 @@ function createWindow() {
 
   // Open the DevTools.
   win.webContents.openDevTools();
-}
-app.on("ready", createWindow);
+});
 
 /**
  * this function opens up the log file for viewing

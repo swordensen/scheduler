@@ -6,7 +6,7 @@ module.exports = [
   new CopyWebpackPlugin({
     patterns: [
       {
-        from: join("src", "assets"),
+        from: join("src", "renderer", "assets"),
         to: "assets",
         globOptions: {
           ignore: [".gitkeep"],
