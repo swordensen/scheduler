@@ -7,6 +7,7 @@ import { ipcRenderer, remote } from "electron";
 
 import "./clock";
 import { MDCLinearProgress } from "@material/linear-progress";
+import { MDCSelect } from "@material/select";
 
 const scheduleContainer = document.getElementById("schedule");
 
@@ -54,42 +55,39 @@ function renderSchedule(schedule: readonly Task[]) {
   });
   linearProgress.close();
 }
-const taskElem = document.querySelector("#task");
-if (taskElem) {
-  const textField = new MDCTextField(taskElem);
-}
+// initialize elements
 
-const nameElem = document.querySelector("#name");
-if (nameElem) {
-  const textField = new MDCTextField(nameElem);
-}
+const commandElem = document.querySelector("#command") as HTMLElement;
+const commandField = new MDCTextField(commandElem);
 
-const intervalElem = document.querySelector("#interval");
-if (intervalElem) {
-  const textField = new MDCTextField(intervalElem);
-}
+const nameElem = document.querySelector("#name") as HTMLElement;
+const nameField = new MDCTextField(nameElem);
 
-const descriptionElem = document.querySelector("#description");
-if (descriptionElem) {
-  const textField = new MDCTextField(descriptionElem);
-}
+const intervalElem = document.querySelector("#interval") as HTMLElement;
+const intervalSelect = new MDCSelect(intervalElem);
 
-const topAppBarElement = document.querySelector(".mdc-top-app-bar");
-if (topAppBarElement) {
-  const topAppBar = new MDCTopAppBar(topAppBarElement);
-}
+const descriptionElem = document.querySelector("#description") as HTMLElement;
+const descriptionField = new MDCTextField(descriptionElem);
 
-const form = document.querySelector("#taskForm");
-if (form) {
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const formData = new FormData(form as HTMLFormElement);
-    const data: any = Object.fromEntries(formData.entries());
-    data.interval = parseInt(data.interval);
-    ipcRenderer.send("add-task", data);
-    linearProgress.open();
+const topAppBarElement = document.querySelector(".mdc-top-app-bar") as HTMLElement;
+const topAppBar = new MDCTopAppBar(topAppBarElement);
+
+const form = document.querySelector("#taskForm") as HTMLFormElement;
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const command = commandField.value;
+  const name = nameField.value;
+  const interval = intervalSelect.value;
+  const description = descriptionField.value;
+
+  ipcRenderer.send("add-task", {
+    command,
+    name,
+    interval: parseInt(interval),
+    description,
   });
-}
+  linearProgress.open();
+});
 
 (window as any).deleteTask = (index: number) => {
   ipcRenderer.send("delete-task", index);
@@ -100,15 +98,13 @@ if (form) {
   ipcRenderer.send("open-log", index);
 };
 
-const commandElem = document.querySelector("#command") as HTMLInputElement;
+const commandInputElem = document.querySelector("#commandInput") as HTMLInputElement;
 const browseButtonElem = document.querySelector("#browse") as HTMLButtonElement;
-if (browseButtonElem) {
-  browseButtonElem.onclick = async (e) => {
-    e.preventDefault();
-    const response = await remote.dialog.showOpenDialog({ properties: ["openFile"] });
-    commandElem.value = response.filePaths[0] || "";
-  };
-}
+browseButtonElem.onclick = async (e) => {
+  e.preventDefault();
+  const response = await remote.dialog.showOpenDialog({ properties: ["openFile"] });
+  commandInputElem.value = response.filePaths[0] || "";
+};
 
 const minimizeButton = document.querySelector("#minimize") as HTMLButtonElement;
 const maximizeButton = document.querySelector("#maximize") as HTMLButtonElement;
