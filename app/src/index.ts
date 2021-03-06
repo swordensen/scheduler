@@ -20,6 +20,9 @@ if (require("electron-squirrel-startup")) {
 
 const scheduleFileManager = new ScheduleFileManager();
 let tray = null;
+app.setLoginItemSettings({
+  openAtLogin: true,
+});
 app.on("ready", () => {
   const iconPath = resolve(__dirname, "assets/icon.png");
   tray = new Tray(iconPath);
