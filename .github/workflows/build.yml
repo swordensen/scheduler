@@ -13,7 +13,7 @@ jobs:
         working-directory: ./app
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-18.04, windows-latest]
 
     steps:
       - name: Check out Git repository
