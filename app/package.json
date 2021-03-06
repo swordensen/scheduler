@@ -6,6 +6,7 @@
   "authors": "michael sorensen",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build-css && npm run build-renderer && npm run build-main",
     "build-css": "webpack -w -c webpack.style.config.js",
     "build-main": "cross-env ENVIRONMENT=electron webpack -c webpack.main.js",
     "build-renderer": "webpack -c webpack.config.js",

@@ -4,6 +4,7 @@ export interface Task {
   command: string;
   interval: number | "startup";
   lastExecuted: number;
+  running: boolean;
 }
 
 export type Schedule = Task[];
