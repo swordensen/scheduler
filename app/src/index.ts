@@ -6,9 +6,9 @@ import { existsSync } from "fs";
 import { resolve } from "path";
 import { logFolder } from "./fileManager/defaults";
 import open from "open";
-import scheduleRunner from "./runner";
+import ScheduleRunner from "./runner";
 
-new scheduleRunner();
+const scheduleRunner = new ScheduleRunner();
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: any;
@@ -68,6 +68,10 @@ app.on("ready", () => {
 
   ipcMain.on("delete-task", (event, index) => {
     scheduleFileManager.deleteTask(index);
+  });
+
+  ipcMain.on("start-task", (event, index) => {
+    scheduleRunner.startTaskNow(index);
   });
 
   ipcMain.on("open-log", (event, index) => {

@@ -27,28 +27,27 @@
           </button>
         </section>
       </div>
-      <div
-        id="loader"
-        role="progressbar"
-        class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed"
-        aria-label="Example Progress Bar"
-        aria-valuemin="0"
-        aria-valuemax="1"
-        aria-valuenow="0"
-      >
-        <div class="mdc-linear-progress__buffer">
-          <div class="mdc-linear-progress__buffer-bar"></div>
-          <div class="mdc-linear-progress__buffer-dots"></div>
-        </div>
-        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-          <span class="mdc-linear-progress__bar-inner"></span>
-        </div>
-        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-          <span class="mdc-linear-progress__bar-inner"></span>
-        </div>
-      </div>
     </header>
-
+    <div
+      id="loader"
+      role="progressbar"
+      class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed"
+      aria-label="Example Progress Bar"
+      aria-valuemin="0"
+      aria-valuemax="1"
+      aria-valuenow="0"
+    >
+      <div class="mdc-linear-progress__buffer">
+        <div class="mdc-linear-progress__buffer-bar"></div>
+        <div class="mdc-linear-progress__buffer-dots"></div>
+      </div>
+      <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+        <span class="mdc-linear-progress__bar-inner"></span>
+      </div>
+      <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+        <span class="mdc-linear-progress__bar-inner"></span>
+      </div>
+    </div>
     <main class="mdc-top-app-bar--fixed-adjust">
       <aside id="schedule"></aside>
       <div>
@@ -131,7 +130,8 @@
                         data-value="86400000"
                         role="option"
                       >
-                        <span class="mdc-list-item__ripple">Daily</span>
+                        <span class="mdc-list-item__ripple"></span>
+                        <span class="mdc-list-item__text"> Daily </span>
                       </li>
                       <li class="mdc-list-item" aria-selected="trie" data-value="604800000" role="option">
                         <span class="mdc-list-item__ripple"></span>
