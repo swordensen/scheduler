@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Scheduler"
-#define MyAppVersion "0.0.3"
+#define MyAppVersion "0.0.4"
 #define MyAppPublisher "Michael Sorensen"
 #define MyAppURL "https://michaelsorensen.dev"
 #define MyAppExeName "scheduler.exe"
@@ -40,8 +40,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "F:\Projects\scheduler\GUI\out\scheduler-win32-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "F:\Projects\scheduler\GUI\out\scheduler-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "F:\Projects\scheduler\APP\out\scheduler-win32-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "F:\Projects\scheduler\APP\out\scheduler-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
@@ -54,7 +54,7 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\resources\app\.webpack\main\extraResources\runner.exe"; WorkingDir: "{app}"
+Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
 
 
 [Run]
