@@ -8,9 +8,6 @@ on:
 jobs:
   release:
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ./app
     strategy:
       matrix:
         os: [macos-latest, ubuntu-18.04, windows-latest]
@@ -23,7 +20,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
-
+      - name: Move contents up a directory?
+        runs: mv ./app/* .
       - name: List contents of current directory?
         run: ls -a .
       - name: Build/release Electron app
