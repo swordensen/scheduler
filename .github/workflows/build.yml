@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 10
       - name: Move app contents up a directory
-        run: mv app/* .
+        run: mv ./app/* .
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
