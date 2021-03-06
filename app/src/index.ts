@@ -42,6 +42,7 @@ app.on("ready", () => {
     height: 720,
     webPreferences: {
       // contextIsolation: true,
+      devTools: false,
       nodeIntegration: true,
       enableRemoteModule: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
