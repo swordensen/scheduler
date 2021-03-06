@@ -8,7 +8,9 @@ on:
 jobs:
   release:
     runs-on: ${{ matrix.os }}
-
+    defaults:
+      run:
+        working-directory: ./app
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -24,7 +26,6 @@ jobs:
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
-        working-directory: ./app
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
