@@ -23,8 +23,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
-      - name: Move app contents up a directory
-        run: mv ./app/* .
+
+      - name: List contents of current directory?
+        run: ls -a .
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
