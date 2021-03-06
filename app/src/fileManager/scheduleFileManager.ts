@@ -100,12 +100,25 @@ export class ScheduleFileManager {
    * @param index
    * @param lastExecuted
    */
-  public updateLastExecutedTime(index: number, lastExecuted: number) {
+  public startTask(index: number) {
     this._schedule = this.schedule.map((task, i) => {
       if (index == i) {
         return {
           ...task,
-          lastExecuted,
+          running: true,
+          lastExecuted: Date.now(),
+        };
+      }
+      return task;
+    });
+  }
+
+  public endTask(index: number) {
+    this._schedule = this.schedule.map((task, i) => {
+      if (index == i) {
+        return {
+          ...task,
+          running: false,
         };
       }
       return task;

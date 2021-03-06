@@ -128,12 +128,27 @@ aside {
   justify-content: space-between;
   align-items: center;
   padding: 0.5em;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0);
+  &.active {
+    animation: taskPulse 3s infinite;
+  }
+  .taskDetails {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   p {
     margin: 0.5em 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
+  }
+  .actions {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
   }
 }
 
@@ -175,4 +190,18 @@ form {
 }
 #runningStatus.notrunning {
   color: $error;
+}
+
+@keyframes taskPulse {
+  0% {
+    border-color: rgba(0, 0, 0, 0);
+  }
+
+  50% {
+    border-color: $secondary;
+  }
+
+  100% {
+    border-color: rgba(0, 0, 0, 0);
+  }
 }

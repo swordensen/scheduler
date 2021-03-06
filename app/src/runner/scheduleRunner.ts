@@ -26,14 +26,28 @@ export class ScheduleRunner {
       this.schedule.forEach((task, index) => {
         LOGGER.info(`checking task ${task.name}`);
         if (this.timeToRun(task)) {
-          LOGGER.info(`attempting to run task ${task.name}`);
-          const process = exec(task.command);
-          taskLogger(task, process); //investigate potential memory leak
-          this.scheduleFileManager.updateLastExecutedTime(index, Date.now());
+          this.startTask(task, index);
         }
       });
       LOGGER.info("MAIN INTERVAL LOOP END");
     }, this.INTERVAL_PERIOD);
+  }
+
+  public startTaskNow(index: number) {
+    const task = this.schedule[index];
+    LOGGER.info(`attempting to run task ${task.name}`);
+    const process = exec(task.command);
+    taskLogger(task, process); //investigate potential memory leak
+    process.on("exit", () => this.scheduleFileManager.endTask(index));
+    this.scheduleFileManager.startTask(index);
+  }
+
+  private startTask(task: Task, index: number) {
+    LOGGER.info(`attempting to run task ${task.name}`);
+    const process = exec(task.command);
+    taskLogger(task, process); //investigate potential memory leak
+    process.on("exit", () => this.scheduleFileManager.endTask(index));
+    this.scheduleFileManager.startTask(index);
   }
 
   /**

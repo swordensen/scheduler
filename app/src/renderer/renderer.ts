@@ -25,15 +25,23 @@ function renderSchedule(schedule: readonly Task[]) {
     if (task.interval === "startup") return;
     const taskElem = document.createElement("div");
     taskElem.classList.add("mdc-card");
+    taskElem.classList.add("task");
+    if (task.running) taskElem.classList.add("active");
     const scheduled = new Date(task.lastExecuted + task.interval);
     taskElem.innerHTML = `
-          <div class="task">
             <div class="taskDetails">
               <p>${task.name}</p>
               <p>${task.command}</p>
               <p>${scheduled.toLocaleString()}</p>
             </div>
-            <div>
+            <div class="actions">
+              <div class="mdc-touch-target-wrapper">
+                <button class="mdc-fab mdc-fab--mini mdc-fab--touch" onclick="startTask(${i})">
+                  <div class="mdc-fab__ripple"></div>
+                  <span class="material-icons mdc-fab__icon">play_arrow</span>
+                  <div class="mdc-fab__touch"></div>
+                </button>
+              </div>
               <div class="mdc-touch-target-wrapper">
                 <button class="mdc-fab mdc-fab--mini mdc-fab--touch" onclick="openLog(${i})">
                   <div class="mdc-fab__ripple"></div>
@@ -49,7 +57,6 @@ function renderSchedule(schedule: readonly Task[]) {
                 </button>
               </div>
             </div>
-          </div>
           `;
     scheduleContainer.append(taskElem);
   });
@@ -98,12 +105,16 @@ form.addEventListener("submit", (event) => {
   ipcRenderer.send("open-log", index);
 };
 
-const commandInputElem = document.querySelector("#commandInput") as HTMLInputElement;
+(window as any).startTask = (index: number) => {
+  ipcRenderer.send("start-task", index);
+  linearProgress.open();
+};
+
 const browseButtonElem = document.querySelector("#browse") as HTMLButtonElement;
 browseButtonElem.onclick = async (e) => {
   e.preventDefault();
   const response = await remote.dialog.showOpenDialog({ properties: ["openFile"] });
-  commandInputElem.value = response.filePaths[0] || "";
+  commandField.value = response.filePaths[0] || "";
 };
 
 const minimizeButton = document.querySelector("#minimize") as HTMLButtonElement;
