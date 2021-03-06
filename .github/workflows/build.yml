@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 10
       - name: Move contents up a directory?
-        runs: mv ./app/* .
+        run: mv ./app/* .
       - name: List contents of current directory?
         run: ls -a .
       - name: Build/release Electron app
