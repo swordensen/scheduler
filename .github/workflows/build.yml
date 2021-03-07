@@ -20,6 +20,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
+
+      - name: Install packages
+        working-directory: ./app
+        run: npm install
+
       - name: Publish Build to Github
         working-directory: ./app
         run: npm run publish
