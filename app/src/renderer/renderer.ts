@@ -134,7 +134,7 @@ maximizeButton.addEventListener("click", () => {
 });
 
 closeButton.addEventListener("click", () => {
-  remote.getCurrentWindow().close();
+  remote.getCurrentWindow().hide();
 });
 
 ipcRenderer.send("get-schedule");
