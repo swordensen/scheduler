@@ -1,5 +1,5 @@
+require("update-electron-app")();
 import { app, BrowserWindow, ipcMain, Menu, Tray } from "electron";
-
 import { ScheduleFileManager } from "./fileManager/scheduleFileManager";
 import { Task } from "./fileManager/types";
 import { existsSync } from "fs";
@@ -45,7 +45,7 @@ app.on("ready", () => {
     height: 720,
     webPreferences: {
       // contextIsolation: true,
-      devTools: true,
+      devTools: !app.isPackaged,
       nodeIntegration: true,
       enableRemoteModule: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
