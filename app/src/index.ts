@@ -1,5 +1,5 @@
+require("update-electron-app")();
 import { app, BrowserWindow, ipcMain, Menu, Tray } from "electron";
-
 import { ScheduleFileManager } from "./fileManager/scheduleFileManager";
 import { Task } from "./fileManager/types";
 import { existsSync } from "fs";

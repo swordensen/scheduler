@@ -60,11 +60,24 @@
     "electron-squirrel-startup": "^1.0.0",
     "open": "^7.4.2",
     "resolve-url-loader": "^3.1.2",
+    "update-electron-app": "^2.0.1",
     "winston": "^3.3.3"
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "osxSign": {
+          "identity": "Developer ID Application: Felix Rieseberg (LT94ZKYDCJ)",
+          "hardened-runtime": true,
+          "entitlements": "entitlements.plist",
+          "entitlements-inherit": "entitlements.plist",
+          "signature-flags": "library"
+        },
+        "osxNotarize": {
+          "appleId": "felix@felix.fun",
+          "appleIdPassword": "my-apple-id-password"
+        }
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
