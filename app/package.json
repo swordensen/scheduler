@@ -67,15 +67,15 @@
     "forge": {
       "packagerConfig": {
         "osxSign": {
-          "identity": "Developer ID Application: Felix Rieseberg (LT94ZKYDCJ)",
+          "identity": "",
           "hardened-runtime": true,
           "entitlements": "entitlements.plist",
           "entitlements-inherit": "entitlements.plist",
-          "signature-flags": "library"
+          "signature-flags": ""
         },
         "osxNotarize": {
-          "appleId": "felix@felix.fun",
-          "appleIdPassword": "my-apple-id-password"
+          "appleId": "",
+          "appleIdPassword": ""
         }
       },
       "makers": [
