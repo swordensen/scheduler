@@ -8,3 +8,4 @@ Output
 out
 .webpack
 mysetup.exe
+.env
