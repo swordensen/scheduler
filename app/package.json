@@ -76,7 +76,10 @@
         "osxNotarize": {
           "appleId": "",
           "appleIdPassword": ""
-        }
+        },
+        "extraResource": [
+          "./extraResources/win/memurai.exe"
+        ]
       },
       "makers": [
         {
