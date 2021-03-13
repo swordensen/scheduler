@@ -7,6 +7,7 @@ import { resolve } from "path";
 import { logFolder } from "./fileManager/defaults";
 import open from "open";
 import ScheduleRunner from "./runner";
+import "./redisServer";
 
 const scheduleRunner = new ScheduleRunner();
 
