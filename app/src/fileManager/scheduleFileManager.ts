@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, watchFile, writeFileSync } from "fs";
 import { scheduleFile } from "./defaults";
 import { LOGGER } from "./logger";
-import { Schedule, Task } from "./types";
+import { Schedule, Task } from "../types";
 /**
  * this singleton is responsible for managing the schedule file to ensure no
  * race conditions
@@ -84,7 +84,7 @@ export class ScheduleFileManager {
   }
 
   public updateTask(index: number, updatedTask: Partial<Task>) {
-    this._schedule = this.schedule.map((task, i) => {
+    this._schedule = this.schedule.map((task: Task, i: number) => {
       if (index == i) {
         return {
           ...task,
@@ -101,7 +101,7 @@ export class ScheduleFileManager {
    * @param lastExecuted
    */
   public startTask(index: number) {
-    this._schedule = this.schedule.map((task, i) => {
+    this._schedule = this.schedule.map((task: Task, i: number) => {
       if (index == i) {
         return {
           ...task,
@@ -114,7 +114,7 @@ export class ScheduleFileManager {
   }
 
   public endTask(index: number) {
-    this._schedule = this.schedule.map((task, i) => {
+    this._schedule = this.schedule.map((task: Task, i: number) => {
       if (index == i) {
         return {
           ...task,

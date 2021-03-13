@@ -4,7 +4,7 @@ import { resolve } from "path";
 import { createLogger, format } from "winston";
 import { Console, File } from "winston/lib/winston/transports";
 import { logFolder } from "./defaults";
-import { Task } from "./types";
+import { Task } from "../types";
 
 export const LOGGER = createLogger({
   level: "info",

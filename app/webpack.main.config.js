@@ -24,6 +24,9 @@ module.exports = {
       ],
     }),
   ],
+  node: {
+    __dirname: true,
+  },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
     alias: {

@@ -1,4 +1,4 @@
-import { Task } from "../fileManager/types";
+import { Task } from "../types";
 import { exec } from "child_process";
 import { ScheduleFileManager } from "../fileManager/scheduleFileManager";
 import LOGGER, { taskLogger } from "../fileManager/logger";
@@ -23,7 +23,7 @@ export class ScheduleRunner {
   private mainInterval(): NodeJS.Timeout {
     return setInterval(() => {
       LOGGER.info("MAIN INTERVAL LOOP");
-      this.schedule.forEach((task, index) => {
+      this.schedule.forEach((task: Task, index: number) => {
         LOGGER.info(`checking task ${task.name}`);
         if (this.timeToRun(task)) {
           this.startTask(task, index);
@@ -56,11 +56,8 @@ export class ScheduleRunner {
    * @param schedule
    */
   private timeToRun(task: Task): boolean {
-    if (task.interval !== "startup") {
-      const currentTime = Date.now();
-      const scheduledTime = task.lastExecuted + task.interval;
-      if (currentTime > scheduledTime) return true;
-    }
-    return false;
+    const currentTime = Date.now();
+    const scheduledTime = task.lastExecuted + task.interval;
+    if (currentTime > scheduledTime) return true;
   }
 }

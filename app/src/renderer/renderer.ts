@@ -1,6 +1,6 @@
 import "./styles.scss";
 
-import { Task } from "../fileManager/types";
+import { Task } from "../types";
 import { MDCTextField } from "@material/textfield";
 import { MDCTopAppBar } from "@material/top-app-bar";
 import { ipcRenderer, remote } from "electron";
@@ -22,7 +22,6 @@ function renderSchedule(schedule: readonly Task[]) {
   if (!scheduleContainer) return;
   scheduleContainer.innerHTML = "";
   schedule.forEach((task: Task, i: number) => {
-    if (task.interval === "startup") return;
     const taskElem = document.createElement("div");
     taskElem.classList.add("mdc-card");
     taskElem.classList.add("task");

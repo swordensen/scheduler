@@ -1,15 +1,14 @@
 require("update-electron-app")();
+try {
+  require("electron-reloader")(module);
+} catch {}
 import { app, BrowserWindow, ipcMain, Menu, Tray } from "electron";
-import { ScheduleFileManager } from "./fileManager/scheduleFileManager";
-import { Task } from "./fileManager/types";
+import { Task } from "./types";
 import { existsSync } from "fs";
 import { resolve } from "path";
-import { logFolder } from "./fileManager/defaults";
 import open from "open";
-import ScheduleRunner from "./runner";
 import "./redisServer";
-
-const scheduleRunner = new ScheduleRunner();
+import { JobQueue } from "./redisServer";
 
 const shouldHide = process.argv[2];
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
@@ -20,7 +19,6 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
-const scheduleFileManager = new ScheduleFileManager();
 let tray = null;
 app.setLoginItemSettings({
   openAtLogin: true,
@@ -71,34 +69,41 @@ app.on("ready", () => {
   // app.getPath(MAIN_WINDOW_WEBPACK_ENTRY);
   // and load the index.html of the app.
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  win.webContents.once("dom-ready", () => {
-    win.webContents.send("schedule", scheduleFileManager.schedule);
+  win.webContents.once("dom-ready", async () => {
+    await JobQueue.waitUntilReady();
+    const jobs = await JobQueue.getWaiting();
+    console.log("jobs", jobs);
+    const jobData = await Promise.all(jobs.map((job) => JobQueue.getJob(job.id)));
+    console.log(jobData);
+    const taskData = jobData.map((job) => job?.data);
+    console.log(taskData);
+    // console.log("taskData", taskData);
+    // win.webContents.send("schedule", taskData);
   });
 
-  ipcMain.on("add-task", (event, task) => {
-    scheduleFileManager.addTask(task);
+  ipcMain.on("add-task", async (event, task: Task) => {
+    console.log("trying to add task", task);
+    console.log(ranStr());
+    await JobQueue.add("task", task, {
+      repeat: {
+        every: task.interval,
+        jobId: ranStr(),
+      },
+      jobId: ranStr(),
+    });
+    const jobs = await JobQueue.getRepeatableJobs();
+    console.log(jobs);
   });
 
-  ipcMain.on("delete-task", (event, index) => {
-    scheduleFileManager.deleteTask(index);
-  });
+  ipcMain.on("delete-task", (event, index) => {});
 
-  ipcMain.on("start-task", (event, index) => {
-    scheduleRunner.startTaskNow(index);
-  });
+  ipcMain.on("start-task", (event, index) => {});
 
   ipcMain.on("open-log", (event, index) => {
-    const task = scheduleFileManager.schedule[index];
-    openLogFile(task);
+    openLogFile("");
   });
 
-  ipcMain.on("get-schedule", (event) => {
-    win.webContents.send("schedule", scheduleFileManager.schedule);
-  });
-
-  scheduleFileManager.onChange((schedule) => {
-    win.webContents.send("schedule", schedule);
-  });
+  ipcMain.on("get-schedule", (event) => {});
 
   // Open the DevTools.
   win.webContents.openDevTools();
@@ -107,7 +112,11 @@ app.on("ready", () => {
 /**
  * this function opens up the log file for viewing
  */
-export function openLogFile(task: Task) {
-  const path = resolve(logFolder, `./commands/${task.name}.log`);
+export function openLogFile(task: string) {
+  const path = "";
   if (existsSync(path)) open(path);
+}
+
+export function ranStr() {
+  return Math.random().toString().substr(2, 12);
 }

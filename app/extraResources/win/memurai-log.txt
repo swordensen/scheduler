@@ -1,0 +1,215 @@
+[6380] 12 Mar 15:16:57.294 # --- Memurai is starting ---
+[6380] 12 Mar 15:16:57.294 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=6380, just started
+[6380] 12 Mar 15:16:57.295 # Service-name=Memurai
+[6380] 12 Mar 15:16:57.295 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[6380] 12 Mar 15:16:57.295 # Configuration loaded
+[6380] 12 Mar 15:16:57.297 * Running mode=standalone, port=6379.
+[6380] 12 Mar 15:16:57.302 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[6380] 12 Mar 15:16:57.302 # Server initialized
+[6380] 12 Mar 15:16:57.414 * Ready to accept connections
+[6380] 12 Mar 17:44:24.540 * 1 changes in 900 seconds. Saving...
+[6380] 12 Mar 17:44:24.543 * Background saving started by pid 18028
+[18028] 12 Mar 17:44:24.630 * DB saved on disk
+[6380] 12 Mar 17:44:24.647 * Background saving terminated with success
+[6380] 12 Mar 17:50:31.686 * 10 changes in 300 seconds. Saving...
+[6380] 12 Mar 17:50:31.689 * Background saving started by pid 17728
+[17728] 12 Mar 17:50:31.775 * DB saved on disk
+[6380] 12 Mar 17:50:31.795 * Background saving terminated with success
+[18108] 12 Mar 20:42:59.860 # --- Memurai is starting ---
+[18108] 12 Mar 20:42:59.861 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=18108, just started
+[18108] 12 Mar 20:42:59.861 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[18108] 12 Mar 20:42:59.861 # Configuration loaded
+[18108] 12 Mar 20:42:59.864 * Running mode=standalone, port=9001.
+[18108] 12 Mar 20:42:59.869 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[18108] 12 Mar 20:42:59.869 # Server initialized
+[18108] 12 Mar 20:42:59.869 * Ready to accept connections
+[18028] 12 Mar 20:44:44.182 # --- Memurai is starting ---
+[18028] 12 Mar 20:44:44.182 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=18028, just started
+[18028] 12 Mar 20:44:44.182 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[18028] 12 Mar 20:44:44.182 # Configuration loaded
+[18028] 12 Mar 20:44:44.184 * Running mode=standalone, port=9001.
+[18028] 12 Mar 20:44:44.189 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[18028] 12 Mar 20:44:44.189 # Server initialized
+[18028] 12 Mar 20:44:44.190 * Ready to accept connections
+[7468] 12 Mar 20:52:13.959 # --- Memurai is starting ---
+[7468] 12 Mar 20:52:13.959 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=7468, just started
+[7468] 12 Mar 20:52:13.960 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[7468] 12 Mar 20:52:13.960 # Configuration loaded
+[7468] 12 Mar 20:52:13.963 * Running mode=standalone, port=9001.
+[7468] 12 Mar 20:52:13.969 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[7468] 12 Mar 20:52:13.969 # Server initialized
+[7468] 12 Mar 20:52:13.969 * Ready to accept connections
+[7292] 12 Mar 20:54:11.338 # --- Memurai is starting ---
+[7292] 12 Mar 20:54:11.338 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=7292, just started
+[7292] 12 Mar 20:54:11.338 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[7292] 12 Mar 20:54:11.338 # Configuration loaded
+[7292] 12 Mar 20:54:11.342 * Running mode=standalone, port=9001.
+[7292] 12 Mar 20:54:11.349 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[7292] 12 Mar 20:54:11.349 # Server initialized
+[7292] 12 Mar 20:54:11.350 * Ready to accept connections
+[14460] 12 Mar 20:54:27.911 # --- Memurai is starting ---
+[14460] 12 Mar 20:54:27.912 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=14460, just started
+[14460] 12 Mar 20:54:27.912 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[14460] 12 Mar 20:54:27.912 # Configuration loaded
+[14460] 12 Mar 20:54:27.915 * Running mode=standalone, port=9001.
+[14460] 12 Mar 20:54:27.921 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[14460] 12 Mar 20:54:27.921 # Server initialized
+[14460] 12 Mar 20:54:27.922 * DB loaded from append only file: 0.001 seconds
+[14460] 12 Mar 20:54:27.923 * Ready to accept connections
+[11300] 12 Mar 20:58:00.276 # --- Memurai is starting ---
+[11300] 12 Mar 20:58:00.277 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=11300, just started
+[11300] 12 Mar 20:58:00.277 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[11300] 12 Mar 20:58:00.277 # Configuration loaded
+[11300] 12 Mar 20:58:00.279 * Running mode=standalone, port=9001.
+[11300] 12 Mar 20:58:00.286 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[11300] 12 Mar 20:58:00.286 # Server initialized
+[11300] 12 Mar 20:58:00.288 * DB loaded from append only file: 0.001 seconds
+[11300] 12 Mar 20:58:00.288 * Ready to accept connections
+[3648] 12 Mar 20:59:41.356 # --- Memurai is starting ---
+[3648] 12 Mar 20:59:41.357 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=3648, just started
+[3648] 12 Mar 20:59:41.357 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[3648] 12 Mar 20:59:41.357 # Configuration loaded
+[3648] 12 Mar 20:59:41.360 * Running mode=standalone, port=9001.
+[3648] 12 Mar 20:59:41.366 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[3648] 12 Mar 20:59:41.366 # Server initialized
+[3648] 12 Mar 20:59:41.367 * DB loaded from append only file: 0.001 seconds
+[3648] 12 Mar 20:59:41.367 * Ready to accept connections
+[3648] 12 Mar 21:04:42.003 * 10 changes in 300 seconds. Saving...
+[3648] 12 Mar 21:04:42.007 * Background saving started by pid 15972
+[15972] 12 Mar 21:04:42.136 * DB saved on disk
+[3648] 12 Mar 21:04:42.220 * Background saving terminated with success
+[13644] 12 Mar 21:07:57.315 # --- Memurai is starting ---
+[13644] 12 Mar 21:07:57.315 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=13644, just started
+[13644] 12 Mar 21:07:57.315 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[13644] 12 Mar 21:07:57.315 # Configuration loaded
+[13644] 12 Mar 21:07:57.318 * Running mode=standalone, port=9001.
+[13644] 12 Mar 21:07:57.324 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[13644] 12 Mar 21:07:57.324 # Server initialized
+[13644] 12 Mar 21:07:57.325 * DB loaded from append only file: 0.001 seconds
+[13644] 12 Mar 21:07:57.325 * Ready to accept connections
+[15852] 12 Mar 21:08:54.824 # --- Memurai is starting ---
+[15852] 12 Mar 21:08:54.824 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=15852, just started
+[15852] 12 Mar 21:08:54.824 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[15852] 12 Mar 21:08:54.824 # Configuration loaded
+[15852] 12 Mar 21:08:54.827 * Running mode=standalone, port=9001.
+[15852] 12 Mar 21:08:54.832 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[15852] 12 Mar 21:08:54.832 # Server initialized
+[15852] 12 Mar 21:08:54.834 * DB loaded from append only file: 0.001 seconds
+[15852] 12 Mar 21:08:54.834 * Ready to accept connections
+[7704] 12 Mar 21:09:58.145 # --- Memurai is starting ---
+[7704] 12 Mar 21:09:58.145 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=7704, just started
+[7704] 12 Mar 21:09:58.145 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[7704] 12 Mar 21:09:58.145 # Configuration loaded
+[7704] 12 Mar 21:09:58.148 * Running mode=standalone, port=9001.
+[7704] 12 Mar 21:09:58.153 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[7704] 12 Mar 21:09:58.153 # Server initialized
+[7704] 12 Mar 21:09:58.154 * DB loaded from append only file: 0.001 seconds
+[7704] 12 Mar 21:09:58.154 * Ready to accept connections
+[7992] 12 Mar 21:10:31.641 # --- Memurai is starting ---
+[7992] 12 Mar 21:10:31.641 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=7992, just started
+[7992] 12 Mar 21:10:31.641 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[7992] 12 Mar 21:10:31.641 # Configuration loaded
+[7992] 12 Mar 21:10:31.644 * Running mode=standalone, port=9001.
+[7992] 12 Mar 21:10:31.648 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[7992] 12 Mar 21:10:31.649 # Server initialized
+[7992] 12 Mar 21:10:31.650 * DB loaded from append only file: 0.001 seconds
+[7992] 12 Mar 21:10:31.650 * Ready to accept connections
+[16164] 12 Mar 21:13:10.150 # --- Memurai is starting ---
+[16164] 12 Mar 21:13:10.151 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=16164, just started
+[16164] 12 Mar 21:13:10.151 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[16164] 12 Mar 21:13:10.151 # Configuration loaded
+[16164] 12 Mar 21:13:10.154 * Running mode=standalone, port=9001.
+[16164] 12 Mar 21:13:10.159 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[16164] 12 Mar 21:13:10.159 # Server initialized
+[16164] 12 Mar 21:13:10.160 * DB loaded from append only file: 0.001 seconds
+[16164] 12 Mar 21:13:10.160 * Ready to accept connections
+[15288] 12 Mar 21:17:08.932 # --- Memurai is starting ---
+[15288] 12 Mar 21:17:08.932 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=15288, just started
+[15288] 12 Mar 21:17:08.932 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[15288] 12 Mar 21:17:08.933 # Configuration loaded
+[15288] 12 Mar 21:17:08.935 * Running mode=standalone, port=9001.
+[15288] 12 Mar 21:17:08.941 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[15288] 12 Mar 21:17:08.941 # Server initialized
+[15288] 12 Mar 21:17:08.942 * DB loaded from append only file: 0.001 seconds
+[15288] 12 Mar 21:17:08.942 * Ready to accept connections
+[10660] 12 Mar 21:18:17.736 # --- Memurai is starting ---
+[10660] 12 Mar 21:18:17.736 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=10660, just started
+[10660] 12 Mar 21:18:17.737 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[10660] 12 Mar 21:18:17.737 # Configuration loaded
+[10660] 12 Mar 21:18:17.739 * Running mode=standalone, port=9001.
+[10660] 12 Mar 21:18:17.745 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[10660] 12 Mar 21:18:17.745 # Server initialized
+[10660] 12 Mar 21:18:17.747 * DB loaded from append only file: 0.001 seconds
+[10660] 12 Mar 21:18:17.747 * Ready to accept connections
+[4424] 12 Mar 21:22:11.333 # --- Memurai is starting ---
+[4424] 12 Mar 21:22:11.333 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=4424, just started
+[4424] 12 Mar 21:22:11.333 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[4424] 12 Mar 21:22:11.333 # Configuration loaded
+[4424] 12 Mar 21:22:11.336 * Running mode=standalone, port=9001.
+[4424] 12 Mar 21:22:11.341 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[4424] 12 Mar 21:22:11.341 # Server initialized
+[4424] 12 Mar 21:22:11.342 * DB loaded from append only file: 0.001 seconds
+[4424] 12 Mar 21:22:11.342 * Ready to accept connections
+[13828] 12 Mar 21:22:35.046 # --- Memurai is starting ---
+[13828] 12 Mar 21:22:35.047 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=13828, just started
+[13828] 12 Mar 21:22:35.047 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[13828] 12 Mar 21:22:35.047 # Configuration loaded
+[13828] 12 Mar 21:22:35.049 * Running mode=standalone, port=9001.
+[13828] 12 Mar 21:22:35.054 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[13828] 12 Mar 21:22:35.054 # Server initialized
+[13828] 12 Mar 21:22:35.055 * DB loaded from append only file: 0.001 seconds
+[13828] 12 Mar 21:22:35.055 * Ready to accept connections
+[14256] 12 Mar 21:23:34.951 # --- Memurai is starting ---
+[14256] 12 Mar 21:23:34.951 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=14256, just started
+[14256] 12 Mar 21:23:34.952 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[14256] 12 Mar 21:23:34.952 # Configuration loaded
+[14256] 12 Mar 21:23:34.955 * Running mode=standalone, port=9001.
+[14256] 12 Mar 21:23:34.960 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[14256] 12 Mar 21:23:34.960 # Server initialized
+[14256] 12 Mar 21:23:34.962 * DB loaded from append only file: 0.001 seconds
+[14256] 12 Mar 21:23:34.962 * Ready to accept connections
+[17412] 12 Mar 21:23:51.257 # --- Memurai is starting ---
+[17412] 12 Mar 21:23:51.257 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=17412, just started
+[17412] 12 Mar 21:23:51.257 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[17412] 12 Mar 21:23:51.257 # Configuration loaded
+[17412] 12 Mar 21:23:51.260 * Running mode=standalone, port=9001.
+[17412] 12 Mar 21:23:51.265 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[17412] 12 Mar 21:23:51.265 # Server initialized
+[17412] 12 Mar 21:23:51.266 * DB loaded from append only file: 0.001 seconds
+[17412] 12 Mar 21:23:51.266 * Ready to accept connections
+[12428] 12 Mar 21:26:18.298 # --- Memurai is starting ---
+[12428] 12 Mar 21:26:18.298 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=12428, just started
+[12428] 12 Mar 21:26:18.298 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[12428] 12 Mar 21:26:18.298 # Configuration loaded
+[12428] 12 Mar 21:26:18.301 * Running mode=standalone, port=9001.
+[12428] 12 Mar 21:26:18.307 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[12428] 12 Mar 21:26:18.308 # Server initialized
+[12428] 12 Mar 21:26:18.309 * DB loaded from append only file: 0.001 seconds
+[12428] 12 Mar 21:26:18.309 * Ready to accept connections
+[8308] 12 Mar 21:28:17.383 # --- Memurai is starting ---
+[8308] 12 Mar 21:28:17.383 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=8308, just started
+[8308] 12 Mar 21:28:17.384 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[8308] 12 Mar 21:28:17.384 # Configuration loaded
+[8308] 12 Mar 21:28:17.386 * Running mode=standalone, port=9001.
+[8308] 12 Mar 21:28:17.392 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[8308] 12 Mar 21:28:17.393 # Server initialized
+[8308] 12 Mar 21:28:17.394 * DB loaded from append only file: 0.001 seconds
+[8308] 12 Mar 21:28:17.394 * Ready to accept connections
+[4404] 12 Mar 21:31:06.689 # --- Memurai is starting ---
+[4404] 12 Mar 21:31:06.689 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=4404, just started
+[4404] 12 Mar 21:31:06.689 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[4404] 12 Mar 21:31:06.689 # Configuration loaded
+[4404] 12 Mar 21:31:06.692 * Running mode=standalone, port=9001.
+[4404] 12 Mar 21:31:06.699 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[4404] 12 Mar 21:31:06.699 # Server initialized
+[4404] 12 Mar 21:31:06.701 * DB loaded from append only file: 0.001 seconds
+[4404] 12 Mar 21:31:06.701 * Ready to accept connections
+[12088] 12 Mar 21:31:15.874 # --- Memurai is starting ---
+[12088] 12 Mar 21:31:15.874 # Memurai Developer version=2.0.3, API=5.0.10, instance-name=, pid=12088, just started
+[12088] 12 Mar 21:31:15.874 # Memurai Developer Edition automatically shuts down after 10 days. For more details see: https://www.memurai.com/faq
+[12088] 12 Mar 21:31:15.874 # Configuration loaded
+[12088] 12 Mar 21:31:15.876 * Running mode=standalone, port=9001.
+[12088] 12 Mar 21:31:15.881 # Memurai QID = 9265533BD50FC376;50F696AE99CE0F83;1B33DF420283B826;B39D3088D6C43769
+[12088] 12 Mar 21:31:15.881 # Server initialized
+[12088] 12 Mar 21:31:15.882 * DB loaded from append only file: 0.001 seconds
+[12088] 12 Mar 21:31:15.882 * Ready to accept connections

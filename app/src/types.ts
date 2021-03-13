@@ -2,7 +2,7 @@ export interface Task {
   name: string;
   description?: string;
   command: string;
-  interval: number | "startup";
+  interval: number;
   lastExecuted: number;
   running: boolean;
 }

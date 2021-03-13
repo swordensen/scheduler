@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import { app } from "electron";
 import { createFolderIfNotExist } from "./helpers";
-import { Schedule } from "./types";
+import { Schedule } from "../types";
 
 export const userDataFolder = app.getPath("userData");
 
