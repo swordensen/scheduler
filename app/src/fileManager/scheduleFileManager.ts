@@ -67,7 +67,7 @@ export class ScheduleFileManager {
       ...currentSchedule,
       {
         ...task,
-        lastExecuted: 0,
+        // lastExecuted: 0,
       },
     ];
     return currentSchedule.length;

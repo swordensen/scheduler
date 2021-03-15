@@ -2,9 +2,8 @@ export interface Task {
   name: string;
   description?: string;
   command: string;
-  interval: number;
-  lastExecuted: number;
-  running: boolean;
+  interval?: number;
+  cron?: string;
 }
 
 export type Schedule = Task[];

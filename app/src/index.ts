@@ -69,33 +69,35 @@ app.on("ready", () => {
   // app.getPath(MAIN_WINDOW_WEBPACK_ENTRY);
   // and load the index.html of the app.
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  win.webContents.once("dom-ready", async () => {
+  ipcMain.on("get-jobs", async () => {
     await JobQueue.waitUntilReady();
-    const jobs = await JobQueue.getWaiting();
+    const jobs = await JobQueue.getRepeatableJobs();
     console.log("jobs", jobs);
-    const jobData = await Promise.all(jobs.map((job) => JobQueue.getJob(job.id)));
-    console.log(jobData);
-    const taskData = jobData.map((job) => job?.data);
-    console.log(taskData);
-    // console.log("taskData", taskData);
-    // win.webContents.send("schedule", taskData);
+
+    win.webContents.send("schedule", jobs);
   });
 
   ipcMain.on("add-task", async (event, task: Task) => {
     console.log("trying to add task", task);
     console.log(ranStr());
-    await JobQueue.add("task", task, {
+    await JobQueue.add(task.name, task, {
       repeat: {
         every: task.interval,
-        jobId: ranStr(),
+        cron: task.cron,
       },
-      jobId: ranStr(),
     });
     const jobs = await JobQueue.getRepeatableJobs();
     console.log(jobs);
   });
 
-  ipcMain.on("delete-task", (event, index) => {});
+  ipcMain.on("delete-task", async (event, key: string) => {
+    console.log("trying to delete task", key);
+    try {
+      await JobQueue.removeRepeatableByKey(key);
+    } catch (e) {
+      console.log(e);
+    }
+  });
 
   ipcMain.on("start-task", (event, index) => {});
 
@@ -103,10 +105,13 @@ app.on("ready", () => {
     openLogFile("");
   });
 
-  ipcMain.on("get-schedule", (event) => {});
+  ipcMain.on("get-schedule", async (event) => {
+    await JobQueue.waitUntilReady();
+    const jobs = await JobQueue.getRepeatableJobs();
+    console.log("jobs", jobs);
 
-  // Open the DevTools.
-  win.webContents.openDevTools();
+    win.webContents.send("schedule", jobs);
+  });
 });
 
 /**
