@@ -8,7 +8,7 @@ import { existsSync } from "fs";
 import { resolve } from "path";
 import open from "open";
 import "./redisServer";
-import { JobQueue } from "./redisServer";
+import { jobQueue } from "./redisServer";
 
 const shouldHide = process.argv[2];
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
@@ -70,33 +70,24 @@ app.on("ready", () => {
   // and load the index.html of the app.
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   ipcMain.on("get-jobs", async () => {
-    await JobQueue.waitUntilReady();
-    const jobs = await JobQueue.getRepeatableJobs();
-    console.log("jobs", jobs);
+    await jobQueue.waitUntilReady();
+    const jobs = await jobQueue.getRepeatableJobs();
 
     win.webContents.send("schedule", jobs);
   });
 
   ipcMain.on("add-task", async (event, task: Task) => {
-    console.log("trying to add task", task);
-    console.log(ranStr());
-    await JobQueue.add(task.name, task, {
+    await jobQueue.add(task.name, task, {
       repeat: {
         every: task.interval,
         cron: task.cron,
       },
     });
-    const jobs = await JobQueue.getRepeatableJobs();
-    console.log(jobs);
+    const jobs = await jobQueue.getRepeatableJobs();
   });
 
   ipcMain.on("delete-task", async (event, key: string) => {
-    console.log("trying to delete task", key);
-    try {
-      await JobQueue.removeRepeatableByKey(key);
-    } catch (e) {
-      console.log(e);
-    }
+    await jobQueue.removeRepeatableByKey(key);
   });
 
   ipcMain.on("start-task", (event, index) => {});
@@ -106,9 +97,8 @@ app.on("ready", () => {
   });
 
   ipcMain.on("get-schedule", async (event) => {
-    await JobQueue.waitUntilReady();
-    const jobs = await JobQueue.getRepeatableJobs();
-    console.log("jobs", jobs);
+    await jobQueue.waitUntilReady();
+    const jobs = await jobQueue.getRepeatableJobs();
 
     win.webContents.send("schedule", jobs);
   });
