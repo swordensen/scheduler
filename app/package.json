@@ -19,7 +19,8 @@
     "package-app": "electron-packager .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "electron-forge": "electron-forge"
   },
   "author": "",
   "license": "ISC",
