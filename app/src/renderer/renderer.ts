@@ -1,6 +1,5 @@
 import "./styles.scss";
 
-import { Task } from "../fileManager/types";
 import { MDCTextField } from "@material/textfield";
 import { MDCTopAppBar } from "@material/top-app-bar";
 import { ipcRenderer, remote } from "electron";
@@ -18,20 +17,27 @@ ipcRenderer.on("schedule", (event, schedule) => {
   renderSchedule(schedule);
 });
 
-function renderSchedule(schedule: readonly Task[]) {
+function renderSchedule(
+  jobs: {
+    key: string;
+    name: string;
+    id: string;
+    endDate: number;
+    tz: string;
+    cron: string;
+    next: number;
+  }[]
+) {
   if (!scheduleContainer) return;
   scheduleContainer.innerHTML = "";
-  schedule.forEach((task: Task, i: number) => {
-    if (task.interval === "startup") return;
+  jobs.forEach((job, i: number) => {
     const taskElem = document.createElement("div");
     taskElem.classList.add("mdc-card");
     taskElem.classList.add("task");
-    if (task.running) taskElem.classList.add("active");
-    const scheduled = new Date(task.lastExecuted + task.interval);
+    const scheduled = new Date(job.next);
     taskElem.innerHTML = `
             <div class="taskDetails">
-              <p>${task.name}</p>
-              <p>${task.command}</p>
+              <p>${job.name}</p>
               <p>${scheduled.toLocaleString()}</p>
             </div>
             <div class="actions">
@@ -50,7 +56,7 @@ function renderSchedule(schedule: readonly Task[]) {
                 </button>
               </div>
               <div class="mdc-touch-target-wrapper">
-                <button class="mdc-fab mdc-fab--mini mdc-fab--touch" onclick="deleteTask(${i})">
+                <button class="mdc-fab mdc-fab--mini mdc-fab--touch" onclick="deleteJob('${job.key}')">
                   <div class="mdc-fab__ripple"></div>
                   <span class="material-icons mdc-fab__icon">delete</span>
                   <div class="mdc-fab__touch"></div>
@@ -90,14 +96,15 @@ form.addEventListener("submit", (event) => {
   ipcRenderer.send("add-task", {
     command,
     name,
-    interval: parseInt(interval),
+    interval: 10000,
     description,
   });
   linearProgress.open();
 });
 
-(window as any).deleteTask = (index: number) => {
-  ipcRenderer.send("delete-task", index);
+(window as any).deleteJob = (key: string) => {
+  console.log("trying to delete job", key);
+  ipcRenderer.send("delete-task", key);
   linearProgress.open();
 };
 
@@ -138,3 +145,4 @@ closeButton.addEventListener("click", () => {
 });
 
 ipcRenderer.send("get-schedule");
+ipcRenderer.send("get-jobs");
