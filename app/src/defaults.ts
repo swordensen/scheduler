@@ -10,3 +10,7 @@ export const appFolder = createFolderIfNotExist(resolve(userDataFolder, "schedul
 export const configFile = resolve(appFolder, "config.json");
 
 export const logFolder = createFolderIfNotExist(resolve(appFolder, "logs"));
+
+export const queueName = "Schedule-Queue";
+
+export const redisPort = "9001";

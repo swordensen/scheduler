@@ -2,13 +2,13 @@ require("update-electron-app")();
 try {
   require("electron-reloader")(module);
 } catch {}
+import "./redis-setup";
 import { app, BrowserWindow, ipcMain, Menu, Tray } from "electron";
 import { Task } from "./types";
 import { existsSync } from "fs";
 import { resolve } from "path";
 import open from "open";
-import "./redisServer";
-import { jobQueue } from "./redisServer";
+import { MyJobQueue } from "./bull";
 
 const shouldHide = process.argv[2];
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
@@ -70,48 +70,33 @@ app.on("ready", () => {
   // and load the index.html of the app.
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   ipcMain.on("get-jobs", async () => {
-    await jobQueue.waitUntilReady();
-    const jobs = await jobQueue.getRepeatableJobs();
+    const jobs = await MyJobQueue.getRepeatableJobs();
 
     win.webContents.send("schedule", jobs);
   });
 
   ipcMain.on("add-task", async (event, task: Task) => {
-    await jobQueue.add(task.name, task, {
+    await MyJobQueue.add(task.name, task, {
       repeat: {
         every: task.interval,
         cron: task.cron,
       },
     });
-    const jobs = await jobQueue.getRepeatableJobs();
+    const jobs = await MyJobQueue.getRepeatableJobs();
   });
 
   ipcMain.on("delete-task", async (event, key: string) => {
-    await jobQueue.removeRepeatableByKey(key);
+    await MyJobQueue.removeRepeatableByKey(key);
   });
 
   ipcMain.on("start-task", (event, index) => {});
 
-  ipcMain.on("open-log", (event, index) => {
-    openLogFile("");
-  });
+  ipcMain.on("open-log", (event, index) => {});
 
   ipcMain.on("get-schedule", async (event) => {
-    await jobQueue.waitUntilReady();
-    const jobs = await jobQueue.getRepeatableJobs();
+    await MyJobQueue.waitUntilReady();
+    const jobs = await MyJobQueue.getRepeatableJobs();
 
     win.webContents.send("schedule", jobs);
   });
 });
-
-/**
- * this function opens up the log file for viewing
- */
-export function openLogFile(task: string) {
-  const path = "";
-  if (existsSync(path)) open(path);
-}
-
-export function ranStr() {
-  return Math.random().toString().substr(2, 12);
-}
