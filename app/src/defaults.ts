@@ -14,3 +14,5 @@ export const logFolder = createFolderIfNotExist(resolve(appFolder, "logs"));
 export const queueName = "Schedule-Queue";
 
 export const redisPort = "9001";
+
+export const iconPath = resolve(__dirname, "assets/icon.png");

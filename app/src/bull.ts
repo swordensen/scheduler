@@ -1,7 +1,7 @@
 import { Processor, Queue, QueueScheduler, Worker } from "bullmq";
 import { queueName, redisPort } from "./defaults";
 import { Task } from "./types";
-import IORedis from "ioredis";
+import Redis from "ioredis";
 import { cpus } from "os";
 import { exec } from "child_process";
 
@@ -12,7 +12,7 @@ const concurrency = cpus.length;
 const cores = cpus.length;
 
 // establish connection with redis server
-const connection = IORedis(redisPort);
+const connection = new Redis(redisPort);
 
 // create jobQueue
 export const MyJobQueue = new Queue(queueName, { connection });
