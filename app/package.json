@@ -2,7 +2,7 @@
   "name": "scheduler",
   "version": "0.0.7",
   "description": "Open source application for scheduling tasks (processes)",
-  "main": ".webpack/main",
+  "main": "dist",
   "authors": "michael sorensen",
   "repository": {
     "type": "git",
@@ -10,17 +10,14 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build-css && npm run build-renderer && npm run build-main",
-    "build-css": "webpack -w -c webpack.style.config.js",
-    "build-main": "cross-env ENVIRONMENT=electron webpack -c webpack.main.js",
-    "build-renderer": "webpack -c webpack.config.js",
     "start-electron": "cross-env ENVIRONMENT=electron electron .",
-    "start": "electron-forge start",
+    "start": "tsc && npm run copy-assets && concurrently \"cd src/renderer && npm start\" \"electron-forge start\" \"tsc -w\" ",
     "package-app": "electron-packager .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
     "make": "electron-forge make",
-    "electron-forge": "electron-forge"
+    "electron-forge": "electron-forge",
+    "copy-assets": "cp -r ./src/main/assets ./dist"
   },
   "author": "",
   "license": "ISC",
@@ -117,24 +114,6 @@
             "prerelease": true
           }
         }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/renderer/index.html",
-                  "js": "./src/renderer/renderer.ts",
-                  "name": "main_window"
-                }
-              ]
-            }
-          }
-        ]
       ]
     }
   }

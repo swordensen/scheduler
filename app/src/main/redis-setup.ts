@@ -5,7 +5,7 @@ import { existsSync, openSync } from "fs";
 import { spawn } from "child_process";
 
 // get resource path based on whether or not we're in development mode
-const resourcePath = app.isPackaged ? process.resourcesPath : resolve(__dirname, "../../extraResources");
+const resourcePath = app.isPackaged ? process.resourcesPath : resolve(__dirname, "../extraResources");
 const memuraiPath = resolve(resourcePath, "./win/memurai.exe");
 const configFilePath = resolve(resourcePath, "./win/memurai.conf");
 const logFilePath = resolve(userDataFolder, "memurai-log.txt");
