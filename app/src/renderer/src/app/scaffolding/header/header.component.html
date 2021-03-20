@@ -6,13 +6,24 @@
     mat-icon-button
     class="example-icon favorite-icon"
     aria-label="minimize"
+    (click)="minimize()"
   >
     <mat-icon>minimize</mat-icon>
   </button>
-  <button mat-icon-button class="example-icon" aria-label="maximize">
+  <button
+    mat-icon-button
+    class="example-icon"
+    aria-label="maximize"
+    (click)="maximize()"
+  >
     <mat-icon>maximize</mat-icon>
   </button>
-  <button mat-icon-button class="example-icon" aria-label="close">
+  <button
+    mat-icon-button
+    class="example-icon"
+    aria-label="close"
+    (click)="close()"
+  >
     <mat-icon>close</mat-icon>
   </button>
 </mat-toolbar>

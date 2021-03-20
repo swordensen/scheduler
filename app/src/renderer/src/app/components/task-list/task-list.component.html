@@ -1,1 +1,4 @@
 <p>task-list works!</p>
+<ng-container *ngFor="let job of repeatableJobs$ | async">
+  {{ job.name }}
+</ng-container>

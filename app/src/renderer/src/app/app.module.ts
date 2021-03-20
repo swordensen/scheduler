@@ -7,7 +7,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { HeaderModule } from './scaffolding/header/header.module';
 import { MainModule } from './scaffolding/main/main.module';
-
+import { EffectsModule } from '@ngrx/effects';
+import { ElectronEffects } from './@core/store/effects/electron.effects';
+import { bullReducer, BullState } from './@core/store/reducers/bull.reducer';
+import { APP_INITIALIZER } from '@angular/core';
+import { BullListenerService } from './@core/services/bull-listener.service';
+export interface AppState {
+  bull: BullState;
+}
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -16,9 +23,18 @@ import { MainModule } from './scaffolding/main/main.module';
     BrowserAnimationsModule,
     HeaderModule,
     MainModule,
-    StoreModule.forRoot({}, {}),
+    StoreModule.forRoot({ bull: bullReducer }),
+    EffectsModule.forRoot([ElectronEffects]),
   ],
-  providers: [],
+  providers: [
+    BullListenerService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (bs: BullListenerService) => () => bs.init(),
+      deps: [BullListenerService],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

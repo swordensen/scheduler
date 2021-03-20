@@ -11,7 +11,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-electron": "cross-env ENVIRONMENT=electron electron .",
-    "start": "tsc && npm run copy-assets && concurrently \"cd src/renderer && npm start\" \"electron-forge start\" \"tsc -w\" ",
+    "start-angular": "cd src/renderer && npm start",
+    "start": "electron-forge start",
     "package-app": "electron-packager .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",

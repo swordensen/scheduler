@@ -5,7 +5,7 @@ import { mainWindow } from "./window-setup";
 
 ipcMain.on("get-jobs", async () => {
   const jobs = await MyJobQueue.getRepeatableJobs();
-
+  console.log(jobs);
   mainWindow.webContents.send("schedule", jobs);
 });
 
