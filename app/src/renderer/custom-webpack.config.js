@@ -1,5 +1,3 @@
 module.exports = {
-  externals: {
-    electron: "electron",
-  },
+  target: "electron-renderer",
 };
