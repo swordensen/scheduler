@@ -1,5 +1,14 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { setRepeatableJobs } from '../actions/bull.actions';
+import { JobsOptions } from 'bullmq';
+import {
+  setRepeatableJobs,
+  addJob,
+  updateJobName,
+  updateJobDescription,
+  updateJobTask,
+  updateJobInterval,
+  addPathToJobTask,
+} from '../actions/bull.actions';
 
 export interface BullState {
   repeatableJobs: {
@@ -11,22 +20,19 @@ export interface BullState {
     cron: string;
     next: number;
   }[];
-  taskToAdd: {
-    name: string;
-    command: string;
-    description: string;
-    interval?: number;
-    cron?: string;
+  jobForm: {
+    name?: string;
+    data?: {
+      description?: string;
+      task?: string;
+    };
+    jobsOptions?: JobsOptions;
   };
 }
 
 const initialBullState: BullState = {
   repeatableJobs: [],
-  taskToAdd: {
-    name: '',
-    command: '',
-    description: '',
-  },
+  jobForm: {},
 };
 
 const _bullReducer = createReducer(
@@ -34,6 +40,62 @@ const _bullReducer = createReducer(
   on(setRepeatableJobs, (state, { repeatableJobs }) => ({
     ...state,
     repeatableJobs,
+  })),
+  // on(addJob, (state) => ({
+  //   ...state,
+  //   jobForm: {},
+  // })),
+  on(updateJobName, (state, { name }) => ({
+    ...state,
+    jobForm: {
+      ...state.jobForm,
+      name,
+    },
+  })),
+  on(updateJobDescription, (state, { description }) => ({
+    ...state,
+    jobForm: {
+      ...state.jobForm,
+      data: {
+        ...state.jobForm.data,
+        description,
+      },
+    },
+  })),
+  on(updateJobTask, (state, { task }) => ({
+    ...state,
+    jobForm: {
+      ...state.jobForm,
+      data: {
+        ...state.jobForm.data,
+        task,
+      },
+    },
+  })),
+  on(addPathToJobTask, (state, { path }) => ({
+    ...state,
+    jobForm: {
+      ...state.jobForm,
+      data: {
+        ...state.jobForm.data,
+        task: path
+          ? `${state.jobForm.data?.task || ''} ${path}`
+          : state.jobForm.data?.task || '',
+      },
+    },
+  })),
+  on(updateJobInterval, (state, { interval }) => ({
+    ...state,
+    jobForm: {
+      ...state.jobForm,
+      jobsOptions: {
+        ...state.jobForm.jobsOptions,
+        repeat: {
+          ...state.jobForm.jobsOptions?.repeat,
+          every: interval,
+        },
+      },
+    },
   }))
 );
 

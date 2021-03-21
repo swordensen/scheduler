@@ -3,7 +3,6 @@ import { app } from "electron";
 import { createFolderIfNotExist } from "./helpers";
 
 export const userDataFolder = app.getPath("userData");
-console.log("user data folder", userDataFolder);
 
 export const appFolder = createFolderIfNotExist(resolve(userDataFolder, "scheduler"));
 

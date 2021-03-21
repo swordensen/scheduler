@@ -12,6 +12,7 @@ import { ElectronEffects } from './@core/store/effects/electron.effects';
 import { bullReducer, BullState } from './@core/store/reducers/bull.reducer';
 import { APP_INITIALIZER } from '@angular/core';
 import { BullListenerService } from './@core/services/bull-listener.service';
+import { BullEffects } from './@core/store/effects/bull.effects';
 export interface AppState {
   bull: BullState;
 }
@@ -24,7 +25,7 @@ export interface AppState {
     HeaderModule,
     MainModule,
     StoreModule.forRoot({ bull: bullReducer }),
-    EffectsModule.forRoot([ElectronEffects]),
+    EffectsModule.forRoot([ElectronEffects, BullEffects]),
   ],
   providers: [
     BullListenerService,

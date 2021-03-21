@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ipcRenderer } from 'electron';
 import { setRepeatableJobs } from '../store/actions/bull.actions';
-const electron = (<any>window).require('electron');
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +14,8 @@ export class BullListenerService {
   }
 
   registerGetRepeatableJobsListener() {
-    electron.ipcRenderer.on('schedule', (event: any, repeatableJobs: any) => {
-      console.log('repeatable jobs', repeatableJobs);
-      this.store.dispatch(setRepeatableJobs({ repeatableJobs }));
-    });
+    ipcRenderer.on('schedule', (event: any, repeatableJobs: any) =>
+      this.store.dispatch(setRepeatableJobs({ repeatableJobs }))
+    );
   }
 }

@@ -2,20 +2,18 @@ import { Task } from "./types";
 import { MyJobQueue } from "./bull";
 import { ipcMain } from "electron";
 import { mainWindow } from "./window-setup";
+import { JobsOptions } from "bullmq";
 
 ipcMain.on("get-jobs", async () => {
   const jobs = await MyJobQueue.getRepeatableJobs();
-  console.log(jobs);
   mainWindow.webContents.send("schedule", jobs);
 });
 
-ipcMain.on("add-task", async (event, task: Task) => {
-  await MyJobQueue.add(task.name, task, {
-    repeat: {
-      every: task.interval,
-      cron: task.cron,
-    },
-  });
+ipcMain.on("add-job", async (event, { name, data, jobsOptions }) => {
+  await MyJobQueue.add(name, data, jobsOptions);
+  const jobs = await MyJobQueue.getRepeatableJobs();
+
+  mainWindow.webContents.send("schedule", jobs);
 });
 
 ipcMain.on("delete-task", async (event, key: string) => {

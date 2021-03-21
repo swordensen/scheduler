@@ -16,7 +16,6 @@ export class ClockComponent implements AfterViewInit {
   @ViewChild('clock') clockElem: ElementRef;
   constructor() {}
   ngAfterViewInit(): void {
-    console.log(this.clockElem);
     this.renderClock();
     window.addEventListener('resize', () => {
       this.clockElem.nativeElement.innerHTML = '';
