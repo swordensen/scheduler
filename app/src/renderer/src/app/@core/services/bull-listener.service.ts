@@ -11,11 +11,13 @@ export class BullListenerService {
 
   init() {
     console.log('bull listeners initialized');
+    this.registerGetRepeatableJobsListener();
   }
 
   registerGetRepeatableJobsListener() {
-    ipcRenderer.on('schedule', (event: any, repeatableJobs: any) =>
-      this.store.dispatch(setRepeatableJobs({ repeatableJobs }))
-    );
+    ipcRenderer.on('schedule', (event: any, repeatableJobs: any) => {
+      console.log(repeatableJobs);
+      this.store.dispatch(setRepeatableJobs({ repeatableJobs }));
+    });
   }
 }

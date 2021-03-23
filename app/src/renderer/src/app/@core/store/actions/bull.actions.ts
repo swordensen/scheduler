@@ -1,9 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { JobsOptions } from '../../../../../../../node_modules/bullmq';
+import { JobJson, JobsOptions } from '../../../../../../../node_modules/bullmq';
 export const getRepeatableJobs = createAction('[Bull] get repeatable jobs');
 export const setRepeatableJobs = createAction(
   '[Bull] set repeatable jobs',
-  props<{ repeatableJobs: any[] }>()
+  props<{ repeatableJobs: JobJson[] }>()
 );
 export const getJobByKey = createAction(
   '[Bull] get job by key',
@@ -35,4 +35,9 @@ export const addPathToJobTask = createAction(
 export const updateJobInterval = createAction(
   '[Bull] update job interval',
   props<{ interval: number }>()
+);
+
+export const startJob = createAction(
+  '[Bull] Start Job',
+  props<{ jobId: string }>()
 );

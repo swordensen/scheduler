@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { addJob, getRepeatableJobs } from '../actions/bull.actions';
+import { addJob, getRepeatableJobs, startJob } from '../actions/bull.actions';
 import { filter, map, take, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/app.module';
 import { select, Store } from '@ngrx/store';
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { selectJob } from '../selectors/bull.selectors';
-
-const electron = (<any>window).require('electron');
+import { ipcRenderer } from 'electron';
 
 @Injectable()
 export class BullEffects {
@@ -17,7 +16,7 @@ export class BullEffects {
     () =>
       this.actions$.pipe(
         ofType(getRepeatableJobs),
-        map(() => electron.ipcRenderer.send('get-jobs'))
+        map(() => ipcRenderer.send('get-jobs'))
       ),
     { dispatch: false }
   );
@@ -30,8 +29,19 @@ export class BullEffects {
           return state.bull.jobForm;
         }),
         map((job) => {
-          console.log(job);
-          // electron.ipcRenderer.send('add-job', job);
+          ipcRenderer.send('add-job', job);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  startJob$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(startJob),
+        map(({ jobId }) => {
+          console.log('trying to start', jobId);
+          ipcRenderer.send('start-task', jobId);
         })
       ),
     { dispatch: false }

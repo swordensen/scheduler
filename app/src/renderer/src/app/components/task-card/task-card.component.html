@@ -1,1 +1,9 @@
-<p>task-card works!</p>
+<mat-card fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="column">
+    <mat-card-title>{{ job.name }}</mat-card-title>
+    <mat-card-subtitle>{{ job.timestamp | date: "short" }}</mat-card-subtitle>
+  </div>
+  <button mat-mini-fab color="primary" (click)="_startJob(job.id)">
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+</mat-card>

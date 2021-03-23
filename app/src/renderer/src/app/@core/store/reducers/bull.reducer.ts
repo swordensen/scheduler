@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { JobsOptions } from 'bullmq';
+import { JobJson, JobsOptions } from 'bullmq';
 import {
   setRepeatableJobs,
   addJob,
@@ -11,15 +11,7 @@ import {
 } from '../actions/bull.actions';
 
 export interface BullState {
-  repeatableJobs: {
-    key: string;
-    name: string;
-    id: string;
-    endDate: number;
-    tz: string;
-    cron: string;
-    next: number;
-  }[];
+  repeatableJobs: JobJson[];
   jobForm: {
     name?: string;
     data?: {
@@ -39,7 +31,13 @@ const _bullReducer = createReducer(
   initialBullState,
   on(setRepeatableJobs, (state, { repeatableJobs }) => ({
     ...state,
-    repeatableJobs,
+    repeatableJobs: repeatableJobs.map((job) => {
+      return {
+        ...job,
+        data: JSON.parse(job.data),
+        opts: JSON.parse(job.opts),
+      };
+    }),
   })),
   // on(addJob, (state) => ({
   //   ...state,
