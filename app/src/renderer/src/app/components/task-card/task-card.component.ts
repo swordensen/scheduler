@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { JobJson, JobsOptions } from 'bullmq';
-import { startJob } from 'src/app/@core/store/actions/bull.actions';
+import { deleteJob, startJob } from 'src/app/@core/store/actions/bull.actions';
+import { MyJobData } from '../../../../../main/types';
 
 @Component({
   selector: 'app-task-card',
@@ -9,14 +9,18 @@ import { startJob } from 'src/app/@core/store/actions/bull.actions';
   styleUrls: ['./task-card.component.scss'],
 })
 export class TaskCardComponent implements OnInit {
-  @Input() job: JobJson;
+  @Input() job: MyJobData;
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     console.log(this.job);
   }
 
-  _startJob(jobId: string) {
-    this.store.dispatch(startJob({ jobId }));
+  _startJob() {
+    this.store.dispatch(startJob({ job: this.job }));
+  }
+
+  _deleteJob() {
+    this.store.dispatch(deleteJob({ job: this.job }));
   }
 }

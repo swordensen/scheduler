@@ -23,8 +23,16 @@ import { remote } from 'electron';
   templateUrl: './task-form.component.html',
   styleUrls: ['./task-form.component.scss'],
 })
-export class TaskFormComponent implements OnInit {
+export class TaskFormComponent {
   intervalOptions = [
+    {
+      display: '10 seconds',
+      value: 10000,
+    },
+    {
+      display: 'every minute',
+      value: 60000,
+    },
     {
       display: 'daily',
       value: 86400000,
@@ -45,12 +53,6 @@ export class TaskFormComponent implements OnInit {
   description$ = this.store.select(selectJobDescription);
 
   constructor(private store: Store<AppState>) {}
-
-  ngOnInit(): void {
-    // this.store.subscribe((store) => {
-    //   console.log(store);
-    // });
-  }
 
   async browse() {
     const dialogResponse = await remote.dialog.showOpenDialog({

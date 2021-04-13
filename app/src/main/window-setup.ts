@@ -1,6 +1,6 @@
 import { app, BrowserWindow, Menu, Tray } from "electron";
 import { iconPath } from "./defaults";
-import "./event-handlers";
+import "./electron-event-handlers";
 /**
  * THIS FILE HANDLES EVERYTHING THAT NEEDS TO BE HANDLED AS ELECTRON STARTS
  */

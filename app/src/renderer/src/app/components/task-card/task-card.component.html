@@ -1,9 +1,16 @@
 <mat-card fxLayout="row" fxLayoutAlign="space-between center">
   <div fxLayout="column">
-    <mat-card-title>{{ job.name }}</mat-card-title>
-    <mat-card-subtitle>{{ job.timestamp | date: "short" }}</mat-card-subtitle>
+    <mat-card-title>{{ job.data.name }} | {{ job.status }}</mat-card-title>
+    <mat-card-subtitle *ngIf="job.repeatData">{{
+      job.repeatData.next | date: "short"
+    }}</mat-card-subtitle>
   </div>
-  <button mat-mini-fab color="primary" (click)="_startJob(job.id)">
-    <mat-icon>play_arrow</mat-icon>
-  </button>
+  <div fxLayout="row">
+    <button mat-mini-fab color="primary" (click)="_deleteJob()">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" (click)="_startJob()">
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+  </div>
 </mat-card>

@@ -1,20 +1,22 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { JobJson, JobsOptions } from 'bullmq';
+import { JobsOptions } from 'bullmq';
 import {
   setRepeatableJobs,
-  addJob,
   updateJobName,
   updateJobDescription,
   updateJobTask,
   updateJobInterval,
   addPathToJobTask,
+  deleteJob,
+  updateJobState,
+  addJobToList,
 } from '../actions/bull.actions';
-
+import { MyJobData, MyJobJson } from '../../../../../../main/types';
 export interface BullState {
-  repeatableJobs: JobJson[];
+  repeatableJobs: MyJobData[];
   jobForm: {
-    name?: string;
     data?: {
+      name?: string;
       description?: string;
       task?: string;
     };
@@ -31,23 +33,17 @@ const _bullReducer = createReducer(
   initialBullState,
   on(setRepeatableJobs, (state, { repeatableJobs }) => ({
     ...state,
-    repeatableJobs: repeatableJobs.map((job) => {
-      return {
-        ...job,
-        data: JSON.parse(job.data),
-        opts: JSON.parse(job.opts),
-      };
-    }),
+    repeatableJobs,
   })),
-  // on(addJob, (state) => ({
-  //   ...state,
-  //   jobForm: {},
-  // })),
+
   on(updateJobName, (state, { name }) => ({
     ...state,
     jobForm: {
       ...state.jobForm,
-      name,
+      data: {
+        ...state.jobForm.data,
+        name,
+      },
     },
   })),
   on(updateJobDescription, (state, { description }) => ({
@@ -94,6 +90,36 @@ const _bullReducer = createReducer(
         },
       },
     },
+  })),
+  on(deleteJob, (state, { job }) => ({
+    ...state,
+    repeatableJobs: state.repeatableJobs.reduce((acc, cur) => {
+      if (cur.name !== job.name) acc.push(cur);
+      return acc;
+    }, [] as MyJobData[]),
+  })),
+  on(updateJobState, (state, { name, status }) => ({
+    ...state,
+    repeatableJobs: state.repeatableJobs.map((job) => {
+      if (job.name === name) {
+        return {
+          ...job,
+          status,
+        };
+      }
+      return job;
+    }),
+  })),
+  on(addJobToList, (state, { job }) => ({
+    ...state,
+    jobForm: {
+      data: {
+        name: '',
+        description: '',
+        task: '',
+      },
+    },
+    repeatableJobs: [...state.repeatableJobs, job],
   }))
 );
 

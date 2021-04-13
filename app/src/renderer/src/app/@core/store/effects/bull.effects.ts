@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { addJob, getRepeatableJobs, startJob } from '../actions/bull.actions';
+import {
+  addJob,
+  deleteJob,
+  getRepeatableJobs,
+  startJob,
+} from '../actions/bull.actions';
 import { filter, map, take, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/app.module';
 import { select, Store } from '@ngrx/store';
@@ -29,7 +34,13 @@ export class BullEffects {
           return state.bull.jobForm;
         }),
         map((job) => {
-          ipcRenderer.send('add-job', job);
+          ipcRenderer.send('add-job', {
+            ...job,
+            jobsOptions: {
+              ...job.jobsOptions,
+              // repeatable: null,
+            },
+          });
         })
       ),
     { dispatch: false }
@@ -39,9 +50,19 @@ export class BullEffects {
     () =>
       this.actions$.pipe(
         ofType(startJob),
-        map(({ jobId }) => {
-          console.log('trying to start', jobId);
-          ipcRenderer.send('start-task', jobId);
+        map(({ job }) => {
+          ipcRenderer.send('start-job', job);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  deleteJob$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(deleteJob),
+        map(({ job }) => {
+          ipcRenderer.send('remove-job', job);
         })
       ),
     { dispatch: false }

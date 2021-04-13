@@ -6,7 +6,7 @@ export const selectRepeatableJobs = (state: AppState) =>
 
 export const selectJob = (state: AppState) => state.bull.jobForm;
 
-export const selectJobName = (state: AppState) => state.bull.jobForm.name;
+export const selectJobName = (state: AppState) => state.bull.jobForm.data?.name;
 
 export const selectJobTask = (state: AppState) => state.bull.jobForm.data?.task;
 
