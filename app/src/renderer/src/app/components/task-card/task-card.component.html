@@ -1,0 +1,14 @@
+<mat-card fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="column">
+    <mat-card-title>{{ task.name }} </mat-card-title>
+    <p>{{ task.command }}</p>
+  </div>
+  <div fxLayout="row">
+    <button mat-mini-fab color="primary" (click)="_deleteTask()">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" (click)="_startTask()">
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+  </div>
+</mat-card>
