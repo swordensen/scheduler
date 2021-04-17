@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  padding: 16px 16px 0px 16px;
+}
+
+.relative {
+  position: relative;
+}
+
+button[type="submit"] {
+  position: absolute;
+  bottom: 30px;
+  right: 16px;
+}
+
+.fill {
+  width: 100%;
+}
+
+textarea.no-resize {
+  resize: none;
+}

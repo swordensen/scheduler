@@ -1,0 +1,62 @@
+<form fxLayout="column">
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <mat-form-field appearance="outline">
+      <mat-label>Task</mat-label>
+      <input
+        matInput
+        placeholder="Ex. C:/calculator.exe"
+        name="task"
+        [ngModel]="command$ | async"
+        (ngModelChange)="updateTask($event)"
+      />
+    </mat-form-field>
+    <button mat-raised-button fxFlex="0 1 auto" (click)="browse()">
+      Browse...
+    </button>
+  </div>
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        placeholder="myCoolTask"
+        name="name"
+        [ngModel]="name$ | async"
+        (ngModelChange)="updateName($event)"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Interval</mat-label>
+      <mat-select
+        name="interval"
+        [ngModel]="interval$ | async"
+        (ngModelChange)="updateInterval($event)"
+      >
+        <mat-option
+          *ngFor="let option of intervalOptions"
+          [value]="option.value"
+          >{{ option.display }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button>Advanced</button>
+  </div>
+  <div class="relative">
+    <mat-form-field appearance="outline" class="fill">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        placeholder="about my cool task"
+        rows="4"
+        class="no-resize"
+        name="description"
+        [ngModel]="description$ | async"
+        (ngModelChange)="updateDescription($event)"
+      ></textarea>
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="primary" (click)="create()">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+  </div>
+</form>

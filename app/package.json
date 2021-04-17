@@ -2,7 +2,7 @@
   "name": "scheduler",
   "version": "0.0.7",
   "description": "Open source application for scheduling tasks (processes)",
-  "main": ".webpack/main",
+  "main": "dist/main",
   "authors": "michael sorensen",
   "repository": {
     "type": "git",
@@ -10,16 +10,17 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build-css && npm run build-renderer && npm run build-main",
-    "build-css": "webpack -w -c webpack.style.config.js",
-    "build-main": "cross-env ENVIRONMENT=electron webpack -c webpack.main.js",
-    "build-renderer": "webpack -c webpack.config.js",
     "start-electron": "cross-env ENVIRONMENT=electron electron .",
+    "start-angular": "cd src/renderer && npm start",
+    "build-renderer": "cd src/renderer && npm run build && cp -r dist ../..",
     "start": "electron-forge start",
+    "build-main-watch": "tsc -w",
     "package-app": "electron-packager .",
     "package": "electron-forge package",
-    "publish": "electron-forge publish",
-    "make": "electron-forge make"
+    "publish": "npm run build-renderer && electron-forge publish",
+    "make": "electron-forge make",
+    "electron-forge": "electron-forge",
+    "copy-assets": "cp -r ./src/main/assets ./dist"
   },
   "author": "",
   "license": "ISC",
@@ -37,6 +38,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^5.0.1",
     "electron": "^11.2.1",
+    "electron-reloader": "^1.2.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "sass": "^1.32.5",
@@ -66,6 +68,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
+        "asar": true,
         "osxSign": {
           "identity": "",
           "hardened-runtime": true,
@@ -76,7 +79,8 @@
         "osxNotarize": {
           "appleId": "",
           "appleIdPassword": ""
-        }
+        },
+        "extraResource": []
       },
       "makers": [
         {
@@ -111,24 +115,6 @@
             "prerelease": true
           }
         }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/renderer/index.html",
-                  "js": "./src/renderer/renderer.ts",
-                  "name": "main_window"
-                }
-              ]
-            }
-          }
-        ]
       ]
     }
   }
