@@ -6,7 +6,7 @@
         matInput
         placeholder="Ex. C:/calculator.exe"
         name="task"
-        [ngModel]="task$ | async"
+        [ngModel]="command$ | async"
         (ngModelChange)="updateTask($event)"
       />
     </mat-form-field>

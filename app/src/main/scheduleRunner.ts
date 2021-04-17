@@ -17,37 +17,32 @@ export class ScheduleRunner {
     return this.scheduleController.schedule;
   }
 
+  constructor() {
+    console.log(`schedule runner initialized`);
+  }
+
   /**
    * this is our main interval loop
    */
   private mainInterval(): NodeJS.Timeout {
     return setInterval(() => {
       LOGGER.info("MAIN INTERVAL LOOP");
-      this.schedule.forEach((task, index) => {
+      this.schedule.forEach((task) => {
         LOGGER.info(`checking task ${task.name}`);
         if (this.timeToRun(task)) {
-          this.startTask(task, index);
+          this.startTask(task);
         }
       });
       LOGGER.info("MAIN INTERVAL LOOP END");
     }, this.INTERVAL_PERIOD);
   }
 
-  public startTaskNow(index: number) {
-    const task = this.schedule[index];
+  public startTask(task: Task) {
     LOGGER.info(`attempting to run task ${task.name}`);
     const process = exec(task.command);
     taskLogger(task, process); //investigate potential memory leak
-    process.on("exit", () => this.scheduleController.endTask(index));
-    this.scheduleController.startTask(index);
-  }
-
-  private startTask(task: Task, index: number) {
-    LOGGER.info(`attempting to run task ${task.name}`);
-    const process = exec(task.command);
-    taskLogger(task, process); //investigate potential memory leak
-    process.on("exit", () => this.scheduleController.endTask(index));
-    this.scheduleController.startTask(index);
+    process.on("exit", () => this.scheduleController.endTask(task));
+    this.scheduleController.startTask(task);
   }
 
   /**
@@ -56,10 +51,9 @@ export class ScheduleRunner {
    * @param schedule
    */
   private timeToRun(task: Task): boolean {
-    if (task.interval !== "startup") {
+    if (task.next) {
       const currentTime = Date.now();
-      const scheduledTime = task.lastExecuted + task.interval;
-      if (currentTime > scheduledTime) return true;
+      if (currentTime > task.next) return true;
     }
     return false;
   }

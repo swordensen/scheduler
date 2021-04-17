@@ -1,21 +1,40 @@
 import { Task } from "./types";
 import { ipcMain } from "electron";
 import { mainWindow } from "./window-setup";
-import { v4 as uuid } from "uuid";
+import { ScheduleRunner } from "./scheduleRunner";
+import {
+  ADD_TASK_EVENT,
+  DELETE_TASK_EVENT,
+  GET_SCHEDULE_EVENT,
+  SEND_SCHEDULE_EVENT,
+  START_TASK_EVENT,
+} from "../event-names";
 
+const scheduleRunner = new ScheduleRunner();
+
+console.log("initializing event handlers ");
 /**
  * this only gets called on the initial page load. Ideally it should
  */
-ipcMain.on("get-jobs", async () => {
-  // mainWindow.webContents.send("schedule", jobs);
+ipcMain.on(GET_SCHEDULE_EVENT, async () => {
+  console.log(`getting schedule...`);
+  const schedule = scheduleRunner.scheduleController.schedule;
+  mainWindow.webContents.send(SEND_SCHEDULE_EVENT, schedule);
 });
 
-ipcMain.on("add-job", async (event, task: Task) => {
-  mainWindow.webContents.send("add-job", task);
+ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
+  console.log(`adding task ${task.name}`);
+  scheduleRunner.scheduleController.addTask(task);
 });
 
-ipcMain.on("start-job", async (event, jobData: Task) => {});
+ipcMain.on(START_TASK_EVENT, async (event, task: Task) => {
+  scheduleRunner.startTask(task);
+});
 
-ipcMain.on("remove-job", async (event, jobData: Task) => {
-  mainWindow.webContents.send("remove-job", jobData);
+ipcMain.on(DELETE_TASK_EVENT, async (event, task: Task) => {
+  scheduleRunner.scheduleController.deleteTask(task);
+});
+
+scheduleRunner.scheduleController.onChange((schedule) => {
+  mainWindow.webContents.send(SEND_SCHEDULE_EVENT, schedule);
 });

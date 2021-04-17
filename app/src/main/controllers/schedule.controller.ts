@@ -2,6 +2,9 @@ import { existsSync, readFileSync, watchFile, writeFileSync } from "fs";
 import { scheduleFile } from "../defaults";
 import { LOGGER } from "../logger";
 import { Schedule, Task } from "../types";
+import { sendAt } from "cron";
+import { v4 as uuid } from "uuid";
+
 /**
  * this singleton is responsible for managing the schedule file to ensure no
  * race conditions
@@ -67,7 +70,8 @@ export class ScheduleController {
       ...currentSchedule,
       {
         ...task,
-        lastExecuted: 0,
+        id: uuid(),
+        next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + task.interval,
       },
     ];
     return currentSchedule.length;
@@ -78,17 +82,20 @@ export class ScheduleController {
    * also notifies any listeners, the index of the task that was deleted
    * @param index
    */
-  public deleteTask(index: number) {
+  public deleteTask(task: Task) {
     const currentSchedule = this.schedule;
-    this._schedule = [...currentSchedule.slice(0, index), ...currentSchedule.slice(index + 1)];
+    this._schedule = currentSchedule.reduce((accumulator, current) => {
+      if (current.id !== task.id) accumulator.push(current);
+      return accumulator;
+    }, [] as Schedule);
   }
 
-  public updateTask(index: number, updatedTask: Partial<Task>) {
-    this._schedule = this.schedule.map((task, i) => {
-      if (index == i) {
+  public updateTask(task: Task) {
+    this._schedule = this.schedule.map((_task, i) => {
+      if (task.id === task.id) {
         return {
+          ..._task,
           ...task,
-          ...updatedTask,
         };
       }
       return task;
@@ -97,28 +104,30 @@ export class ScheduleController {
 
   /**
    * updates the last executed time.
+   * and sets the next time the script will be ran
    * @param index
    * @param lastExecuted
    */
-  public startTask(index: number) {
-    this._schedule = this.schedule.map((task, i) => {
-      if (index == i) {
+  public startTask(task: Task) {
+    this._schedule = this.schedule.map((_task, i) => {
+      if (task.id == _task.id) {
         return {
           ...task,
-          running: true,
+          status: "active",
           lastExecuted: Date.now(),
+          next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + task.interval,
         };
       }
       return task;
     });
   }
 
-  public endTask(index: number) {
-    this._schedule = this.schedule.map((task, i) => {
-      if (index == i) {
+  public endTask(task: Task) {
+    this._schedule = this.schedule.map((_task, i) => {
+      if (task.id === _task.id) {
         return {
           ...task,
-          running: false,
+          status: "waiting",
         };
       }
       return task;

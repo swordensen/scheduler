@@ -2,7 +2,7 @@
   "name": "scheduler",
   "version": "0.0.7",
   "description": "Open source application for scheduling tasks (processes)",
-  "main": "dist",
+  "main": "dist/main",
   "authors": "michael sorensen",
   "repository": {
     "type": "git",
@@ -12,11 +12,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-electron": "cross-env ENVIRONMENT=electron electron .",
     "start-angular": "cd src/renderer && npm start",
+    "build-renderer": "cd src/renderer && npm run build && cp -r dist ../..",
     "start": "electron-forge start",
     "build-main-watch": "tsc -w",
     "package-app": "electron-packager .",
     "package": "electron-forge package",
-    "publish": "electron-forge publish",
+    "publish": "npm run build-renderer && electron-forge publish",
     "make": "electron-forge make",
     "electron-forge": "electron-forge",
     "copy-assets": "cp -r ./src/main/assets ./dist"
@@ -67,6 +68,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
+        "asar": true,
         "osxSign": {
           "identity": "",
           "hardened-runtime": true,

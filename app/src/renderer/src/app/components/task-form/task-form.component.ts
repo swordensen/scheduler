@@ -11,6 +11,7 @@ import {
 } from 'src/app/@core/store/actions/schedule.actions';
 import {
   selectTaskForm,
+  selectTaskFormCommand,
   selectTaskFormDescription,
   selectTaskFormInterval,
   selectTaskFormName,
@@ -47,7 +48,7 @@ export class TaskFormComponent {
     },
   ];
 
-  task$ = this.store.select(selectTaskForm);
+  command$ = this.store.select(selectTaskFormCommand);
   name$ = this.store.select(selectTaskFormName);
   interval$ = this.store.select(selectTaskFormInterval);
   description$ = this.store.select(selectTaskFormDescription);

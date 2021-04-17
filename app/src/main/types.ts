@@ -1,10 +1,14 @@
 export interface Task {
+  id: string;
   name: string;
   description?: string;
   command: string;
-  interval: number | "startup";
-  lastExecuted: number;
-  running: boolean;
+  interval?: number;
+  startup: boolean;
+  lastExecuted?: number;
+  next?: number;
+  cron?: string;
+  status: "active" | "waiting";
 }
 
 export type Schedule = Task[];
