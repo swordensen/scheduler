@@ -25,6 +25,10 @@ jobs:
         working-directory: ./app
         run: npm install
 
+      - name: Install Renderer Packages
+        working-directory: ./app/src/renderer
+        run: npm install
+
       - name: Publish Build to Github
         working-directory: ./app
         run: npm run publish
