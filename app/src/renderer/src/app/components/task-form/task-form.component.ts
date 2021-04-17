@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import {
-  addJob,
-  addPathToJobTask,
-  updateJobDescription,
-  updateJobInterval,
-  updateJobName,
-  updateJobTask,
-} from 'src/app/@core/store/actions/bull.actions';
+  addPathToTaskFormCommand,
+  addTask,
+  updateTaskFormCommand,
+  updateTaskFormDescription,
+  updateTaskFormInterval,
+  updateTaskFormName,
+} from 'src/app/@core/store/actions/schedule.actions';
 import {
-  selectJobDescription,
-  selectJobInterval,
-  selectJobName,
-  selectJobTask,
+  selectTaskForm,
+  selectTaskFormDescription,
+  selectTaskFormInterval,
+  selectTaskFormName,
 } from 'src/app/@core/store/selectors/bull.selectors';
 import { AppState } from 'src/app/app.module';
 import { remote } from 'electron';
@@ -47,10 +47,10 @@ export class TaskFormComponent {
     },
   ];
 
-  task$ = this.store.select(selectJobTask);
-  name$ = this.store.select(selectJobName);
-  interval$ = this.store.select(selectJobInterval);
-  description$ = this.store.select(selectJobDescription);
+  task$ = this.store.select(selectTaskForm);
+  name$ = this.store.select(selectTaskFormName);
+  interval$ = this.store.select(selectTaskFormInterval);
+  description$ = this.store.select(selectTaskFormDescription);
 
   constructor(private store: Store<AppState>) {}
 
@@ -59,28 +59,26 @@ export class TaskFormComponent {
       properties: ['openFile', 'showHiddenFiles'],
     });
     const path = dialogResponse.filePaths[0];
-    this.store.dispatch(addPathToJobTask({ path }));
+    this.store.dispatch(addPathToTaskFormCommand({ path }));
   }
 
   create() {
-    this.store.dispatch(addJob());
+    this.store.dispatch(addTask());
   }
 
   updateName(name: string) {
-    this.store.dispatch(updateJobName({ name }));
+    this.store.dispatch(updateTaskFormName({ name }));
   }
 
   updateDescription(description: string) {
-    this.store.dispatch(updateJobDescription({ description }));
+    this.store.dispatch(updateTaskFormDescription({ description }));
   }
 
-  updateTask(task: string) {
-    this.store.dispatch(updateJobTask({ task }));
+  updateTask(command: string) {
+    this.store.dispatch(updateTaskFormCommand({ command }));
   }
 
   updateInterval(interval: string) {
-    // turn into number
-    const _interval = parseInt(interval);
-    this.store.dispatch(updateJobInterval({ interval: _interval }));
+    this.store.dispatch(updateTaskFormInterval({ interval }));
   }
 }

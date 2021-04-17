@@ -10,8 +10,6 @@ export const configFile = resolve(appFolder, "config.json");
 
 export const logFolder = createFolderIfNotExist(resolve(appFolder, "logs"));
 
-export const queueName = "Schedule-Queue";
-
-export const redisPort = "9001";
-
 export const iconPath = resolve(__dirname, "assets/icon.png");
+
+export const scheduleFile = resolve(appFolder, "schedule.json");

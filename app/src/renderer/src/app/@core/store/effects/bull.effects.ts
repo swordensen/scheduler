@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import {
-  addJob,
-  deleteJob,
-  getRepeatableJobs,
-  startJob,
-} from '../actions/bull.actions';
-import { filter, map, take, withLatestFrom } from 'rxjs/operators';
+
+import { map, withLatestFrom } from 'rxjs/operators';
 import { AppState } from 'src/app/app.module';
-import { select, Store } from '@ngrx/store';
-import { Action } from 'rxjs/internal/scheduler/Action';
-import { selectJob } from '../selectors/bull.selectors';
+import { Store } from '@ngrx/store';
 import { ipcRenderer } from 'electron';
+import {
+  addTask,
+  deleteTask,
+  getSchedule,
+  startTask,
+} from '../actions/schedule.actions';
 
 @Injectable()
 export class BullEffects {
@@ -20,7 +19,7 @@ export class BullEffects {
   getRepeatableJobs$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(getRepeatableJobs),
+        ofType(getSchedule),
         map(() => ipcRenderer.send('get-jobs'))
       ),
     { dispatch: false }
@@ -29,18 +28,12 @@ export class BullEffects {
   addRepeatableJob$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(addJob),
+        ofType(addTask),
         withLatestFrom(this.store$, (action, state) => {
-          return state.bull.jobForm;
+          return state.bull.taskForm;
         }),
-        map((job) => {
-          ipcRenderer.send('add-job', {
-            ...job,
-            jobsOptions: {
-              ...job.jobsOptions,
-              // repeatable: null,
-            },
-          });
+        map((task) => {
+          ipcRenderer.send('add-job', task);
         })
       ),
     { dispatch: false }
@@ -49,9 +42,9 @@ export class BullEffects {
   startJob$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(startJob),
-        map(({ job }) => {
-          ipcRenderer.send('start-job', job);
+        ofType(startTask),
+        map(({ task }) => {
+          ipcRenderer.send('start-job', task);
         })
       ),
     { dispatch: false }
@@ -60,9 +53,9 @@ export class BullEffects {
   deleteJob$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(deleteJob),
-        map(({ job }) => {
-          ipcRenderer.send('remove-job', job);
+        ofType(deleteTask),
+        map(({ task }) => {
+          ipcRenderer.send('remove-job', task);
         })
       ),
     { dispatch: false }

@@ -4,7 +4,7 @@ import { resolve } from "path";
 import { createLogger, format } from "winston";
 import { Console, File } from "winston/lib/winston/transports";
 import { logFolder } from "./defaults";
-import { JobData } from "./types";
+import { Task } from "./types";
 
 export const LOGGER = createLogger({
   level: "info",
@@ -17,7 +17,7 @@ export const LOGGER = createLogger({
   ],
 });
 
-export function createTaskLogger(task: JobData) {
+export function createTaskLogger(task: Task) {
   return createLogger({
     level: "info",
     transports: [
@@ -27,9 +27,9 @@ export function createTaskLogger(task: JobData) {
   });
 }
 
-export function taskLogger(task: JobData, _process: ChildProcess) {
+export function taskLogger(task: Task, _process: ChildProcess) {
   const logger = createTaskLogger(task);
-  logger.info(`attempting to execute ${task.task}`);
+  logger.info(`attempting to execute ${task.command}`);
   _process.stdout?.on("data", (data) => logger.info(data.toString()));
   _process.stderr?.on("data", (data) => logger.error(data.toString()));
   _process.on("exit", (code) => logger.info(`process exited with code ${code?.toString()}`));

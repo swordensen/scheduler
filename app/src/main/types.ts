@@ -1,36 +1,14 @@
-import { Job, JobJson, JobsOptions } from "bullmq";
-
-export interface JobData {
+export interface Task {
   name: string;
-  description: string;
-  task: string;
+  description?: string;
+  command: string;
+  interval: number | "startup";
+  lastExecuted: number;
+  running: boolean;
 }
 
-export interface MyJobData {
-  name: string; // use the name as the unique identifier
-  data: JobData;
-  repeatData?: {
-    key: string;
-    name: string;
-    id: string;
-    endDate: number;
-    tz: string;
-    cron: string;
-    next: number;
-  };
-  jobsOptions: JobsOptions;
-  startup?: boolean;
-  status?: string;
-}
-
-export type Schedule = MyJobData[];
+export type Schedule = Task[];
 
 export interface Config {
   scheduleFilePath: string;
-}
-
-export interface MyJobJson extends JobJson {
-  state: string;
-  dataJson: any;
-  optsJson: JobsOptions;
 }

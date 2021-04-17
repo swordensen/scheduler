@@ -1,17 +1,16 @@
 import { AppState } from 'src/app/app.module';
-import { BullState } from '../reducers/bull.reducer';
 
-export const selectRepeatableJobs = (state: AppState) =>
-  state.bull.repeatableJobs;
+export const selectSchedule = (state: AppState) => state.bull.schedule;
 
-export const selectJob = (state: AppState) => state.bull.jobForm;
+export const selectTaskForm = (state: AppState) => state.bull.taskForm;
 
-export const selectJobName = (state: AppState) => state.bull.jobForm.data?.name;
+export const selectTaskFormName = (state: AppState) => state.bull.taskForm.name;
 
-export const selectJobTask = (state: AppState) => state.bull.jobForm.data?.task;
+export const selectTaskFormCommand = (state: AppState) =>
+  state.bull.taskForm.command;
 
-export const selectJobDescription = (state: AppState) =>
-  state.bull.jobForm.data?.description;
+export const selectTaskFormDescription = (state: AppState) =>
+  state.bull.taskForm.description;
 
-export const selectJobInterval = (state: AppState) =>
-  state.bull.jobForm.jobsOptions?.repeat?.every;
+export const selectTaskFormInterval = (state: AppState) =>
+  state.bull.taskForm.interval;

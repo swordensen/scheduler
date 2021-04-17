@@ -1,3 +1,3 @@
-<ng-container *ngFor="let job of repeatableJobs$ | async">
-  <app-task-card [job]="job"></app-task-card>
+<ng-container *ngFor="let task of schedule$ | async">
+  <app-task-card [task]="task"></app-task-card>
 </ng-container>

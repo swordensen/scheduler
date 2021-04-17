@@ -17,6 +17,7 @@ export let mainWindow: BrowserWindow;
 export let tray: Tray;
 
 export function setup() {
+  console.log("setting up window");
   mainWindow = new BrowserWindow({
     width: 1080,
     height: 720,
@@ -31,11 +32,13 @@ export function setup() {
     frame: false,
     show: shouldHide ? false : true,
   });
+  console.log("setting up tray");
   tray = new Tray(iconPath);
   tray.setToolTip("scheduler");
   tray.on("click", (e) => {
     mainWindow.show();
   });
+  console.log("setting up context menu");
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "open",
@@ -52,10 +55,12 @@ export function setup() {
   ]);
   tray.setContextMenu(contextMenu);
 
+  console.log("disable minimize");
   mainWindow.on("minimize", (event: any) => {
     event.preventDefault();
     mainWindow.hide();
   });
 
+  console.log("loading url localhost:4200");
   mainWindow.loadURL("http://localhost:4200");
 }

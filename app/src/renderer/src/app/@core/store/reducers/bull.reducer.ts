@@ -1,125 +1,71 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { JobsOptions } from 'bullmq';
 import {
-  setRepeatableJobs,
-  updateJobName,
-  updateJobDescription,
-  updateJobTask,
-  updateJobInterval,
-  addPathToJobTask,
-  deleteJob,
-  updateJobState,
-  addJobToList,
-} from '../actions/bull.actions';
-import { MyJobData, MyJobJson } from '../../../../../../main/types';
+  updateTaskFormName,
+  updateTaskFormDescription,
+  setSchedule,
+  updateTaskFormCommand,
+  addPathToTaskFormCommand,
+  updateTaskFormInterval,
+} from '../actions/schedule.actions';
+import { Schedule } from '../../../../../../main/types';
 export interface BullState {
-  repeatableJobs: MyJobData[];
-  jobForm: {
-    data?: {
-      name?: string;
-      description?: string;
-      task?: string;
-    };
-    jobsOptions?: JobsOptions;
+  schedule: Schedule;
+  taskForm: {
+    name?: string;
+    description?: string;
+    command?: string;
+    interval?: string;
   };
 }
 
 const initialBullState: BullState = {
-  repeatableJobs: [],
-  jobForm: {},
+  schedule: [],
+  taskForm: {},
 };
 
 const _bullReducer = createReducer(
   initialBullState,
-  on(setRepeatableJobs, (state, { repeatableJobs }) => ({
+  on(setSchedule, (state, { schedule }) => ({
     ...state,
-    repeatableJobs,
+    schedule,
   })),
 
-  on(updateJobName, (state, { name }) => ({
+  on(updateTaskFormName, (state, { name }) => ({
     ...state,
-    jobForm: {
-      ...state.jobForm,
-      data: {
-        ...state.jobForm.data,
-        name,
-      },
+    taskForm: {
+      ...state.taskForm,
+      name,
     },
   })),
-  on(updateJobDescription, (state, { description }) => ({
+  on(updateTaskFormDescription, (state, { description }) => ({
     ...state,
-    jobForm: {
-      ...state.jobForm,
-      data: {
-        ...state.jobForm.data,
-        description,
-      },
+    taskForm: {
+      ...state.taskForm,
+      description,
     },
   })),
-  on(updateJobTask, (state, { task }) => ({
+  on(updateTaskFormCommand, (state, { command }) => ({
     ...state,
-    jobForm: {
-      ...state.jobForm,
-      data: {
-        ...state.jobForm.data,
-        task,
-      },
+    taskForm: {
+      ...state.taskForm,
+      command,
     },
   })),
-  on(addPathToJobTask, (state, { path }) => ({
+  on(addPathToTaskFormCommand, (state, { path }) => ({
     ...state,
-    jobForm: {
-      ...state.jobForm,
-      data: {
-        ...state.jobForm.data,
-        task: path
-          ? `${state.jobForm.data?.task || ''} ${path}`
-          : state.jobForm.data?.task || '',
-      },
+    taskForm: {
+      ...state.taskForm,
+      command: path
+        ? `${state.taskForm.command || ''} ${path}`
+        : state.taskForm.command || '',
     },
   })),
-  on(updateJobInterval, (state, { interval }) => ({
+  on(updateTaskFormInterval, (state, { interval }) => ({
     ...state,
-    jobForm: {
-      ...state.jobForm,
-      jobsOptions: {
-        ...state.jobForm.jobsOptions,
-        repeat: {
-          ...state.jobForm.jobsOptions?.repeat,
-          every: interval,
-        },
-      },
+    taskForm: {
+      ...state.taskForm,
+      interval,
     },
-  })),
-  on(deleteJob, (state, { job }) => ({
-    ...state,
-    repeatableJobs: state.repeatableJobs.reduce((acc, cur) => {
-      if (cur.name !== job.name) acc.push(cur);
-      return acc;
-    }, [] as MyJobData[]),
-  })),
-  on(updateJobState, (state, { name, status }) => ({
-    ...state,
-    repeatableJobs: state.repeatableJobs.map((job) => {
-      if (job.name === name) {
-        return {
-          ...job,
-          status,
-        };
-      }
-      return job;
-    }),
-  })),
-  on(addJobToList, (state, { job }) => ({
-    ...state,
-    jobForm: {
-      data: {
-        name: '',
-        description: '',
-        task: '',
-      },
-    },
-    repeatableJobs: [...state.repeatableJobs, job],
   }))
 );
 
