@@ -1,3 +1,30 @@
 button {
   margin-left: 16px;
 }
+
+mat-card {
+  border-width: 2px;
+  border-color: rgba(0, 0, 0, 0);
+  border-style: solid;
+}
+.active {
+  animation: pulse 2s infinite;
+}
+
+.failed {
+  border-color: red;
+}
+
+@keyframes pulse {
+  0% {
+    border-color: rgba(0, 0, 0, 0);
+  }
+
+  50% {
+    border-color: aquamarine;
+  }
+
+  100% {
+    border-color: rgba(0, 0, 0, 0);
+  }
+}

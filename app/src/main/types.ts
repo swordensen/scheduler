@@ -8,7 +8,7 @@ export interface Task {
   lastExecuted?: number;
   next?: number;
   cron?: string;
-  status: "active" | "waiting";
+  status: "active" | "waiting" | "failed";
 }
 
 export type Schedule = Task[];

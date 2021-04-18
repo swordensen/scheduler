@@ -8,6 +8,7 @@ import {
   GET_SCHEDULE_EVENT,
   SEND_SCHEDULE_EVENT,
   START_TASK_EVENT,
+  UPDATE_TASK_EVENT,
 } from "../event-names";
 
 const scheduleRunner = new ScheduleRunner();
@@ -29,6 +30,10 @@ ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
 
 ipcMain.on(START_TASK_EVENT, async (event, task: Task) => {
   scheduleRunner.startTask(task);
+});
+
+ipcMain.on(UPDATE_TASK_EVENT, async (event, task: Task) => {
+  scheduleRunner.scheduleController.updateTask(task);
 });
 
 ipcMain.on(DELETE_TASK_EVENT, async (event, task: Task) => {

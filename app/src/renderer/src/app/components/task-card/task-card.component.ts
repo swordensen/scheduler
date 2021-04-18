@@ -15,7 +15,9 @@ export class TaskCardComponent implements OnInit {
   @Input() task: Task;
   constructor(private store: Store) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.task);
+  }
 
   _startTask() {
     this.store.dispatch(startTask({ task: this.task }));

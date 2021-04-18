@@ -1,6 +1,13 @@
-<mat-card fxLayout="row" fxLayoutAlign="space-between center">
+<mat-card
+  fxLayout="row"
+  fxLayoutAlign="space-between center"
+  [ngClass]="task.status"
+>
   <div fxLayout="column">
-    <mat-card-title>{{ task.name }} </mat-card-title>
+    <mat-card-title fxLayout="row" fxLayoutAlign="space-between">
+      <span>{{ task.name }}</span>
+      <!-- <mat-menu></mat-menu> -->
+    </mat-card-title>
     <p>{{ task.command }}</p>
   </div>
   <div fxLayout="row">
