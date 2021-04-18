@@ -1,4 +1,3 @@
-// require("update-electron-app")();
 try {
   require("electron-reloader")(module);
 } catch {}
@@ -8,6 +7,8 @@ import { setup } from "./window-setup";
 if (require("electron-squirrel-startup")) {
   // eslint-disable-line global-require
   app.quit();
+} else {
+  require("update-electron-app")();
 }
 
 app.on("ready", () => setup());
