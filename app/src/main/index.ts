@@ -1,4 +1,4 @@
-require("update-electron-app")();
+// require("update-electron-app")();
 try {
   require("electron-reloader")(module);
 } catch {}
