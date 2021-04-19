@@ -1,14 +1,12 @@
-button {
-  margin-left: 16px;
-}
-
 mat-card {
   border-width: 2px;
   border-color: rgba(0, 0, 0, 0);
   border-style: solid;
+  cursor: pointer;
 }
 .active {
   animation: pulse 2s infinite;
+  cursor: default;
 }
 
 .failed {

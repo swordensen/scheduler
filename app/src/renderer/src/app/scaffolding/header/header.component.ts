@@ -4,6 +4,9 @@ import {
   maximizeWindow,
   minimizeWindow,
 } from 'src/app/@core/store/actions/electron.actions';
+import { toggleSideNav } from 'src/app/@core/store/actions/gui.actions';
+import { GUIState } from 'src/app/@core/store/reducers/gui.reducer';
+import { selectLoading } from 'src/app/@core/store/selectors/gui.selectors';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +14,8 @@ import {
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  constructor(private store: Store) {}
+  loading$ = this.store.select(selectLoading);
+  constructor(private store: Store<{ gui: GUIState }>) {}
 
   minimize() {
     this.store.dispatch(minimizeWindow());
@@ -23,5 +27,9 @@ export class HeaderComponent {
 
   close() {
     this.store.dispatch(minimizeWindow());
+  }
+
+  _toggleSideNav() {
+    this.store.dispatch(toggleSideNav());
   }
 }

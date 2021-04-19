@@ -1,5 +1,10 @@
 <mat-toolbar>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="menu">
+  <button
+    mat-icon-button
+    class="example-icon favorite-icon"
+    aria-label="menu"
+    (click)="_toggleSideNav()"
+  >
     <mat-icon>menu</mat-icon></button
   ><span>Scheduler</span><span class="spacer"></span>
   <button
@@ -27,3 +32,6 @@
     <mat-icon>close</mat-icon>
   </button>
 </mat-toolbar>
+<ng-container *ngIf="loading$ | async">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-container>

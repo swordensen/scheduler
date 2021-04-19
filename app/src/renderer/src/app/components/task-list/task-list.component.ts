@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { getSchedule } from 'src/app/@core/store/actions/schedule.actions';
-import { BullState } from 'src/app/@core/store/reducers/bull.reducer';
-import { selectSchedule } from 'src/app/@core/store/selectors/bull.selectors';
+import { selectSchedule } from 'src/app/@core/store/selectors/schedule.selectors';
+import { Schedule } from '../../../../../main/types';
 
 @Component({
   selector: 'app-task-list',
@@ -12,7 +12,7 @@ import { selectSchedule } from 'src/app/@core/store/selectors/bull.selectors';
 export class TaskListComponent implements OnInit {
   schedule$ = this.store.select(selectSchedule);
 
-  constructor(private store: Store<{ bull: BullState }>) {}
+  constructor(private store: Store<{ schedule: Schedule }>) {}
 
   ngOnInit(): void {
     this.store.dispatch(getSchedule());

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs/operators';
 import {
   addPathToTaskFormCommand,
   addTask,
@@ -9,15 +8,15 @@ import {
   updateTaskFormInterval,
   updateTaskFormName,
 } from 'src/app/@core/store/actions/schedule.actions';
+
+import { remote } from 'electron';
 import {
-  selectTaskForm,
   selectTaskFormCommand,
   selectTaskFormDescription,
   selectTaskFormInterval,
   selectTaskFormName,
-} from 'src/app/@core/store/selectors/bull.selectors';
-import { AppState } from 'src/app/app.module';
-import { remote } from 'electron';
+} from 'src/app/@core/store/selectors/taskForm.schedule';
+import { TaskForm } from 'src/app/@core/store/reducers/taskForm.reducer';
 
 @Component({
   selector: 'app-task-form',
@@ -53,7 +52,7 @@ export class TaskFormComponent {
   interval$ = this.store.select(selectTaskFormInterval);
   description$ = this.store.select(selectTaskFormDescription);
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<{ taskForm: TaskForm }>) {}
 
   async browse() {
     const dialogResponse = await remote.dialog.showOpenDialog({

@@ -92,13 +92,13 @@ export class ScheduleController {
 
   public updateTask(task: Task) {
     this._schedule = this.schedule.map((_task, i) => {
-      if (task.id === task.id) {
+      if (task.id === _task.id) {
         return {
           ..._task,
           ...task,
         };
       }
-      return task;
+      return _task;
     });
   }
 

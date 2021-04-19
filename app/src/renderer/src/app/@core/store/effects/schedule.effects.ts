@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import { map, withLatestFrom } from 'rxjs/operators';
-import { AppState } from 'src/app/app.module';
 import { Store } from '@ngrx/store';
 import { ipcRenderer } from 'electron';
 import {
@@ -17,30 +16,23 @@ import {
   GET_SCHEDULE_EVENT,
   START_TASK_EVENT,
 } from '../../../../../../event-names';
+import { Schedule } from '../../../../../../main/types';
+import { startLoading, stopLoading } from '../actions/gui.actions';
 
 @Injectable()
-export class BullEffects {
-  constructor(private actions$: Actions, private store$: Store<AppState>) {}
+export class ScheduleEffects {
+  constructor(
+    private actions$: Actions,
+    private store$: Store<{ schedule: Schedule }>
+  ) {}
 
   getSchedule$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(getSchedule),
-        map(() => ipcRenderer.send(GET_SCHEDULE_EVENT))
-      ),
-    { dispatch: false }
-  );
-
-  addTask$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(addTask),
-        withLatestFrom(this.store$, (action, state) => {
-          return state.bull.taskForm;
-        }),
-        map((task) => {
-          console.log(`adding task ${task.name}`);
-          ipcRenderer.send(ADD_TASK_EVENT, task);
+        map(() => {
+          ipcRenderer.send(GET_SCHEDULE_EVENT);
+          this.store$.dispatch(stopLoading());
         })
       ),
     { dispatch: false }
@@ -52,6 +44,7 @@ export class BullEffects {
         ofType(startTask),
         map(({ task }) => {
           ipcRenderer.send(START_TASK_EVENT, task);
+          this.store$.dispatch(startLoading());
         })
       ),
     { dispatch: false }
@@ -63,6 +56,7 @@ export class BullEffects {
         ofType(deleteTask),
         map(({ task }) => {
           ipcRenderer.send(DELETE_TASK_EVENT, task);
+          this.store$.dispatch(startLoading());
         })
       ),
     { dispatch: false }
