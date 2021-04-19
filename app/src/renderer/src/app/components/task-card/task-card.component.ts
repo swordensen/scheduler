@@ -11,13 +11,9 @@ import { Task } from '../../../../../main/types';
   templateUrl: './task-card.component.html',
   styleUrls: ['./task-card.component.scss'],
 })
-export class TaskCardComponent implements OnInit {
+export class TaskCardComponent {
   @Input() task: Task;
   constructor(private store: Store) {}
-
-  ngOnInit(): void {
-    console.log(this.task);
-  }
 
   _startTask() {
     this.store.dispatch(startTask({ task: this.task }));
