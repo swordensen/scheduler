@@ -2,6 +2,7 @@ import { Task } from "./types";
 import { exec } from "child_process";
 import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
+import { sendAt } from "cron";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -39,10 +40,27 @@ export class ScheduleRunner {
 
   public startTask(task: Task) {
     LOGGER.info(`attempting to run task ${task.name}`);
+    this.scheduleController.updateTask({
+      ...task,
+      status: "active",
+      lastExecuted: Date.now(),
+      next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + task.interval,
+    });
     const process = exec(task.command);
     taskLogger(task, process); //investigate potential memory leak
-    process.on("exit", () => this.scheduleController.endTask(task));
-    this.scheduleController.startTask(task);
+    process.on("exit", (code) => {
+      if (code === 0) {
+        this.scheduleController.updateTask({
+          ...task,
+          status: "waiting",
+        });
+      } else {
+        this.scheduleController.updateTask({
+          ...task,
+          status: "failed",
+        });
+      }
+    });
   }
 
   /**

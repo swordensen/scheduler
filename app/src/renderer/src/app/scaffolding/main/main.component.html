@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav opened="opened" mode="side">
+  <mat-sidenav [opened]="sideNavOpened$ | async" mode="side">
     <app-task-list></app-task-list>
   </mat-sidenav>
   <mat-sidenav-content>
