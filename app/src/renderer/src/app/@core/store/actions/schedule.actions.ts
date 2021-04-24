@@ -9,6 +9,11 @@ export const setSchedule = createAction(
 
 export const addTask = createAction('[Schedule] add task');
 
+export const updateTaskForm = createAction(
+  '[TaskForm] Update Task Form',
+  props<{ taskForm: Partial<Task> }>()
+);
+
 export const updateTaskFormName = createAction(
   '[Schedule] update job name',
   props<{ name: string }>()
@@ -47,4 +52,9 @@ export const deleteTask = createAction(
 export const updateTaskState = createAction(
   '[Schedule] Update Task State',
   props<{ name: string; status: string }>()
+);
+
+export const openLogFile = createAction(
+  '[Schedule] Open task log file',
+  props<{ task: Task }>()
 );

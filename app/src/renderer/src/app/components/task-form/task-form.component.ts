@@ -16,7 +16,9 @@ import {
   selectTaskFormInterval,
   selectTaskFormName,
 } from 'src/app/@core/store/selectors/taskForm.schedule';
-import { TaskForm } from 'src/app/@core/store/reducers/taskForm.reducer';
+import { Task } from '../../../../../main/types';
+import { MatDialog } from '@angular/material/dialog';
+import { AdvancedTaskFormDialogueComponent } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.component';
 
 @Component({
   selector: 'app-task-form',
@@ -52,7 +54,14 @@ export class TaskFormComponent {
   interval$ = this.store.select(selectTaskFormInterval);
   description$ = this.store.select(selectTaskFormDescription);
 
-  constructor(private store: Store<{ taskForm: TaskForm }>) {}
+  constructor(
+    private store: Store<{ taskForm: Partial<Task> }>,
+    public dialog: MatDialog
+  ) {}
+
+  advanced() {
+    this.dialog.open(AdvancedTaskFormDialogueComponent);
+  }
 
   async browse() {
     const dialogResponse = await remote.dialog.showOpenDialog({

@@ -9,3 +9,17 @@ export const GET_SCHEDULE_EVENT = "get-schedule";
 export const SEND_SCHEDULE_EVENT = "send-schedule";
 
 export const UPDATE_TASK_EVENT = "update-task";
+
+export const OPEN_TASK_LOG_FILE_EVENT = "open-task-log-file";
+
+export const TASK_STARTED_EVENT = "task-started";
+
+export const TASK_WAITING_EVENT = "task-waiting";
+
+export const TASK_FAILED_EVENT = "task-failed";
+
+export const TASK_DELETED_EVENT = "task-deleted";
+
+export const TASK_ADDED_EVENT = "task-added";
+
+export const TASK_UPDATED_EVENT = "task-updated";

@@ -10,19 +10,21 @@ import { MainModule } from './scaffolding/main/main.module';
 import { EffectsModule } from '@ngrx/effects';
 import { ElectronEffects } from './@core/store/effects/electron.effects';
 import { scheduleReducer } from './@core/store/reducers/schedule.reducer';
-import {
-  TaskForm,
-  taskFormReducer,
-} from './@core/store/reducers/taskForm.reducer';
+import { taskFormReducer } from './@core/store/reducers/taskForm.reducer';
 import { APP_INITIALIZER } from '@angular/core';
 import { ScheduleListenerService } from './@core/services/schedule-listener.service';
 import { ScheduleEffects } from './@core/store/effects/schedule.effects';
 import { TaskFormEffects } from './@core/store/effects/taskForm.effects';
 import { Schedule } from '../../../main/types';
 import { guiReducer } from './@core/store/reducers/gui.reducer';
+import { Task } from 'electron';
+import {
+  MatSnackBarModule,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS,
+} from '@angular/material/snack-bar';
 export interface AppState {
   schedule: Schedule;
-  taskForm: TaskForm;
+  taskForm: Partial<Task>;
 }
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +34,7 @@ export interface AppState {
     BrowserAnimationsModule,
     HeaderModule,
     MainModule,
+    MatSnackBarModule,
     StoreModule.forRoot({
       schedule: scheduleReducer,
       taskForm: taskFormReducer,
@@ -41,6 +44,10 @@ export interface AppState {
   ],
   providers: [
     ScheduleListenerService,
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { duration: 2500 },
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: (bs: ScheduleListenerService) => () => bs.init(),

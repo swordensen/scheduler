@@ -3,7 +3,8 @@ export interface Task {
   name: string;
   description?: string;
   command: string;
-  interval?: number;
+  arguments?: string[];
+  interval?: string;
   startup: boolean;
   lastExecuted?: number;
   next?: number;
