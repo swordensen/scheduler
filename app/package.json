@@ -16,7 +16,7 @@
     "start": "electron-forge start",
     "build-main-watch": "tsc -w",
     "package-app": "electron-packager .",
-    "package": "electron-forge package",
+    "package": "npm run build-renderer && electron-forge package",
     "publish": "npm run build-renderer && electron-forge publish",
     "make": "electron-forge make",
     "electron-forge": "electron-forge",
