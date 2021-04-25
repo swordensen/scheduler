@@ -1,0 +1,78 @@
+<form [formGroup]="taskForm">
+  <!-- task name -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        placeholder="Ex. C:/calculator.exe"
+        formControlName="name"
+      />
+    </mat-form-field>
+  </div>
+
+  <!-- task command -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <mat-form-field appearance="outline">
+      <mat-label>Command</mat-label>
+      <input
+        matInput
+        placeholder="Ex. C:/calculator.exe"
+        formControlName="command"
+      />
+    </mat-form-field>
+    <button mat-raised-button fxFlex="0 1 auto" (click)="browse()">
+      Browse...
+    </button>
+  </div>
+
+  <!-- task arguments -->
+  <div formArrayName="arguments">
+    <ng-container *ngFor="let argument of arguments.controls; let i = index">
+      <mat-form-field appearance="outline">
+        <mat-label>argument {{ i }}</mat-label>
+        <input matInput [placeholder]="i.toString()" [formControlName]="i" />
+      </mat-form-field>
+    </ng-container>
+  </div>
+  <!-- TODO: add ability to add more arguments -->
+  <button mat-fab><mat-icon>add</mat-icon></button>
+
+  <!-- cron or interval -->
+  <!-- TODO: create a flag such that you can only do either CRON time or Interval -->
+  <!-- TODO: create a smarter CRON input field -->
+  <!-- CRON -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <mat-form-field appearance="outline">
+      <mat-label>CRON</mat-label>
+      <input matInput placeholder="* * * * * * " formControlName="cron" />
+    </mat-form-field>
+  </div>
+
+  <!-- interval -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <mat-form-field appearance="outline">
+      <mat-label>Interval</mat-label>
+      <input matInput placeholder="* * * * * * " formControlName="interval" />
+    </mat-form-field>
+  </div>
+  <!-- description -->
+  <div class="relative">
+    <mat-form-field appearance="outline" class="fill">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        placeholder="about my cool task"
+        rows="4"
+        class="no-resize"
+        name="description"
+        formControlName="description"
+      ></textarea>
+    </mat-form-field>
+    <!-- post button -->
+    <button type="submit" mat-raised-button color="primary" (click)="create()">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+  </div>
+</form>

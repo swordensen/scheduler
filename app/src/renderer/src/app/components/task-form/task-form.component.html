@@ -35,11 +35,12 @@
         <mat-option
           *ngFor="let option of intervalOptions"
           [value]="option.value"
-          >{{ option.display }}</mat-option
         >
+          {{ option.display }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button>Advanced</button>
+    <button mat-raised-button (click)="advanced()">Advanced</button>
   </div>
   <div class="relative">
     <mat-form-field appearance="outline" class="fill">

@@ -14,13 +14,20 @@ import { SVG, Color } from '@svgdotjs/svg.js';
 })
 export class ClockComponent implements AfterViewInit {
   @ViewChild('clock') clockElem: ElementRef;
-  constructor() {}
+
+  constructor(private elRef: ElementRef) {}
+
   ngAfterViewInit(): void {
     this.renderClock();
-    window.addEventListener('resize', () => {
-      this.clockElem.nativeElement.innerHTML = '';
-      this.renderClock();
-    });
+    // @ts-ignore
+    const resizeObserver = new ResizeObserver(() => {
+      this.rerender();
+    }).observe(this.clockElem.nativeElement);
+  }
+
+  rerender() {
+    this.clockElem.nativeElement.innerHTML = '';
+    this.renderClock();
   }
 
   /************************************

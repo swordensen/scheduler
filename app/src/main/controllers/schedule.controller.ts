@@ -71,7 +71,7 @@ export class ScheduleController {
       {
         ...task,
         id: uuid(),
-        next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + task.interval,
+        next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + parseInt(task.interval),
       },
     ];
     return currentSchedule.length;
@@ -115,7 +115,7 @@ export class ScheduleController {
           ...task,
           status: "active",
           lastExecuted: Date.now(),
-          next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + task.interval,
+          next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + parseInt(task.interval),
         };
       }
       return task;

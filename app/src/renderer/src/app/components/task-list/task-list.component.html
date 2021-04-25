@@ -1,8 +1,11 @@
 <ng-container *ngIf="schedule$ | async; let schedule">
   <ng-container *ngIf="schedule.length; else noTasks">
-    <ng-container *ngFor="let task of schedule">
-      <app-task-card [task]="task"></app-task-card>
-    </ng-container>
+    <div fxLayout="column" fxLayoutGap="16px" fx>
+      <ng-container *ngFor="let task of schedule">
+        <app-task-card [task]="task"></app-task-card>
+      </ng-container>
+    </div>
   </ng-container>
+
   <ng-template #noTasks> ...no tasks to display </ng-template>
 </ng-container>

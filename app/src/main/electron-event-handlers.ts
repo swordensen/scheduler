@@ -6,12 +6,45 @@ import {
   ADD_TASK_EVENT,
   DELETE_TASK_EVENT,
   GET_SCHEDULE_EVENT,
+  OPEN_TASK_LOG_FILE_EVENT,
   SEND_SCHEDULE_EVENT,
   START_TASK_EVENT,
+  TASK_ADDED_EVENT,
+  TASK_DELETED_EVENT,
+  TASK_FAILED_EVENT,
+  TASK_STARTED_EVENT,
+  TASK_UPDATED_EVENT,
+  TASK_WAITING_EVENT,
   UPDATE_TASK_EVENT,
 } from "../event-names";
+import { openLogFile } from "./logger";
 
 const scheduleRunner = new ScheduleRunner();
+
+scheduleRunner.onTaskStarted((task) => {
+  console.log("task started listener triggered sendin task started even to browser");
+  mainWindow.webContents.send(TASK_STARTED_EVENT, task);
+});
+
+scheduleRunner.onTaskFailed((task) => {
+  mainWindow.webContents.send(TASK_FAILED_EVENT, task);
+});
+
+scheduleRunner.onTaskWaiting((task) => {
+  mainWindow.webContents.send(TASK_WAITING_EVENT, task);
+});
+
+scheduleRunner.onTaskDeleted((task) => {
+  mainWindow.webContents.send(TASK_DELETED_EVENT, task);
+});
+
+scheduleRunner.onTaskUpdated((task) => {
+  mainWindow.webContents.send(TASK_UPDATED_EVENT, task);
+});
+
+scheduleRunner.onTaskAdded((task) => {
+  mainWindow.webContents.send(TASK_ADDED_EVENT, task);
+});
 
 console.log("initializing event handlers ");
 /**
@@ -25,7 +58,11 @@ ipcMain.on(GET_SCHEDULE_EVENT, async () => {
 
 ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
   console.log(`adding task ${task.name}`);
-  scheduleRunner.scheduleController.addTask(task);
+  if (task.id) {
+    scheduleRunner.updateTask(task);
+  } else {
+    scheduleRunner.createTask(task);
+  }
 });
 
 ipcMain.on(START_TASK_EVENT, async (event, task: Task) => {
@@ -33,11 +70,15 @@ ipcMain.on(START_TASK_EVENT, async (event, task: Task) => {
 });
 
 ipcMain.on(UPDATE_TASK_EVENT, async (event, task: Task) => {
-  scheduleRunner.scheduleController.updateTask(task);
+  scheduleRunner.updateTask(task);
 });
 
 ipcMain.on(DELETE_TASK_EVENT, async (event, task: Task) => {
-  scheduleRunner.scheduleController.deleteTask(task);
+  scheduleRunner.deleteTask(task);
+});
+
+ipcMain.on(OPEN_TASK_LOG_FILE_EVENT, (event, task: Task) => {
+  openLogFile(task);
 });
 
 scheduleRunner.scheduleController.onChange((schedule) => {

@@ -1,5 +1,6 @@
 // import { ChildProcess } from "child_process";
 import { ChildProcess } from "child_process";
+import open from "open";
 import { resolve } from "path";
 import { createLogger, format } from "winston";
 import { Console, File } from "winston/lib/winston/transports";
@@ -34,5 +35,10 @@ export function taskLogger(task: Task, _process: ChildProcess) {
   _process.stderr?.on("data", (data) => logger.error(data.toString()));
   _process.on("exit", (code) => logger.info(`process exited with code ${code?.toString()}`));
   return logger;
+}
+
+export function openLogFile(task: Task) {
+  const path = resolve(logFolder, `./commands/${task.name}.log`);
+  open(path);
 }
 export default LOGGER;

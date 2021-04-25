@@ -4,15 +4,15 @@ import { Store } from '@ngrx/store';
 import { ipcRenderer } from 'electron';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { ADD_TASK_EVENT } from '../../../../../../event-names';
+import { Task } from '../../../../../../main/types';
 import { startLoading } from '../actions/gui.actions';
 import { addTask } from '../actions/schedule.actions';
-import { TaskForm } from '../reducers/taskForm.reducer';
 
 @Injectable()
 export class TaskFormEffects {
   constructor(
     private actions$: Actions,
-    private store$: Store<{ taskForm: TaskForm }>
+    private store$: Store<{ taskForm: Partial<Task> }>
   ) {}
 
   addTask$ = createEffect(

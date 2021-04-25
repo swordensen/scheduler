@@ -1,24 +1,29 @@
 import { createReducer, on, Action } from '@ngrx/store';
+import { Task } from '../../../../../../main/types';
 import {
   addPathToTaskFormCommand,
+  updateTaskForm,
   updateTaskFormCommand,
   updateTaskFormDescription,
   updateTaskFormInterval,
   updateTaskFormName,
 } from '../actions/schedule.actions';
 
-export interface TaskForm {
-  name?: string;
-  description?: string;
-  command?: string;
-  interval?: string;
-  cron?: string;
-}
-
-const initialTaskFormState: TaskForm = {};
+const initialTaskFormState: Partial<Task> = {
+  name: '',
+  description: '',
+  arguments: [''],
+  command: '',
+  cron: '',
+  interval: '',
+};
 
 const _taskFormReducer = createReducer(
   initialTaskFormState,
+  on(updateTaskForm, (state, { taskForm }) => ({
+    ...state,
+    ...taskForm,
+  })),
   on(updateTaskFormName, (state, { name }) => ({
     ...state,
     name,
@@ -41,6 +46,9 @@ const _taskFormReducer = createReducer(
   }))
 );
 
-export function taskFormReducer(state: TaskForm | undefined, action: Action) {
+export function taskFormReducer(
+  state: Partial<Task> | undefined,
+  action: Action
+) {
   return _taskFormReducer(state, action);
 }

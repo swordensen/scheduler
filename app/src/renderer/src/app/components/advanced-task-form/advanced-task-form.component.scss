@@ -1,0 +1,17 @@
+.relative {
+  position: relative;
+}
+
+button[type="submit"] {
+  position: absolute;
+  bottom: 30px;
+  right: 16px;
+}
+
+.fill {
+  width: 100%;
+}
+
+textarea.no-resize {
+  resize: none;
+}

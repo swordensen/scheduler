@@ -13,11 +13,11 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="_editTask()">
           <mat-icon>edit</mat-icon>
           <span>edit</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="_openLogFile()">
           <mat-icon>text_snippet</mat-icon>
           <span>logs</span>
         </button>
@@ -30,5 +30,6 @@
   </mat-card-title>
   <mat-card-content>
     <p>{{ task.command }}</p>
+    <p>next: {{ task.next | date: "medium" }}</p>
   </mat-card-content>
 </mat-card>

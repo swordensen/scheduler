@@ -8,12 +8,14 @@ import {
   addTask,
   deleteTask,
   getSchedule,
+  openLogFile,
   startTask,
 } from '../actions/schedule.actions';
 import {
   ADD_TASK_EVENT,
   DELETE_TASK_EVENT,
   GET_SCHEDULE_EVENT,
+  OPEN_TASK_LOG_FILE_EVENT,
   START_TASK_EVENT,
 } from '../../../../../../event-names';
 import { Schedule } from '../../../../../../main/types';
@@ -57,6 +59,17 @@ export class ScheduleEffects {
         map(({ task }) => {
           ipcRenderer.send(DELETE_TASK_EVENT, task);
           this.store$.dispatch(startLoading());
+        })
+      ),
+    { dispatch: false }
+  );
+
+  openLogFile$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(openLogFile),
+        map(({ task }) => {
+          ipcRenderer.send(OPEN_TASK_LOG_FILE_EVENT, task);
         })
       ),
     { dispatch: false }

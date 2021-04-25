@@ -4,8 +4,13 @@
 :host {
   -webkit-user-select: none;
   -webkit-app-region: drag;
+  position: relative;
 }
 button {
   -webkit-user-select: auto;
   -webkit-app-region: no-drag;
+}
+mat-progress-bar {
+  position: absolute;
+  bottom: 0px;
 }
