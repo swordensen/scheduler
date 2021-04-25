@@ -2,7 +2,7 @@
   "name": "scheduler",
   "version": "0.0.10",
   "description": "Open source application for scheduling tasks (processes)",
-  "main": "dist/main",
+  "main": "./main.js",
   "authors": "michael sorensen",
   "repository": {
     "type": "git",
@@ -72,7 +72,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "asar": false,
+        "asar": true,
         "osxSign": {
           "identity": "",
           "hardened-runtime": true,
