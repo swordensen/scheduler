@@ -58,3 +58,33 @@ export const openLogFile = createAction(
   '[Schedule] Open task log file',
   props<{ task: Task }>()
 );
+
+export const taskStarted = createAction(
+  '[Schedule] Task started',
+  props<{ task: Task }>()
+);
+
+export const taskWaiting = createAction(
+  '[Schedule] Task Waiting',
+  props<{ task: Task }>()
+);
+
+export const taskFailed = createAction(
+  '[Schedule] Task Failed',
+  props<{ task: Task }>()
+);
+
+export const taskAdded = createAction(
+  '[Schedule] Task Added',
+  props<{ task: Task }>()
+);
+
+export const taskUpdated = createAction(
+  '[Schedule] Task Updated',
+  props<{ task: Task }>()
+);
+
+export const taskDeleted = createAction(
+  '[Schedule] Task Deleted',
+  props<{ task: Task }>()
+);
