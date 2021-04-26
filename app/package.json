@@ -1,8 +1,8 @@
 {
   "name": "scheduler",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "description": "Open source application for scheduling tasks (processes)",
-  "main": "./main.js",
+  "main": "dist/main",
   "authors": "michael sorensen",
   "repository": {
     "type": "git",
@@ -15,9 +15,10 @@
     "build-renderer": "cd src/renderer && npm run build && cp -r dist ../..",
     "start": "electron-forge start",
     "build-main-watch": "tsc -w",
+    "build-main": "tsc",
     "package-app": "electron-packager .",
-    "package": "npm run build-renderer && electron-forge package",
-    "publish": "npm run build-renderer && electron-forge publish",
+    "package": "npm run build-renderer && npm run build-main && electron-forge package",
+    "publish": "npm run build-renderer && npm run build-main && electron-forge publish",
     "make": "electron-forge make",
     "electron-forge": "electron-forge",
     "copy-assets": "cp -r ./src/main/assets ./dist"
