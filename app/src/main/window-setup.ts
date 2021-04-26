@@ -23,8 +23,8 @@ export function setup() {
     height: 720,
     webPreferences: {
       // contextIsolation: true,
-
-      devTools: !app.isPackaged,
+      devTools: true,
+      // devTools: !app.isPackaged,
       nodeIntegration: true,
       enableRemoteModule: true,
     },
@@ -32,6 +32,7 @@ export function setup() {
     frame: false,
     show: shouldHide ? false : true,
   });
+  console.log(iconPath);
   tray = new Tray(iconPath);
   tray.setToolTip("scheduler");
   tray.on("click", (e) => {
