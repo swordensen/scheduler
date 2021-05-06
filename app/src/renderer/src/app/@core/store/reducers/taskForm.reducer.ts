@@ -2,6 +2,7 @@ import { createReducer, on, Action } from '@ngrx/store';
 import { Task } from '../../../../../../main/types';
 import {
   addPathToTaskFormCommand,
+  resetTaskForm,
   updateTaskForm,
   updateTaskFormCommand,
   updateTaskFormDescription,
@@ -51,7 +52,8 @@ const _taskFormReducer = createReducer(
       if (index === i) return trigger;
       return trigger;
     }),
-  }))
+  })),
+  on(resetTaskForm, (state, data) => initialTaskFormState)
 );
 
 export function taskFormReducer(

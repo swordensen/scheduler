@@ -31,9 +31,15 @@ export function createTaskLogger(task: Task) {
 export function taskLogger(task: Task, _process: ChildProcess) {
   const logger = createTaskLogger(task);
   logger.info(`attempting to execute ${task.command}`);
-  _process.stdout?.on("data", (data) => logger.info(data.toString()));
+  _process.stdout?.on("data", (data) => {
+    console.log(data);
+    logger.info(data.toString());
+  });
   _process.stderr?.on("data", (data) => logger.error(data.toString()));
-  _process.on("exit", (code) => logger.info(`process exited with code ${code?.toString()}`));
+  _process.on("exit", (code) => {
+    logger.info(`process exited with code ${code?.toString()}`);
+    logger.destroy();
+  });
   return logger;
 }
 

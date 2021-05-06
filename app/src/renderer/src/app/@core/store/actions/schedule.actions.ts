@@ -19,6 +19,8 @@ export const updateTaskForm = createAction(
   props<{ taskForm: Partial<Task> }>()
 );
 
+export const resetTaskForm = createAction('[TaskForm] Reset Task Form');
+
 export const updateTaskFormName = createAction(
   '[Schedule] update job name',
   props<{ name: string }>()

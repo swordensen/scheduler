@@ -111,18 +111,15 @@ export class ScheduleRunner {
       this.taskStartedListeners.forEach((cb) => {
         cb(task);
       });
-      const myTaskLogFolder = createFolderIfNotExist(resolve(taskLogFolder, task.name));
-      const outFilePath = resolve(myTaskLogFolder, "out.log");
-      const errFilePath = resolve(myTaskLogFolder, "error.log");
-      const outFile = openSync(outFilePath, "a");
-      const errFile = openSync(errFilePath, "a");
-      const process = spawn(task.command, task.arguments, {
-        detached: true,
+      const _process = spawn(task.command, task.arguments, {
+        // detached: true,
         shell: true,
-        stdio: [outFile, outFile, errFile],
       });
-      taskLogger(task, process); //investigate potential memory leak
-      process.on("exit", (code) => {
+      _process.stdout.pipe(process.stdout);
+      console.log("creating task logger");
+      taskLogger(task, _process); //investigate potential memory leak
+
+      _process.on("exit", (code) => {
         if (code === 0) {
           const __task: Task = {
             ...task,
@@ -143,7 +140,7 @@ export class ScheduleRunner {
           this.scheduleController.updateTask(__task);
         }
       });
-      process.unref();
+      // process.unref();
     } catch (e) {
       console.log(e);
       throw `could not start task ${e}`;
