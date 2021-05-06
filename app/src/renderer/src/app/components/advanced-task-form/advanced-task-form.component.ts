@@ -54,7 +54,7 @@ export class AdvancedTaskFormComponent implements OnInit {
     const commandControl = this.taskForm.get('command');
     const commandControlValue = commandControl?.value;
     commandControl?.setValue(commandControlValue + path);
-    this.store.dispatch(addPathToTaskFormCommand({ path }));
+    // this.store.dispatch(addPathToTaskFormCommand({ path }));
   }
 
   create() {

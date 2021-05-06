@@ -30,6 +30,6 @@
   </mat-card-title>
   <mat-card-content>
     <p>{{ task.command }}</p>
-    <p>next: {{ task.next | date: "medium" }}</p>
+    <p>last ran: {{ task.lastExecuted | date: "medium" }}</p>
   </mat-card-content>
 </mat-card>

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, watchFile, writeFileSync } from "fs";
 import { scheduleFile } from "../defaults";
 import { LOGGER } from "../logger";
-import { Schedule, Task } from "../types";
+import { Schedule, Task, Trigger } from "../types";
 import { sendAt } from "cron";
 import { v4 as uuid } from "uuid";
 
@@ -71,7 +71,18 @@ export class ScheduleController {
       {
         ...task,
         id: uuid(),
-        next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + parseInt(task.interval),
+        triggers: task.triggers.map((trigger) => {
+          switch (trigger.type) {
+            case "CRON":
+              trigger.next = sendAt(trigger.value).unix();
+              break;
+            case "interval":
+              trigger.next = Date.now() + trigger.value;
+              break;
+          }
+          trigger.id = uuid();
+          return trigger;
+        }),
       },
     ];
     return currentSchedule.length;
@@ -104,22 +115,58 @@ export class ScheduleController {
 
   /**
    * updates the last executed time.
-   * and sets the next time the script will be ran
    * @param index
    * @param lastExecuted
    */
   public startTask(task: Task) {
+    const modTask: Task = {
+      ...task,
+      status: "active",
+      lastExecuted: Date.now(),
+    };
     this._schedule = this.schedule.map((_task, i) => {
       if (task.id == _task.id) {
-        return {
-          ...task,
-          status: "active",
-          lastExecuted: Date.now(),
-          next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + parseInt(task.interval),
-        };
+        return modTask;
       }
-      return task;
+      return _task;
     });
+    return modTask;
+  }
+
+  /**
+   *
+   * @param task
+   * @param trigger
+   */
+  public triggerTask(task: Task, trigger: Trigger) {
+    // modify the task
+    const modTask: Task = {
+      ...task,
+      status: "active",
+      lastExecuted: Date.now(),
+      triggers: task.triggers.map((_trigger) => {
+        if (trigger.id === _trigger.id) {
+          switch (_trigger.type) {
+            case "CRON":
+              _trigger.next = sendAt(_trigger.value).unix();
+              break;
+            case "interval":
+              _trigger.next = Date.now() + _trigger.value;
+              break;
+          }
+        }
+        return _trigger;
+      }),
+    };
+    // save the modifications to the database
+    this._schedule = this.schedule.map((_task) => {
+      if (task.id === _task.id) {
+        return modTask;
+      }
+      return _task;
+    });
+    // return modded task
+    return modTask;
   }
 
   public endTask(task: Task) {

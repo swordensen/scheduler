@@ -23,6 +23,7 @@ export class TaskFormEffects {
           return state.taskForm;
         }),
         map((task) => {
+          console.log(task);
           ipcRenderer.send(ADD_TASK_EVENT, task);
           this.store$.dispatch(startLoading());
         })

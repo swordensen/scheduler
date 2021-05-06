@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { Schedule, Task } from '../../../../../../main/types';
+import {
+  Schedule,
+  Task,
+  Trigger,
+  UTrigger,
+} from '../../../../../../main/types';
 
 export const getSchedule = createAction('[Schedule] get schedule');
 export const setSchedule = createAction(
@@ -34,9 +39,9 @@ export const addPathToTaskFormCommand = createAction(
   props<{ path: string }>()
 );
 
-export const updateTaskFormInterval = createAction(
+export const updateTaskFormTrigger = createAction(
   '[Schedule] update job interval',
-  props<{ interval: string }>()
+  props<{ trigger: UTrigger; index: number }>()
 );
 
 export const startTask = createAction(
