@@ -20,3 +20,11 @@ button[type="submit"] {
 textarea.no-resize {
   resize: none;
 }
+
+.cron {
+  position: relative;
+  .cronstring {
+    position: absolute;
+    bottom: -15px;
+  }
+}

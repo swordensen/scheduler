@@ -74,7 +74,7 @@ export class ScheduleController {
         triggers: task.triggers.map((trigger) => {
           switch (trigger.type) {
             case "CRON":
-              trigger.next = sendAt(trigger.value).unix();
+              trigger.next = sendAt(trigger.value).unix() * 1000;
               break;
             case "interval":
               trigger.next = Date.now() + trigger.value;
@@ -148,7 +148,7 @@ export class ScheduleController {
         if (trigger.id === _trigger.id) {
           switch (_trigger.type) {
             case "CRON":
-              _trigger.next = sendAt(_trigger.value).unix();
+              _trigger.next = sendAt(_trigger.value).unix() * 1000;
               break;
             case "interval":
               _trigger.next = Date.now() + _trigger.value;

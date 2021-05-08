@@ -61,7 +61,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div *ngSwitchCase="'CRON'" fxLayout="column">
+            <div *ngSwitchCase="'CRON'" fxLayout="column" class="cron">
               <mat-form-field appearance="outline">
                 <mat-label>CRON</mat-label>
                 <input
@@ -70,7 +70,7 @@
                   formControlName="value"
                 />
               </mat-form-field>
-              <p>{{ getTriggerValue() | cronStr }}</p>
+              <p class="cronstring">{{ getTriggerValue() | cronStr }}</p>
             </div>
           </div>
         </div>
