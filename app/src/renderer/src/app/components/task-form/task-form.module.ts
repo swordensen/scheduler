@@ -10,6 +10,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { MatDialogModule } from '@angular/material/dialog';
 import { AdvancedTaskFormDialogueModule } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.module';
+import { CronStrModule } from 'src/app/pipes/cron-str/cron-str.module';
 @NgModule({
   declarations: [TaskFormComponent],
   imports: [
@@ -23,6 +24,7 @@ import { AdvancedTaskFormDialogueModule } from 'src/app/dialogues/advanced-task-
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
+    CronStrModule,
   ],
   exports: [TaskFormComponent],
 })

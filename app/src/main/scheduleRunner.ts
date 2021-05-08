@@ -114,10 +114,11 @@ export class ScheduleRunner {
       const _process = spawn(task.command, task.arguments, {
         // detached: true,
         shell: true,
+        stdio: "inherit",
       });
-      _process.stdout.pipe(process.stdout);
+
       console.log("creating task logger");
-      taskLogger(task, _process); //investigate potential memory leak
+      const logger = taskLogger(task, _process); //investigate potential memory leak
 
       _process.on("exit", (code) => {
         if (code === 0) {

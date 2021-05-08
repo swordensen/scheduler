@@ -52,6 +52,10 @@ export class TaskFormComponent implements OnInit {
     return this.taskForm.get('triggers') as FormArray;
   }
 
+  getTriggerValue() {
+    return this.triggers.get('0')?.get('value')?.value;
+  }
+
   constructor(
     private store: Store<{ taskForm: Partial<Task> }>,
     public dialog: MatDialog,
