@@ -22,13 +22,73 @@
       </div>
       <h2>Automation Made Simple</h2>
       <a href="https://github.com/Mikkal24/scheduler/releases/download/0.0.1/windows-setup.exe">Download for Windows</a>
-      <p>This is an open source project. Consider donating.</p>
-      <a href="https://michaelsorensen.dev" target="_blank">Donate</a>
+      <p>This is an open source project. Consider donating time or money.</p>
+      <div>
+        <a
+          class="donate"
+          href="https://www.paypal.com/donate?business=9W87GG2TTPQEU&item_name=Recreating+applications+for+the+modern+era.&currency_code=USD"
+          target="_blank"
+          >Donate</a
+        >
+        <span> </span>
+        <a class="github" href="https://github.com/Mikkal24/scheduler" target="_blank">Github</a>
+      </div>
+      <br />
+      <br />
+      <hr />
+      <section class="about">
+        <h3>About Task Scheduler</h3>
+        <p>
+          The Task Scheduler is a very simple application that allows users to run shell commands (aka tasks) at
+          intervals using either milliseconds, CRON formatting or startup triggers. The Task Scheduler has a suite of
+          features to make that simple objective a seemless experience for the end user relative to current market
+          competitors.
+        </p>
+        <p>
+          The Task Scheduler aims at taking on the Windows Task Scheduler and Unix/Linux Crontab by providing a better
+          user experience on all platforms including macOs.
+        </p>
+
+        <p>
+          The Task Scheduler is made by me,
+          <a href="https://michaelsorensen.dev/" target="_blank">Michael Sorensen (sw0rdensen)</a>
+        </p>
+      </section>
+      <br />
+      <br />
+      <hr />
+      <section class="goals">
+        <h3>Task Scheduler Goals</h3>
+        <p>The Task Scheduler has a long road ahead of it but, it will stay true to the following objectives:</p>
+        <ol>
+          <li>A better user interface</li>
+          <li>Better security</li>
+          <li>Support multiple operating systems (windows, mac, linux)</li>
+          <li>Remain free and open source</li>
+        </ol>
+      </section>
+      <br />
+      <br />
+      <hr />
+      <footer>
+        If you would like to contact me please navigate to my website
+        <a href="https://www.michaelsorensen.dev">https://www.michaelsorensen.dev</a>
+      </footer>
     </div>
     <style>
       html,
       body {
         margin: 0px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      .about p,
+      .goals p {
+        text-align: left;
+      }
+      a {
+        color: #03dac6;
       }
       body {
         display: flex;
@@ -43,9 +103,43 @@
       }
       .wrapper {
         padding: 2em;
+        max-width: 1080px;
       }
       img {
         max-width: 100%;
+      }
+      ol {
+        display: inline-block;
+      }
+
+      ol li {
+        text-align: left;
+      }
+
+      .donate {
+        /* background-color: black; */
+        display: inline-block;
+        border: 2px solid #03dac6;
+        color: #03dac6;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 10px 20px;
+        /* margin: 10px; */
+        /* border-radius: 7px; */
+        text-transform: uppercase;
+      }
+      .github {
+        margin-left: 10px;
+        background-color: #03dac6;
+        display: inline-block;
+        border: 2px solid #03dac6;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 10px 20px;
+        /* margin: 10px; */
+        /* border-radius: 7px; */
+        text-transform: uppercase;
       }
     </style>
   </body>
