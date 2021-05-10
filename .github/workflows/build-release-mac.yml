@@ -26,7 +26,7 @@ jobs:
 
       - name: Install packages
         working-directory: ./app
-        run: npm install
+        run: npm install --no-optional
 
       - name: Install Renderer Packages
         working-directory: ./app/src/renderergit pus
