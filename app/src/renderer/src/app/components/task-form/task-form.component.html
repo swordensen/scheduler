@@ -1,46 +1,85 @@
-<form fxLayout="column">
+<form fxLayout="column" [formGroup]="taskForm">
   <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
-    <mat-form-field appearance="outline">
-      <mat-label>Task</mat-label>
-      <input
-        matInput
-        placeholder="Ex. C:/calculator.exe"
-        name="task"
-        [ngModel]="command$ | async"
-        (ngModelChange)="updateTask($event)"
-      />
-    </mat-form-field>
-    <button mat-raised-button fxFlex="0 1 auto" (click)="browse()">
-      Browse...
-    </button>
-  </div>
-  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <!-- name -->
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
       <input
         matInput
         placeholder="myCoolTask"
         name="name"
-        [ngModel]="name$ | async"
-        (ngModelChange)="updateName($event)"
+        formControlName="name"
       />
     </mat-form-field>
+    <!-- command -->
     <mat-form-field appearance="outline">
-      <mat-label>Interval</mat-label>
-      <mat-select
-        name="interval"
-        [ngModel]="interval$ | async"
-        (ngModelChange)="updateInterval($event)"
-      >
-        <mat-option
-          *ngFor="let option of intervalOptions"
-          [value]="option.value"
-        >
-          {{ option.display }}
-        </mat-option>
-      </mat-select>
+      <mat-label>Command</mat-label>
+      <input
+        matInput
+        placeholder="Ex. C:/calculator.exe"
+        name="task"
+        formControlName="command"
+      />
     </mat-form-field>
-    <button mat-raised-button (click)="advanced()">Advanced</button>
+    <button mat-raised-button fxFlex="0 1 auto" (click)="browse()">
+      Browse...
+    </button>
+  </div>
+
+  <!-- only the first trigger -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <div formArrayName="triggers">
+      <ng-container
+        *ngFor="let trigger of triggers.controls | slice: 0:1; let i = index"
+      >
+        <div
+          fxLayout="row"
+          [formGroupName]="i"
+          fxLayout="row"
+          fxLayoutGap="16px"
+          fxLayoutAlign="start center"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Trigger Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option value="interval">interval</mat-option>
+              <mat-option value="CRON">CRON</mat-option>
+              <mat-option value="startup">startup</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div [ngSwitch]="trigger.value.type">
+            <div *ngSwitchCase="'interval'">
+              <mat-form-field appearance="outline">
+                <mat-label>Interval</mat-label>
+                <mat-select name="value" formControlName="value">
+                  <mat-option
+                    *ngFor="let option of intervalOptions"
+                    [value]="option.value"
+                  >
+                    {{ option.display }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngSwitchCase="'CRON'" fxLayout="column" class="cron">
+              <mat-form-field appearance="outline">
+                <mat-label>CRON</mat-label>
+                <input
+                  matInput
+                  placeholder="* * * * * * "
+                  formControlName="value"
+                />
+              </mat-form-field>
+              <p class="cronstring">{{ getTriggerValue() | cronStr }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <button mat-raised-button fxFlex="0 1 auto" (click)="advanced()">
+      Advanced
+    </button>
   </div>
   <div class="relative">
     <mat-form-field appearance="outline" class="fill">
@@ -51,8 +90,7 @@
         rows="4"
         class="no-resize"
         name="description"
-        [ngModel]="description$ | async"
-        (ngModelChange)="updateDescription($event)"
+        formControlName="description"
       ></textarea>
     </mat-form-field>
     <button type="submit" mat-raised-button color="primary" (click)="create()">

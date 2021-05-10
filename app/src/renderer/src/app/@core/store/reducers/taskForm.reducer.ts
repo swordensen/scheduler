@@ -2,11 +2,12 @@ import { createReducer, on, Action } from '@ngrx/store';
 import { Task } from '../../../../../../main/types';
 import {
   addPathToTaskFormCommand,
+  resetTaskForm,
   updateTaskForm,
   updateTaskFormCommand,
   updateTaskFormDescription,
-  updateTaskFormInterval,
   updateTaskFormName,
+  updateTaskFormTrigger,
 } from '../actions/schedule.actions';
 
 const initialTaskFormState: Partial<Task> = {
@@ -14,8 +15,13 @@ const initialTaskFormState: Partial<Task> = {
   description: '',
   arguments: [''],
   command: '',
-  cron: '',
-  interval: '',
+  triggers: [
+    {
+      type: 'interval',
+      value: 86400000,
+      next: Date.now(),
+    },
+  ],
 };
 
 const _taskFormReducer = createReducer(
@@ -40,10 +46,14 @@ const _taskFormReducer = createReducer(
     ...state,
     command: path ? `${state.command || ''} ${path}` : state.command || '',
   })),
-  on(updateTaskFormInterval, (state, { interval }) => ({
+  on(updateTaskFormTrigger, (state, { trigger, index }) => ({
     ...state,
-    interval,
-  }))
+    triggers: state.triggers?.map((_trigger, i) => {
+      if (index === i) return trigger;
+      return trigger;
+    }),
+  })),
+  on(resetTaskForm, (state, data) => initialTaskFormState)
 );
 
 export function taskFormReducer(

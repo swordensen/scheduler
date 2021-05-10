@@ -1,11 +1,7 @@
-import { Task } from "./types";
-import { exec, spawn } from "child_process";
+import { Task, UTrigger } from "./types";
+import { spawn, spawnSync } from "child_process";
 import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
-import { sendAt } from "cron";
-import { resolve, normalize } from "path";
-import { openSync } from "original-fs";
-import { logFolder } from "./defaults";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -14,7 +10,7 @@ import { logFolder } from "./defaults";
  */
 export class ScheduleRunner {
   public scheduleController = new ScheduleController();
-  private INTERVAL_PERIOD = 15000; // 1 MINUTE
+  private INTERVAL_PERIOD = 15000; // 15 seconds
   private interval?: NodeJS.Timeout = this.mainInterval();
   private taskStartedListeners: Array<(task: Task) => void> = [];
   private taskFailedListeners: Array<(task: Task) => void> = [];
@@ -39,9 +35,12 @@ export class ScheduleRunner {
       LOGGER.info("MAIN INTERVAL LOOP");
       this.schedule.forEach((task) => {
         LOGGER.info(`checking task ${task.name}`);
-        if (this.timeToRun(task)) {
-          this.startTask(task);
-        }
+        task.triggers.forEach((trigger) => {
+          if (this.checkTrigger(trigger)) {
+            this.scheduleController.triggerTask(task, trigger);
+            this._startTask(task);
+          }
+        });
       });
       LOGGER.info("MAIN INTERVAL LOOP END");
     }, this.INTERVAL_PERIOD);
@@ -93,34 +92,32 @@ export class ScheduleRunner {
   }
 
   public startTask(task: Task) {
+    const _task = this.scheduleController.startTask(task);
+    this._startTask(_task);
+  }
+
+  /**
+   * this is the main start task function
+   * @param task
+   */
+  private _startTask(task: Task) {
     LOGGER.info(`attempting to run task ${task.name}`);
     try {
-      const _task: Task = {
-        ...task,
-        status: "active",
-        lastExecuted: Date.now(),
-        next: task.cron ? sendAt(task.cron).milliseconds() : Date.now() + parseInt(task.interval),
-      };
-      this.scheduleController.updateTask(_task);
-      console.log("trigerring task started listeners...");
       this.taskStartedListeners.forEach((cb) => {
-        cb(_task);
+        cb(task);
       });
 
-      const outFilePath = resolve(logFolder, `./commands/${task.name}.log`);
-      const errFilePath = resolve(logFolder, `./commands/${task.name}-error.log`);
-      const outFile = openSync(outFilePath, "a");
-      const errFile = openSync(errFilePath, "a");
-      const process = spawn(task.command, task.arguments, {
-        detached: true,
+      const _process = spawn(task.command, {
+        // detached: true,
         shell: true,
-        stdio: [outFile, outFile, errFile],
+        cwd: process.cwd(),
       });
-      taskLogger(task, process); //investigate potential memory leak
-      process.on("exit", (code) => {
+      const logger = taskLogger(task, _process);
+
+      _process.on("exit", (code) => {
         if (code === 0) {
           const __task: Task = {
-            ..._task,
+            ...task,
             status: "waiting",
           };
           this.taskWaitingListeners.forEach((cb) => {
@@ -128,8 +125,9 @@ export class ScheduleRunner {
           });
           this.scheduleController.updateTask(__task);
         } else {
+          console.log("failed " + code);
           const __task: Task = {
-            ..._task,
+            ...task,
             status: "failed",
           };
           this.taskFailedListeners.forEach((cb) => {
@@ -138,7 +136,7 @@ export class ScheduleRunner {
           this.scheduleController.updateTask(__task);
         }
       });
-      process.unref();
+      // _process.unref();
     } catch (e) {
       console.log(e);
       throw `could not start task ${e}`;
@@ -146,14 +144,19 @@ export class ScheduleRunner {
   }
 
   /**
-   * decides if it's time to run the command. Based on the interval provided
-   * and the time it was last ran
-   * @param schedule
+   *
+   * @param task
+   * @returns
    */
-  private timeToRun(task: Task): boolean {
-    if (task.next) {
-      const currentTime = Date.now();
-      if (currentTime > task.next) return true;
+  private checkTrigger(trigger: UTrigger): boolean {
+    switch (trigger.type) {
+      case "CRON":
+      case "interval":
+        const curTime = Date.now();
+        const next = trigger.next;
+        return curTime > next ? true : false;
+      case "startup":
+        return false;
     }
     return false;
   }

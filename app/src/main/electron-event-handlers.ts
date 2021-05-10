@@ -5,6 +5,7 @@ import { ScheduleRunner } from "./scheduleRunner";
 import {
   ADD_TASK_EVENT,
   DELETE_TASK_EVENT,
+  ERROR_EVENT,
   GET_SCHEDULE_EVENT,
   OPEN_TASK_LOG_FILE_EVENT,
   SEND_SCHEDULE_EVENT,
@@ -58,10 +59,15 @@ ipcMain.on(GET_SCHEDULE_EVENT, async () => {
 
 ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
   console.log(`adding task ${task.name}`);
-  if (task.id) {
-    scheduleRunner.updateTask(task);
-  } else {
-    scheduleRunner.createTask(task);
+  try {
+    if (task.id) {
+      scheduleRunner.updateTask(task);
+    } else {
+      scheduleRunner.createTask(task);
+    }
+  } catch (e) {
+    console.log(e);
+    mainWindow.webContents.send(ERROR_EVENT, e);
   }
 });
 

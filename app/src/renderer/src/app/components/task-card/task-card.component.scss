@@ -3,6 +3,11 @@ mat-card {
   border-color: rgba(0, 0, 0, 0);
   border-style: solid;
   cursor: pointer;
+  * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 .active {
   animation: pulse 2s infinite;

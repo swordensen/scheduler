@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { Schedule, Task } from '../../../../../../main/types';
+import {
+  Schedule,
+  Task,
+  Trigger,
+  UTrigger,
+} from '../../../../../../main/types';
 
 export const getSchedule = createAction('[Schedule] get schedule');
 export const setSchedule = createAction(
@@ -13,6 +18,8 @@ export const updateTaskForm = createAction(
   '[TaskForm] Update Task Form',
   props<{ taskForm: Partial<Task> }>()
 );
+
+export const resetTaskForm = createAction('[TaskForm] Reset Task Form');
 
 export const updateTaskFormName = createAction(
   '[Schedule] update job name',
@@ -34,9 +41,9 @@ export const addPathToTaskFormCommand = createAction(
   props<{ path: string }>()
 );
 
-export const updateTaskFormInterval = createAction(
+export const updateTaskFormTrigger = createAction(
   '[Schedule] update job interval',
-  props<{ interval: string }>()
+  props<{ trigger: UTrigger; index: number }>()
 );
 
 export const startTask = createAction(

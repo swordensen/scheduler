@@ -32,7 +32,6 @@ export function setup() {
     frame: false,
     show: shouldHide ? false : true,
   });
-  console.log(iconPath);
   tray = new Tray(iconPath);
   tray.setToolTip("scheduler");
   tray.on("click", (e) => {
@@ -58,7 +57,6 @@ export function setup() {
     event.preventDefault();
     mainWindow.hide();
   });
-  console.log(resolve(__dirname, "../renderer/index.html"));
   if (app.isPackaged) {
     mainWindow.loadFile(resolve(__dirname, "../renderer/index.html"));
   } else {

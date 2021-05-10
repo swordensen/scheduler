@@ -29,15 +29,32 @@
   <!-- task arguments -->
   <div formArrayName="arguments">
     <ng-container *ngFor="let argument of arguments.controls; let i = index">
-      <mat-form-field appearance="outline">
-        <mat-label>argument {{ i }}</mat-label>
-        <input matInput [placeholder]="i.toString()" [formControlName]="i" />
-      </mat-form-field>
+      <div fxLayout="row">
+        <mat-form-field appearance="outline">
+          <mat-label>argument {{ i }}</mat-label>
+          <input matInput [placeholder]="i.toString()" [formControlName]="i" />
+        </mat-form-field>
+        <button mat-button>
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
     </ng-container>
   </div>
-  <!-- TODO: add ability to add more arguments -->
-  <button mat-fab><mat-icon>add</mat-icon></button>
 
+  <!-- triggers -->
+  <div class="triggers" fxLayout="row">
+    <mat-label>CRON</mat-label>
+    <mat-slide-toggle></mat-slide-toggle>
+    <mat-label>interval</mat-label>
+    <ng-container>
+      <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+        <mat-form-field appearance="outline">
+          <mat-label>CRON</mat-label>
+          <input matInput placeholder="* * * * * * " formControlName="cron" />
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </div>
   <!-- cron or interval -->
   <!-- TODO: create a flag such that you can only do either CRON time or Interval -->
   <!-- TODO: create a smarter CRON input field -->
@@ -50,12 +67,12 @@
   </div>
 
   <!-- interval -->
-  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+  <!-- <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
     <mat-form-field appearance="outline">
       <mat-label>Interval</mat-label>
       <input matInput placeholder="* * * * * * " formControlName="interval" />
     </mat-form-field>
-  </div>
+  </div> -->
   <!-- description -->
   <div class="relative">
     <mat-form-field appearance="outline" class="fill">

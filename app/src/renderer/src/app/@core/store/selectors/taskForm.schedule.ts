@@ -12,5 +12,9 @@ export const selectTaskFormCommand = (state: { taskForm: Partial<Task> }) =>
 export const selectTaskFormDescription = (state: { taskForm: Partial<Task> }) =>
   state.taskForm.description;
 
-export const selectTaskFormInterval = (state: { taskForm: Partial<Task> }) =>
-  state.taskForm.interval;
+export const selectTaskFormTriggers = (state: { taskForm: Partial<Task> }) =>
+  state.taskForm.triggers;
+
+export const selectFirstTaskFormTriggerType = (state: {
+  taskForm: Partial<Task>;
+}) => (state.taskForm.triggers ? state.taskForm.triggers[0].type : null);
