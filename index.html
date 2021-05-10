@@ -7,21 +7,30 @@
     <title>Task Scheduler</title>
     <meta name="description" content="Multi-platform task scheduler that is easy to use." />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="wrapper">
       <div>
         <p>No Account Needed</p>
         <p>No Tracking</p>
-        <p>Modern UI</p>
+        <p>Modern Material UI</p>
       </div>
       <h1>Task Scheduler</h1>
       <div>
-        <img src="assets/scheduler.png" />
+        <video width="1080" height="720" autoplay muted loop>
+          <source src="assets/2021-05-10 15-58-27.mp4" type="video/mp4" />
+        </video>
       </div>
       <h2>Automation Made Simple</h2>
-      <a href="https://github.com/Mikkal24/scheduler/releases/download/0.0.1/windows-setup.exe">Download for Windows</a>
+      <div class="downloads">
+        <a href="https://github.com/Mikkal24/scheduler/releases/download/v0.0.15/scheduler-darwin-x64-0.0.15.zip"
+          >MacOs</a
+        >
+        <a href="https://github.com/Mikkal24/scheduler/releases/download/v0.0.15/scheduler-0.0.15.Setup.exe">Windows</a>
+        <a href="https://github.com/Mikkal24/scheduler/releases/download/v0.0.15/task-scheduler_0.0.15_amd64.deb"
+          >Ubuntu</a
+        >
+      </div>
       <p>This is an open source project. Consider donating time or money.</p>
       <div>
         <a
@@ -75,6 +84,8 @@
         <a href="https://www.michaelsorensen.dev">https://www.michaelsorensen.dev</a>
       </footer>
     </div>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet" />
+
     <style>
       html,
       body {
@@ -105,8 +116,10 @@
         padding: 2em;
         max-width: 1080px;
       }
-      img {
+      img,
+      video {
         max-width: 100%;
+        height: auto;
       }
       ol {
         display: inline-block;
