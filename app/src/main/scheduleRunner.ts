@@ -1,12 +1,7 @@
 import { Task, UTrigger } from "./types";
-import { exec, spawn } from "child_process";
+import { spawn, spawnSync } from "child_process";
 import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
-import { sendAt } from "cron";
-import { resolve, normalize } from "path";
-import { existsSync, openSync } from "original-fs";
-import { logFolder, taskLogFolder } from "./defaults";
-import { createFolderIfNotExist } from "./helpers";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -111,14 +106,13 @@ export class ScheduleRunner {
       this.taskStartedListeners.forEach((cb) => {
         cb(task);
       });
-      const _process = spawn(task.command, task.arguments, {
+
+      const _process = spawn(task.command, {
         // detached: true,
         shell: true,
-        stdio: "inherit",
+        cwd: process.cwd(),
       });
-
-      console.log("creating task logger");
-      const logger = taskLogger(task, _process); //investigate potential memory leak
+      const logger = taskLogger(task, _process);
 
       _process.on("exit", (code) => {
         if (code === 0) {
@@ -131,6 +125,7 @@ export class ScheduleRunner {
           });
           this.scheduleController.updateTask(__task);
         } else {
+          console.log("failed " + code);
           const __task: Task = {
             ...task,
             status: "failed",
@@ -141,7 +136,7 @@ export class ScheduleRunner {
           this.scheduleController.updateTask(__task);
         }
       });
-      // process.unref();
+      // _process.unref();
     } catch (e) {
       console.log(e);
       throw `could not start task ${e}`;
@@ -159,7 +154,6 @@ export class ScheduleRunner {
       case "interval":
         const curTime = Date.now();
         const next = trigger.next;
-        console.log(curTime, next);
         return curTime > next ? true : false;
       case "startup":
         return false;

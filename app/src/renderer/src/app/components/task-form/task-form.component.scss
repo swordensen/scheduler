@@ -26,5 +26,6 @@ textarea.no-resize {
   .cronstring {
     position: absolute;
     bottom: -15px;
+    white-space: nowrap;
   }
 }
