@@ -16,18 +16,20 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v1
 
-      - name: Install Node.js, NPM
+      - name: checkout v2
         uses: actions/checkout@v2
+
+      - name: Install Node.js, NPM
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Install packages
         working-directory: ./app
         run: npm install
 
       - name: Install Renderer Packages
-        working-directory: ./app/src/renderer
+        working-directory: ./app/src/renderergit pus
         run: npm install
 
       - name: Publish Build to Github
