@@ -26,10 +26,10 @@ jobs:
 
       - name: Install packages
         working-directory: ./app
-        run: npm install --no-optional
+        run: npm install
 
       - name: Install Renderer Packages
-        working-directory: ./app/src/renderergit pus
+        working-directory: ./app/src/renderer
         run: npm install
 
       - name: Publish Build to Github
