@@ -21,6 +21,10 @@ jobs:
         with:
           node-version: 10
 
+      - name: Install rpm if necessary
+        if: runner.os == 'ubuntu-latest'
+        run: sudo apt install rpm
+
       - name: Install packages
         working-directory: ./app
         run: npm install
