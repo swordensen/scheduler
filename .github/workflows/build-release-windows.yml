@@ -10,20 +10,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [windows-latest]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v1
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+      - name: Install Node.js, NPM
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v2
         with:
-          node-version: 10
-
-      - name: Install rpm if necessary
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt install rpm
+          node-version: '14'
 
       - name: Install packages
         working-directory: ./app
