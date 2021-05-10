@@ -22,7 +22,7 @@ jobs:
           node-version: 10
 
       - name: Install rpm if necessary
-        if: runner.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt install rpm
 
       - name: Install packages
