@@ -1,6 +1,6 @@
 {
   "name": "scheduler",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Open source application for scheduling tasks (processes)",
   "main": "dist/main",
   "authors": "michael sorensen",

@@ -112,7 +112,7 @@ export class TaskFormComponent implements OnInit {
     const dialogResponse = await remote.dialog.showOpenDialog({
       properties: ['openFile', 'showHiddenFiles'],
     });
-    const path = dialogResponse.filePaths[0];
+    const path = `"${dialogResponse.filePaths[0]}"`;
     const commandControl = this.taskForm.get('command');
     const commandControlValue = commandControl?.value;
     commandControl?.setValue(commandControlValue + path);

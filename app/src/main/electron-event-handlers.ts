@@ -23,7 +23,6 @@ import { openLogFile } from "./logger";
 const scheduleRunner = new ScheduleRunner();
 
 scheduleRunner.onTaskStarted((task) => {
-  console.log("task started listener triggered sendin task started even to browser");
   mainWindow.webContents.send(TASK_STARTED_EVENT, task);
 });
 
@@ -47,18 +46,15 @@ scheduleRunner.onTaskAdded((task) => {
   mainWindow.webContents.send(TASK_ADDED_EVENT, task);
 });
 
-console.log("initializing event handlers ");
 /**
  * this only gets called on the initial page load. Ideally it should
  */
 ipcMain.on(GET_SCHEDULE_EVENT, async () => {
-  console.log(`getting schedule...`);
   const schedule = scheduleRunner.scheduleController.schedule;
   mainWindow.webContents.send(SEND_SCHEDULE_EVENT, schedule);
 });
 
 ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
-  console.log(`adding task ${task.name}`);
   try {
     if (task.id) {
       scheduleRunner.updateTask(task);

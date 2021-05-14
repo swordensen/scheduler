@@ -6,3 +6,5 @@ export function createFolderIfNotExist(folderPath: string) {
   }
   return folderPath;
 }
+
+export const spacesNotInQuotesRegex = /\s+(?=([^"]*"[^"]*")*[^"]*$)/g;
