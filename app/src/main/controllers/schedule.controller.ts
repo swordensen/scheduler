@@ -27,6 +27,14 @@ export class ScheduleController {
 
   constructor() {
     LOGGER.info(`creating schedule file manager...`);
+    this.clearActiveTasks();
+  }
+
+  clearActiveTasks() {
+    this._schedule = this.schedule.map((task) => ({
+      ...task,
+      status: "waiting",
+    }));
   }
 
   /**

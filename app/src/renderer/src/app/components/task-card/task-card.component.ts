@@ -17,6 +17,20 @@ import { Task } from '../../../../../main/types';
 })
 export class TaskCardComponent {
   @Input() task: Task;
+
+  get next() {
+    let next: number | string = 0;
+    this.task.triggers?.forEach((trigger) => {
+      if (trigger.type === 'CRON' || trigger.type === 'interval') {
+        next = next > trigger.next ? next : trigger.next;
+      }
+    });
+    return next;
+  }
+
+  get hasStartupTrigger() {
+    return this.task.triggers?.some((trigger) => trigger.type === 'startup');
+  }
   constructor(private store: Store, public dialog: MatDialog) {}
 
   _startTask() {

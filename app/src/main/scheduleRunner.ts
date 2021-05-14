@@ -2,7 +2,8 @@ import { Task, UTrigger } from "./types";
 import { spawn, spawnSync } from "child_process";
 import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
-
+import { spacesNotInQuotesRegex } from "./helpers";
+import { normalize } from "path";
 /**
  * this singleton is responsible for running the commands at the appropriate time
  * and calling on methods of the config manager to update the config accordingly.
@@ -23,9 +24,7 @@ export class ScheduleRunner {
     return this.scheduleController.schedule;
   }
 
-  constructor() {
-    console.log(`schedule runner initialized`);
-  }
+  constructor() {}
 
   /**
    * this is our main interval loop
@@ -106,12 +105,23 @@ export class ScheduleRunner {
       this.taskStartedListeners.forEach((cb) => {
         cb(task);
       });
+      const parts = task.command.split(spacesNotInQuotesRegex).reduce((a, c) => {
+        if (c) a.push(c);
+        return a;
+      }, [] as string[]);
 
-      const _process = spawn(task.command, {
-        // detached: true,
+      const command = normalize(parts.shift());
+      const commandArgs = [...parts, ...task.arguments].reduce((a, c) => {
+        c.replace(spacesNotInQuotesRegex, "");
+        if (c) a.push(normalize(c));
+        return a;
+      }, []);
+
+      const spawnOptions = {
         shell: true,
-        cwd: process.cwd(),
-      });
+      };
+      const _process = commandArgs.length ? spawn(command, commandArgs, spawnOptions) : spawn(command, spawnOptions);
+
       const logger = taskLogger(task, _process);
 
       _process.on("exit", (code) => {
@@ -125,7 +135,6 @@ export class ScheduleRunner {
           });
           this.scheduleController.updateTask(__task);
         } else {
-          console.log("failed " + code);
           const __task: Task = {
             ...task,
             status: "failed",
