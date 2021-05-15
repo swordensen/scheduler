@@ -24,7 +24,22 @@ export class ScheduleRunner {
     return this.scheduleController.schedule;
   }
 
-  constructor() {}
+  constructor() {
+    this.runStartupTasks();
+  }
+
+  /**
+   * run startup triggers at startup
+   */
+  private runStartupTasks() {
+    this.schedule.forEach((task) => {
+      const startupTrigger = task.triggers.find((trigger) => trigger.type === "startup");
+      if (startupTrigger) {
+        this.scheduleController.triggerTask(task, startupTrigger);
+        this._startTask(task);
+      }
+    });
+  }
 
   /**
    * this is our main interval loop

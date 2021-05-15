@@ -10,7 +10,7 @@ import {
   updateTaskFormTrigger,
 } from '../actions/schedule.actions';
 
-const initialTaskFormState: Partial<Task> = {
+export const initialTaskFormState: Partial<Task> = {
   name: '',
   description: '',
   arguments: [''],

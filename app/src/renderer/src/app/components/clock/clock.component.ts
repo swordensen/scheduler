@@ -74,8 +74,7 @@ export class ClockComponent implements AfterViewInit {
 
       const update = () => {
         // Get time
-        const d = new Date();
-        const localDate = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+        const localDate = new Date(Date.now());
         let h = localDate.getHours();
         let m = localDate.getMinutes();
         let s = localDate.getSeconds();

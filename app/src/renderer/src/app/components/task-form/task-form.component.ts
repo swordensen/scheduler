@@ -24,7 +24,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdvancedTaskFormDialogueComponent } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.component';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { take } from 'rxjs/operators';
-
+import { initialTaskFormState } from '../../@core/store/reducers/taskForm.reducer';
 @Component({
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
@@ -120,5 +120,6 @@ export class TaskFormComponent implements OnInit {
 
   create() {
     this.store.dispatch(addTask());
+    this.taskForm.setValue(initialTaskFormState);
   }
 }
