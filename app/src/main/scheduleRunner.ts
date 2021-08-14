@@ -1,9 +1,10 @@
 import { Task, UTrigger } from "./types";
-import { spawn, spawnSync } from "child_process";
+import { spawn, spawnSync, ChildProcess } from "child_process";
 import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
-import { spacesNotInQuotesRegex } from "./helpers";
+import { killProcess, spacesNotInQuotesRegex } from "./helpers";
 import { normalize } from "path";
+
 /**
  * this singleton is responsible for running the commands at the appropriate time
  * and calling on methods of the config manager to update the config accordingly.
@@ -19,6 +20,7 @@ export class ScheduleRunner {
   private taskAddedListeners: Array<(task: Task) => void> = [];
   private taskDeletedListeners: Array<(task: Task) => void> = [];
   private taskUpdatedListeners: Array<(task: Task) => void> = [];
+  private taskStoppedListeners: Array<(task: Task) => void> = [];
 
   private get schedule() {
     return this.scheduleController.schedule;
@@ -64,6 +66,10 @@ export class ScheduleRunner {
     this.taskStartedListeners.push(cb);
   }
 
+  public onTaskStopped(cb: (task: Task) => void) {
+    this.taskStoppedListeners.push(cb);
+  }
+
   public onTaskFailed(cb: (task: Task) => void) {
     this.taskFailedListeners.push(cb);
   }
@@ -106,8 +112,25 @@ export class ScheduleRunner {
   }
 
   public startTask(task: Task) {
-    const _task = this.scheduleController.startTask(task);
-    this._startTask(_task);
+    const pid = this._startTask(task);
+    this.scheduleController.startTask({
+      ...task,
+      pids: [...task.pids, pid],
+    });
+  }
+
+  /**
+   * this kills a running task;
+   * @param task
+   */
+  public stopTask(task: Task) {
+    task.pids.forEach((pid) => {
+      killProcess(pid);
+    });
+    this.scheduleController.stopTask({
+      ...task,
+      pids: [],
+    });
   }
 
   /**
@@ -134,6 +157,7 @@ export class ScheduleRunner {
 
       const spawnOptions = {
         shell: true,
+        detached: true,
       };
       const _process = commandArgs.length ? spawn(command, commandArgs, spawnOptions) : spawn(command, spawnOptions);
 
@@ -160,7 +184,9 @@ export class ScheduleRunner {
           this.scheduleController.updateTask(__task);
         }
       });
+
       // _process.unref();
+      return _process.pid;
     } catch (e) {
       console.log(e);
       throw `could not start task ${e}`;

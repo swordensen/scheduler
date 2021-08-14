@@ -6,6 +6,7 @@ import {
   deleteTask,
   updateTaskForm,
   openLogFile,
+  stopTask,
 } from 'src/app/@core/store/actions/schedule.actions';
 import { AdvancedTaskFormDialogueComponent } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.component';
 import { Task } from '../../../../../main/types';
@@ -33,8 +34,15 @@ export class TaskCardComponent {
   }
   constructor(private store: Store, public dialog: MatDialog) {}
 
-  _startTask() {
+  _startTask(event: any) {
+    event.stopPropagation();
     this.store.dispatch(startTask({ task: this.task }));
+  }
+
+  _stopTask(event: any) {
+    event.stopPropagation();
+    if (this.task.status === 'active')
+      this.store.dispatch(stopTask({ task: this.task }));
   }
 
   _deleteTask() {

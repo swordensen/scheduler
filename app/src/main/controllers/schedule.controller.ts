@@ -14,6 +14,10 @@ export class ScheduleController {
    * returns a readonly schedule. The values in this array should not be changed.
    */
   get schedule() {
+    return Object.freeze(this._schedule);
+  }
+
+  private get _schedule() {
     return this.readScheduleFile();
   }
 
@@ -41,7 +45,7 @@ export class ScheduleController {
    * creates the schedule file if it doesn't exist.
    * returns schedule
    */
-  private readScheduleFile(): Readonly<Schedule> {
+  private readScheduleFile(): Schedule {
     LOGGER.info(`reading schedule file ${scheduleFile}...`);
     try {
       if (!this._scheduleFileExists) this.initScheduleFile();
@@ -79,6 +83,7 @@ export class ScheduleController {
       {
         ...task,
         id: uuid(),
+        pids: [],
         triggers: task.triggers.map((trigger) => {
           switch (trigger.type) {
             case "CRON":
@@ -133,6 +138,20 @@ export class ScheduleController {
       lastExecuted: Date.now(),
     };
     this._schedule = this.schedule.map((_task, i) => {
+      if (task.id == _task.id) {
+        return modTask;
+      }
+      return _task;
+    });
+    return modTask;
+  }
+
+  public stopTask(task: Task) {
+    const modTask: Task = {
+      ...task,
+      status: "waiting",
+    };
+    this._schedule = this.schedule.map((_task) => {
       if (task.id == _task.id) {
         return modTask;
       }

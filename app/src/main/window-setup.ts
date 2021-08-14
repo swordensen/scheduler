@@ -32,6 +32,7 @@ export function setup() {
     frame: false,
     show: shouldHide ? false : true,
   });
+  mainWindow.webContents.openDevTools();
   tray = new Tray(iconPath);
   tray.setToolTip("scheduler");
   tray.on("click", (e) => {
