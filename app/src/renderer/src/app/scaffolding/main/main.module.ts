@@ -5,6 +5,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ClockModule } from 'src/app/components/clock/clock.module';
 import { TaskFormModule } from 'src/app/components/task-form/task-form.module';
 import { TaskListModule } from 'src/app/components/task-list/task-list.module';
+import { MainRoutingModule } from './main-routing.module';
+import { TerminalModule } from 'src/app/components/terminal/terminal.module';
 
 @NgModule({
   declarations: [MainComponent],
@@ -14,6 +16,8 @@ import { TaskListModule } from 'src/app/components/task-list/task-list.module';
     ClockModule,
     TaskFormModule,
     TaskListModule,
+    MainRoutingModule,
+    TerminalModule,
   ],
   exports: [MainComponent],
 })

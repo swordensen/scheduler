@@ -5,4 +5,8 @@ mat-sidenav-content {
   display: flex;
   height: 100%;
   flex-direction: column;
+  justify-content: flex-end;
+  div {
+    flex-grow: 1;
+  }
 }

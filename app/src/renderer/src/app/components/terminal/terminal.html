@@ -1,0 +1,15 @@
+<div #terminal>
+  Welcome to the console! <br />
+  Type help for a list of available commands <br />
+  Author: Michael Sorensen
+  <p></p>
+  <p *ngFor="let history of _logHistory">
+    {{ history }}
+  </p>
+  <p>
+    <span>{{ _location }}</span>
+    >
+    <span #command>{{ _command }}</span>
+    <app-blinker></app-blinker>
+  </p>
+</div>
