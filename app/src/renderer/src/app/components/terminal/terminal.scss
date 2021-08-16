@@ -4,13 +4,19 @@ div {
   color: white;
   // height: 500px;
   // width: 1000px;
-  height: 100%;
-  max-height: 100%;
-  width: 100%;
+  max-height: inherit;
   font-family: "Lucida Console";
   padding: 2px;
-  overflow-x: hidden;
+  // overflow: auto;
+  // overflow-x: hidden;
   overflow-y: scroll;
+  // flex: 1;
+  // min-height: 300px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 span {
@@ -20,7 +26,7 @@ span {
 }
 
 :host {
-  height: 100%;
-  width: 100%;
-  display: block;
+  display: flex;
+  flex: 1;
+  position: relative;
 }

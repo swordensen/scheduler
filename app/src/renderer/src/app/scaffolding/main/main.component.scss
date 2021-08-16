@@ -1,12 +1,18 @@
 mat-sidenav-container {
-  height: 100%;
+  display: flex;
+  flex: 1;
 }
 mat-sidenav-content {
   display: flex;
-  height: 100%;
+  flex: 1;
+  // height: 100%;
   flex-direction: column;
-  justify-content: flex-end;
+  // height: 721px;
+  // justify-content: flex-end;
   div {
     flex-grow: 1;
+    display: flex;
+    min-height: 0px;
+    overflow: auto;
   }
 }
