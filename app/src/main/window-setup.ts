@@ -7,7 +7,7 @@ import { resolve } from "path";
  */
 app.setLoginItemSettings({
   openAtLogin: true,
-  openAsHidden: true,
+  openAsHidden: process.platform === "darwin",
   args: ["hide"],
 });
 
@@ -23,8 +23,8 @@ export function setup() {
     height: 720,
     webPreferences: {
       // contextIsolation: true,
-      devTools: true,
-      // devTools: !app.isPackaged,
+      // devTools: true,
+      devTools: !app.isPackaged,
       nodeIntegration: true,
       enableRemoteModule: true,
     },

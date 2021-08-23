@@ -157,7 +157,7 @@ export class ScheduleRunner {
 
       const spawnOptions = {
         shell: true,
-        detached: true,
+        // detached: true,
       };
       const _process = commandArgs.length ? spawn(command, commandArgs, spawnOptions) : spawn(command, spawnOptions);
 
