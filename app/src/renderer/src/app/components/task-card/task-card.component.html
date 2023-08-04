@@ -1,6 +1,6 @@
 <mat-card
   [ngClass]="task.status"
-  (click)="task.status != 'active' ? _startTask() : ''"
+  (click)="task.status != 'active' ? _startTask($event) : _stopTask($event)"
 >
   <mat-card-title fxLayout="row" fxLayoutAlign="space-between center">
     <span>{{ task.name }}</span>

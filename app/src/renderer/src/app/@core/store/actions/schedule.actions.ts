@@ -51,6 +51,11 @@ export const startTask = createAction(
   props<{ task: Task }>()
 );
 
+export const stopTask = createAction(
+  '[Schedule] Stop Job',
+  props<{ task: Task }>()
+);
+
 export const deleteTask = createAction(
   '[Schedule] Delete Job',
   props<{ task: Task }>()
