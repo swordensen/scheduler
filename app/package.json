@@ -1,12 +1,12 @@
 {
   "name": "scheduler",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Open source application for scheduling tasks (processes)",
   "main": "dist/main",
   "authors": "michael sorensen",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mikkal24/scheduler.git"
+    "url": "https://github.com/swordensen/scheduler.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -96,7 +96,7 @@
           "name": "@electron-forge/publisher-github",
           "config": {
             "repository": {
-              "owner": "Mikkal24",
+              "owner": "swordensen",
               "name": "Scheduler"
             },
             "prerelease": true
