@@ -10,6 +10,7 @@ import {
   OPEN_TASK_LOG_FILE_EVENT,
   SEND_SCHEDULE_EVENT,
   START_TASK_EVENT,
+  STOP_TASK_EVENT,
   TASK_ADDED_EVENT,
   TASK_DELETED_EVENT,
   TASK_FAILED_EVENT,
@@ -69,6 +70,10 @@ ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
 
 ipcMain.on(START_TASK_EVENT, async (event, task: Task) => {
   scheduleRunner.startTask(task);
+});
+
+ipcMain.on(STOP_TASK_EVENT, async (event, task: Task) => {
+  scheduleRunner.stopTask(task);
 });
 
 ipcMain.on(UPDATE_TASK_EVENT, async (event, task: Task) => {

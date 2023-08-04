@@ -4,8 +4,9 @@ export interface Task {
   description?: string;
   command: string;
   arguments?: string[];
-  triggers?: UTrigger[];
+  triggers: UTrigger[];
   lastExecuted?: number;
+  pids: number[];
   status: "active" | "waiting" | "failed";
 }
 
@@ -34,7 +35,7 @@ export interface CRONTrigger extends Trigger {
   next: number;
 }
 
-export type Schedule = Task[];
+export type Schedule = Array<Task>;
 
 export interface Config {
   scheduleFilePath: string;
