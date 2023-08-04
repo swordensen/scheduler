@@ -1,3 +1,6 @@
+import { SpawnOptions } from "child_process";
+
+
 export interface Task {
   id: string;
   name: string;
@@ -7,6 +10,7 @@ export interface Task {
   triggers?: UTrigger[];
   lastExecuted?: number;
   status: "active" | "waiting" | "failed";
+  spawnOptions?:SpawnOptions
 }
 
 export type TriggerType = "startup" | "interval" | "CRON";

@@ -117,6 +117,7 @@ export class ScheduleRunner {
   private _startTask(task: Task) {
     LOGGER.info(`attempting to run task ${task.name}`);
     try {
+      task.lastExecuted = Date.now();
       this.taskStartedListeners.forEach((cb) => {
         cb(task);
       });
@@ -132,10 +133,8 @@ export class ScheduleRunner {
         return a;
       }, []);
 
-      const spawnOptions = {
-        shell: true,
-      };
-      const _process = commandArgs.length ? spawn(command, commandArgs, spawnOptions) : spawn(command, spawnOptions);
+
+      const _process = spawn(command, commandArgs, task.spawnOptions)
 
       const logger = taskLogger(task, _process);
 

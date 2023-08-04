@@ -195,7 +195,7 @@ export class ScheduleController {
    */
   private writeScheduleFile(tasks: Schedule): Schedule {
     LOGGER.info(`writing to ${scheduleFile} schedule file ${JSON.stringify(tasks)}`);
-    writeFileSync(scheduleFile, JSON.stringify(tasks));
+    writeFileSync(scheduleFile, JSON.stringify(tasks, null, '\t'));
     return tasks;
   }
 

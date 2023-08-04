@@ -1,5 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import {
+  setFilter,
   startLoading,
   stopLoading,
   toggleSideNav,
@@ -8,11 +9,13 @@ import {
 export interface GUIState {
   sideNavOpen: boolean;
   loading: boolean;
+  scheduleFilter:string;
 }
 
 const initialGUIState: GUIState = {
   sideNavOpen: true,
   loading: false,
+  scheduleFilter: '',
 };
 
 const _guiReducer = createReducer(
@@ -28,6 +31,10 @@ const _guiReducer = createReducer(
   on(stopLoading, (state) => ({
     ...state,
     loading: false,
+  })),
+  on(setFilter,(state, props)=> ({
+    ...state,
+    scheduleFilter: props.filter
   }))
 );
 

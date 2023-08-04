@@ -22,6 +22,9 @@ export const initialTaskFormState: Partial<Task> = {
       next: Date.now(),
     },
   ],
+  spawnOptions:{
+    shell: true
+  }
 };
 
 const _taskFormReducer = createReducer(
