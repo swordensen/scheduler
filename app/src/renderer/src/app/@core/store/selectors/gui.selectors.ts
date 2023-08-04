@@ -4,3 +4,5 @@ export const selectSideNavOpen = (state: { gui: GUIState }) =>
   state.gui.sideNavOpen;
 
 export const selectLoading = (state: { gui: GUIState }) => state.gui.loading;
+
+export const selectFilter = (state: {gui: GUIState}) => state.gui.scheduleFilter;
