@@ -1,6 +1,6 @@
 {
   "name": "scheduler",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Open source application for scheduling tasks (processes)",
   "main": "dist/main",
   "authors": "michael sorensen",
@@ -19,7 +19,7 @@
     "package-app": "electron-packager .",
     "package": "npm run build-renderer && npm run build-main && npm run copy-assets && electron-forge package",
     "publish": "npm run build-renderer && npm run build-main && npm run copy-assets && electron-forge publish",
-    "make": "electron-forge make",
+    "make-installer": "electron-forge make",
     "electron-forge": "electron-forge",
     "copy-assets": "cp -r ./src/main/assets ./dist/main"
   },
