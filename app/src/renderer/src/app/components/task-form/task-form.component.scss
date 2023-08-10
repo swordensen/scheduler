@@ -7,11 +7,12 @@
   position: relative;
 }
 
-button[type="submit"] {
+div.actions{
   position: absolute;
   bottom: 30px;
   right: 16px;
 }
+
 
 .fill {
   width: 100%;

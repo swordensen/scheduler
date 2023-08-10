@@ -72,7 +72,7 @@
       </ng-container>
     </div>
 
-    <button disabled mat-raised-button fxFlex="0 1 auto" (click)="advanced()">
+    <button mat-raised-button fxFlex="0 1 auto" (click)="advanced()">
       Advanced
     </button>
   </div>
@@ -88,9 +88,26 @@
         formControlName="description"
       ></textarea>
     </mat-form-field>
-    <button type="submit" mat-raised-button color="primary" (click)="create()">
-      <mat-icon>add</mat-icon>
-      Create
-    </button>
+    <div class="actions" 
+    fxLayout="row" 
+    fxLayoutGap="16px"
+
+    >
+      <ng-container *ngIf="task.id">
+        <button mat-raised-button color="primary" (click)="reset()">
+          <mat-icon>cancel</mat-icon>
+        </button>
+        <button type="submit" mat-raised-button color="primary" (click)="save()">
+          <mat-icon>save</mat-icon>
+          Save
+        </button>
+      </ng-container>
+      <ng-container  *ngIf="!task.id">
+        <button type="submit" mat-raised-button color="primary" (click)="create()">
+          <mat-icon>add</mat-icon>
+          Create
+        </button>
+      </ng-container>
+    </div>
   </div>
 </form>

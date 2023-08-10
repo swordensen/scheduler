@@ -9,8 +9,10 @@ import { startLoading } from '../actions/gui.actions';
 import {
   addTask,
   resetTaskForm,
+  saveTask,
   updateTaskForm,
 } from '../actions/schedule.actions';
+import { UPDATE_TASK_EVENT } from '../../../../../../event-names';
 
 @Injectable()
 export class TaskFormEffects {
@@ -34,4 +36,21 @@ export class TaskFormEffects {
       ),
     { dispatch: false }
   );
+
+  saveTask$ = createEffect(
+    () => 
+      this.actions$.pipe(
+        ofType(saveTask),
+        withLatestFrom(this.store$, (action, state)=> {
+          return state.taskForm
+        }),
+        map((task)=> {
+          ipcRenderer.send(UPDATE_TASK_EVENT, task);
+          this.store$.dispatch(startLoading());
+        })
+      ),
+      {
+        dispatch: false
+      }
+  )
 }
