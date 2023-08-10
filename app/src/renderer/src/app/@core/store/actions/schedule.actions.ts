@@ -14,6 +14,8 @@ export const setSchedule = createAction(
 
 export const addTask = createAction('[Schedule] add task');
 
+export const saveTask = createAction('[Schedule] save current task')
+
 export const updateTaskForm = createAction(
   '[TaskForm] Update Task Form',
   props<{ taskForm: Partial<Task> }>()

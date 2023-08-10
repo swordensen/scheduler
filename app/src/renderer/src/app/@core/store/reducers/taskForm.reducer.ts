@@ -23,7 +23,8 @@ export const initialTaskFormState: Partial<Task> = {
     },
   ],
   spawnOptions:{
-    shell: true
+    shell: true,
+    detached: true
   }
 };
 

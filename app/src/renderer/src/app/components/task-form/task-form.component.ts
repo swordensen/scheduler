@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import {
   addPathToTaskFormCommand,
   addTask,
+  saveTask,
   updateTaskForm,
   updateTaskFormCommand,
   updateTaskFormDescription,
@@ -25,6 +26,7 @@ import { AdvancedTaskFormDialogueComponent } from 'src/app/dialogues/advanced-ta
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { initialTaskFormState } from '../../@core/store/reducers/taskForm.reducer';
+import { resetTaskForm } from 'src/app/@core/store/actions/schedule.actions';
 @Component({
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
@@ -32,6 +34,7 @@ import { initialTaskFormState } from '../../@core/store/reducers/taskForm.reduce
 })
 export class TaskFormComponent implements OnInit {
   taskForm: FormGroup;
+  task: Partial<Task>;
   intervalOptions = [
     {
       display: 'daily',
@@ -65,8 +68,9 @@ export class TaskFormComponent implements OnInit {
   ngOnInit(): void {
     this.store
       .select(selectTaskForm)
-      .pipe(take(1))
+      // .pipe(take(1))
       .subscribe((task) => {
+        this.task = task;
         this.taskForm = this.fb.group({
           ...task,
           arguments: task.arguments
@@ -103,6 +107,7 @@ export class TaskFormComponent implements OnInit {
           }
         }
       });
+
   }
   advanced() {
     this.dialog.open(AdvancedTaskFormDialogueComponent);
@@ -118,8 +123,17 @@ export class TaskFormComponent implements OnInit {
     commandControl?.setValue(commandControlValue + path);
   }
 
+  reset(){
+    this.store.dispatch(resetTaskForm())
+    this.taskForm.setValue(initialTaskFormState);
+  }
+
   create() {
     this.store.dispatch(addTask());
     this.taskForm.setValue(initialTaskFormState);
+  }
+
+  save(){
+    this.store.dispatch(saveTask());
   }
 }
