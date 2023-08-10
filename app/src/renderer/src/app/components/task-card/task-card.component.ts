@@ -23,6 +23,7 @@ export class TaskCardComponent {
     let next: number | string = 0;
     this.task.triggers?.forEach((trigger) => {
       if (trigger.type === 'CRON' || trigger.type === 'interval') {
+        if(typeof next === 'string') next = parseInt(next);
         next = next > trigger.next ? next : trigger.next;
       }
     });
@@ -55,6 +56,5 @@ export class TaskCardComponent {
 
   _editTask() {
     this.store.dispatch(updateTaskForm({ taskForm: this.task }));
-    this.dialog.open(AdvancedTaskFormDialogueComponent);
   }
 }
