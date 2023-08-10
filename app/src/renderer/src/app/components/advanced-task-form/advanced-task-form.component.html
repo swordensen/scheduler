@@ -1,23 +1,17 @@
-<form [formGroup]="taskForm">
-  <!-- task name -->
+<form fxLayout="column" fxLayoutGap="16px" [formGroup]="taskForm">
   <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <!-- name -->
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
-      <input
-        matInput
-        placeholder="Ex. C:/calculator.exe"
-        formControlName="name"
-      />
+      <input matInput name="name" formControlName="name" />
     </mat-form-field>
-  </div>
-
-  <!-- task command -->
-  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <!-- command -->
     <mat-form-field appearance="outline">
       <mat-label>Command</mat-label>
       <input
         matInput
-        placeholder="Ex. C:/calculator.exe"
+        placeholder="Ex. C:/chrome.exe"
+        name="task"
         formControlName="command"
       />
     </mat-form-field>
@@ -26,54 +20,119 @@
     </button>
   </div>
 
-  <!-- task arguments -->
-  <div formArrayName="arguments">
-    <ng-container *ngFor="let argument of arguments.controls; let i = index">
-      <div fxLayout="row">
+  <!-- <div > -->
+    <div formArrayName="arguments" fxLayout="column">
+      <h2>Arguments</h2>
+      <ng-container
+        *ngFor="let argument of arguments.controls; let i = index"
+      >
         <mat-form-field appearance="outline">
-          <mat-label>argument {{ i }}</mat-label>
-          <input matInput [placeholder]="i.toString()" [formControlName]="i" />
+          <mat-label>argument {{i}}</mat-label>
+          <input
+          matInput
+          placeholder="Ex. C:/chrome.exe"
+          name="task"
+          [formControlName]="i"
+        />
         </mat-form-field>
-        <button mat-button>
+      </ng-container>
+      <div>
+        <button mat-raised-button color="primary" (click)="addArgument()">
           <mat-icon>add</mat-icon>
         </button>
       </div>
-    </ng-container>
-  </div>
+    </div>
 
-  <!-- triggers -->
-  <div class="triggers" fxLayout="row">
-    <mat-label>CRON</mat-label>
-    <mat-slide-toggle></mat-slide-toggle>
-    <mat-label>interval</mat-label>
-    <ng-container>
-      <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <!-- arguments -->
+    <div formArrayName="arguments" fxLayout="column">
+      <h2>Arguments</h2>
+      <ng-container
+        *ngFor="let argument of arguments.controls; let i = index"
+      >
         <mat-form-field appearance="outline">
-          <mat-label>CRON</mat-label>
-          <input matInput placeholder="* * * * * * " formControlName="cron" />
+          <mat-label>argument {{i}}</mat-label>
+          <input
+          matInput
+          placeholder="Ex. C:/chrome.exe"
+          [name]="'argument '+i"
+          [formControlName]="i"
+        />
         </mat-form-field>
+      </ng-container>
+      <div>
+        <button mat-raised-button color="primary" (click)="addArgument()">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
-    </ng-container>
-  </div>
-  <!-- cron or interval -->
-  <!-- TODO: create a flag such that you can only do either CRON time or Interval -->
-  <!-- TODO: create a smarter CRON input field -->
-  <!-- CRON -->
-  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
-    <mat-form-field appearance="outline">
-      <mat-label>CRON</mat-label>
-      <input matInput placeholder="* * * * * * " formControlName="cron" />
-    </mat-form-field>
-  </div>
+    </div>
 
-  <!-- interval -->
-  <!-- <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
-    <mat-form-field appearance="outline">
-      <mat-label>Interval</mat-label>
-      <input matInput placeholder="* * * * * * " formControlName="interval" />
-    </mat-form-field>
-  </div> -->
-  <!-- description -->
+        <!-- spawn options -->
+        <div formGroupName="spawnOptions" fxLayout="column">
+          <h2>Options</h2>
+          <mat-form-field appearance="outline">
+            <mat-label>Current Working Directory</mat-label>
+            <input
+            matInput
+            placeholder="Ex. C:/chrome.exe"
+            name="cwd"
+            formControlName="cwd"
+          />
+          </mat-form-field>
+          <mat-checkbox formControlName="detached">detached</mat-checkbox>
+          <mat-checkbox formControlName="shell">shell</mat-checkbox>
+        </div>
+  <!-- only the first trigger -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+    <div formArrayName="triggers">
+      <ng-container
+        *ngFor="let trigger of triggers.controls; let i = index"
+      >
+        <div
+          fxLayout="row"
+          [formGroupName]="i"
+          fxLayout="row"
+          fxLayoutGap="16px"
+          fxLayoutAlign="start center"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Trigger Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option value="interval">interval</mat-option>
+              <mat-option value="CRON">CRON</mat-option>
+              <mat-option value="startup">startup</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div [ngSwitch]="trigger.value.type">
+            <div *ngSwitchCase="'interval'">
+              <mat-form-field appearance="outline">
+                <mat-label>Interval</mat-label>
+                <mat-select name="value" formControlName="value">
+                  <mat-option
+                    *ngFor="let option of intervalOptions"
+                    [value]="option.value"
+                  >
+                    {{ option.display }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngSwitchCase="'CRON'" fxLayout="column" class="cron">
+              <mat-form-field appearance="outline">
+                <mat-label>CRON</mat-label>
+                <input
+                  matInput
+                  placeholder="* * * * * * "
+                  formControlName="value"
+                />
+              </mat-form-field>
+              <p class="cronstring">{{ getTriggerValue() | cronStr }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
   <div class="relative">
     <mat-form-field appearance="outline" class="fill">
       <mat-label>Description</mat-label>
@@ -86,10 +145,26 @@
         formControlName="description"
       ></textarea>
     </mat-form-field>
-    <!-- post button -->
-    <button type="submit" mat-raised-button color="primary" (click)="create()">
-      <mat-icon>add</mat-icon>
-      Create
-    </button>
+    <div class="actions" 
+    fxLayout="row" 
+    fxLayoutGap="16px"
+
+    >
+      <ng-container *ngIf="task.id">
+        <button mat-raised-button color="primary" (click)="reset()">
+          <mat-icon>cancel</mat-icon>
+        </button>
+        <button type="submit" mat-raised-button color="primary" (click)="save()">
+          <mat-icon>save</mat-icon>
+          Save
+        </button>
+      </ng-container>
+      <ng-container  *ngIf="!task.id">
+        <button type="submit" mat-raised-button color="primary" (click)="create()">
+          <mat-icon>add</mat-icon>
+          Create
+        </button>
+      </ng-container>
+    </div>
   </div>
 </form>
