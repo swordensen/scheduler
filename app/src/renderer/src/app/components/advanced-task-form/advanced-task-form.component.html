@@ -20,28 +20,7 @@
     </button>
   </div>
 
-  <!-- <div > -->
-    <div formArrayName="arguments" fxLayout="column">
-      <h2>Arguments</h2>
-      <ng-container
-        *ngFor="let argument of arguments.controls; let i = index"
-      >
-        <mat-form-field appearance="outline">
-          <mat-label>argument {{i}}</mat-label>
-          <input
-          matInput
-          placeholder="Ex. C:/chrome.exe"
-          name="task"
-          [formControlName]="i"
-        />
-        </mat-form-field>
-      </ng-container>
-      <div>
-        <button mat-raised-button color="primary" (click)="addArgument()">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
+
 
     <!-- arguments -->
     <div formArrayName="arguments" fxLayout="column">
