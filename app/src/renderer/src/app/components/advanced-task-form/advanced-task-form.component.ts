@@ -76,7 +76,7 @@ export class AdvancedTaskFormComponent implements OnInit {
   ngOnInit(): void {
     this.store
       .select(selectTaskForm)
-      // .pipe(take(1))
+      .pipe(take(1))
       .subscribe((task) => {
         this.task = task;
         this.taskForm = this.fb.group({
