@@ -69,7 +69,7 @@ ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
 });
 
 ipcMain.on(START_TASK_EVENT, async (event, task: Task) => {
-  scheduleRunner.startTask(task);
+  scheduleRunner.queueTask(task);
 });
 
 ipcMain.on(STOP_TASK_EVENT, async (event, task: Task) => {

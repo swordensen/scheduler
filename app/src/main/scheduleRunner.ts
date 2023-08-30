@@ -4,6 +4,8 @@ import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
 import { killProcess, spacesNotInQuotesRegex } from "./helpers";
 import { normalize } from "path";
+import Queue from "queue";
+import { cpus } from "os";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -12,6 +14,11 @@ import { normalize } from "path";
  */
 export class ScheduleRunner {
   public scheduleController = new ScheduleController();
+  private taskQueue = new Queue({
+    concurrency: cpus().length,
+    timeout: 1000,
+    autostart: true,
+  })
   private INTERVAL_PERIOD = 15000; // 15 seconds
   private interval?: NodeJS.Timeout = this.mainInterval();
   private taskStartedListeners: Array<(task: Task) => void> = [];
@@ -38,9 +45,23 @@ export class ScheduleRunner {
       const startupTrigger = task.triggers.find((trigger) => trigger.type === "startup");
       if (startupTrigger) {
         this.scheduleController.triggerTask(task, startupTrigger);
-        this._startTask(task);
+        this.queueTask(task);
       }
     });
+  }
+
+  public queueTask(task:Task){
+    this.taskQueue.push(()=>{
+      return new Promise((resolve, reject)=>{
+        const process = this._startTask(task);
+        process.on('spawn', ()=>{
+          resolve(true)
+        });
+        process.on('error', ()=>{
+          reject(false);
+        })
+      })
+    })
   }
 
   /**
@@ -54,7 +75,7 @@ export class ScheduleRunner {
         task.triggers.forEach((trigger) => {
           if (this.checkTrigger(trigger)) {
             this.scheduleController.triggerTask(task, trigger);
-            this._startTask(task);
+            this.queueTask(task);
           }
         });
       });
@@ -112,11 +133,8 @@ export class ScheduleRunner {
   }
 
   public startTask(task: Task) {
-    const pid = this._startTask(task);
-    this.scheduleController.startTask({
-      ...task,
-      pids: [...task.pids, pid],
-    });
+    const process = this.queueTask(task);
+
   }
 
   /**
@@ -124,9 +142,10 @@ export class ScheduleRunner {
    * @param task
    */
   public stopTask(task: Task) {
-    task.pids.forEach((pid) => {
+    for(const pid of task.pids){
       killProcess(pid);
-    });
+    }
+
     this.scheduleController.stopTask({
       ...task,
       pids: [],
@@ -182,9 +201,12 @@ export class ScheduleRunner {
           this.scheduleController.updateTask(__task);
         }
       });
-
+      this.scheduleController.startTask({
+        ...task,
+        pids: [...task.pids, process.pid],
+      });
       // _process.unref();
-      return _process.pid;
+      return _process;
     } catch (e) {
       console.log(e);
       throw `could not start task ${e}`;
