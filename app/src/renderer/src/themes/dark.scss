@@ -39,19 +39,25 @@
 // // @include my-app-theme($theme);
 
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 @include mat.core();
 
 // Define a dark theme
 $dark-theme: mat.define-dark-theme((
  color: (
-   primary: mat.define-palette(mat.$pink-palette),
-   accent: mat.define-palette(mat.$blue-grey-palette),
+   primary: mat.define-palette(mat.$teal-palette),
+   accent: mat.define-palette(mat.$blue-grey-palette, 500, 200, 700),
+   background: #121212,
  ),
   // Only include `typography` and `density` in the default dark theme.
   typography: mat.define-typography-config(),
   density: 0,
 ));
+
+
+
+
 
 // Define a light theme
 $light-theme: mat.define-light-theme((
@@ -62,13 +68,14 @@ $light-theme: mat.define-light-theme((
 ));
 
 // Apply the dark theme by default
-@include mat.core-theme($dark-theme);
-@include mat.button-theme($dark-theme);
+// @include mat.core-theme($dark-theme);
+// @include mat.button-theme($dark-theme);
+@include mat.all-component-themes($dark-theme);
 
 // Apply the light theme only when the user prefers light themes.
 @media (prefers-color-scheme: light) {
  // Use the `-color` mixins to only apply color styles without reapplying the same
  // typography and density styles.
- @include mat.core-color($light-theme);
- @include mat.button-color($light-theme);
+ @include mat.all-component-themes($light-theme);
+
 }
