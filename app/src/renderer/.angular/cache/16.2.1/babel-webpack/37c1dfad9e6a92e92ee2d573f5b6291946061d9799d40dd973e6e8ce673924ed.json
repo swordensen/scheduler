@@ -1,1 +1,0 @@
-{"ast":null,"code":"export const selectSchedule = state => state.schedule.filter(task => task.name.toLowerCase().includes(state.gui.scheduleFilter.toLowerCase()));","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

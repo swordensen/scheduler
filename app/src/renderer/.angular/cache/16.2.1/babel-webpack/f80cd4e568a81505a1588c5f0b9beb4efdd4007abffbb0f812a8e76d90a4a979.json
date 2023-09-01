@@ -1,1 +1,0 @@
-{"ast":null,"code":"export const selectSideNavOpen = state => state.gui.sideNavOpen;\nexport const selectLoading = state => state.gui.loading;\nexport const selectFilter = state => state.gui.scheduleFilter;","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

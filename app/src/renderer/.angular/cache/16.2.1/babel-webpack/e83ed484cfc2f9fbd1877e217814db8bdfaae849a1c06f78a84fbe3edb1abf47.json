@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { createAction } from '@ngrx/store';\nexport const minimizeWindow = createAction('[Electron] minimize');\nexport const maximizeWindow = createAction('[Electron] maximize');\nexport const closeWindow = createAction('[Electron] close');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
