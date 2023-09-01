@@ -4,3 +4,15 @@
   width: 300px;
 }
 
+div[fxLayout="column"]{
+  display:flex;
+  flex-direction: column;
+}
+
+div[fxLayoutGap="16px"]{
+  gap: 16px;
+}
+
+.filter{
+  flex :1;
+}

@@ -30,3 +30,37 @@ textarea.no-resize {
     white-space: nowrap;
   }
 }
+
+form > div{
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: start center;
+}
+
+div.actions{
+  display:flex;
+  gap: 16px;
+}
+
+button{
+  flex: 0 1 auto;
+}
+
+div[fxLayout="column"]{
+  display: flex;
+  flex-direction: column;
+}
+
+div[fxLayout="row"]{
+  display: flex;
+  flex-direction: row;
+}
+
+div[fxLayoutGap="16px"]{
+  gap: 16px;
+}
+
+div[fxLayoutAlign="start center"]{
+  align-items: start center;
+}
