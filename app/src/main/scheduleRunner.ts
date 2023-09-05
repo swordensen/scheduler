@@ -142,8 +142,10 @@ export class ScheduleRunner {
    * @param task
    */
   public stopTask(task: Task) {
-    for(const pid of task.pids){
-      killProcess(pid);
+    if(task.pids.length){
+      for(const pid of task.pids){
+        killProcess(pid);
+      }
     }
 
     this.scheduleController.stopTask({
