@@ -1,0 +1,87 @@
+// @import "~@angular/material/theming";
+// // Include the common styles for Angular Material. We include this here so that you only
+// // have to load a single css file for Angular Material in your app.
+// // Be sure that you only ever include this mixin once!
+// @include mat-core;
+
+// // Define the palettes for your theme using the Material Design palettes available in palette.scss
+// // (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// // hue.
+// $primary: mat-palette($mat-teal);
+// $accent: mat-palette($mat-blue-grey, 500, 200, 700);
+// $background-color: #121212;
+
+// // The warn palette is optional (defaults to red).
+// $warn: mat-palette($mat-blue);
+
+// // Create the theme object (a Sass map containing all of the palettes).
+// $theme: mat-dark-theme($primary, $accent, $warn);
+
+// // Insert custom background color
+// $background: map-get($theme, background);
+// $background: map_merge(
+//   $background,
+//   (
+//     background: $background-color,
+//   )
+// );
+// $theme: map_merge(
+//   $theme,
+//   (
+//     background: $background,
+//   )
+// );
+
+// // Include theme styles for core and each component used in your app.
+// // Alternatively, you can import and @include the theme mixins for each component
+// // that you are using.
+// @include angular-material-theme($theme);
+// // @include my-app-theme($theme);
+
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Define a dark theme
+$dark-theme: mat.define-dark-theme((
+ color: (
+   primary: mat.define-palette(mat.$teal-palette),
+   accent: mat.define-palette(mat.$blue-grey-palette, 500, 200, 700),
+  //  background: #121212,
+ ),
+  // Only include `typography` and `density` in the default dark theme.
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+
+
+
+
+
+// Define a light theme
+$light-theme: mat.define-light-theme((
+ color: (
+   primary: mat.define-palette(mat.$indigo-palette),
+   accent: mat.define-palette(mat.$pink-palette),
+ ),
+));
+
+// Apply the dark theme by default
+@include mat.core-theme($dark-theme);
+@include mat.button-theme($dark-theme);
+@include mat.card-theme($dark-theme);
+@include mat.input-theme($dark-theme);
+@include mat.toolbar-theme($dark-theme);
+@include mat.form-field-theme($dark-theme);
+@include mat.snack-bar-theme($dark-theme);
+@include mat.expansion-theme($dark-theme);
+
+@include mat.all-component-colors($dark-theme);
+
+// Apply the light theme only when the user prefers light themes.
+@media (prefers-color-scheme: light) {
+ // Use the `-color` mixins to only apply color styles without reapplying the same
+ // typography and density styles.
+ @include mat.all-component-themes($light-theme);
+
+}

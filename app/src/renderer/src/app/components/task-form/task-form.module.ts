@@ -6,7 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { MatDialogModule } from '@angular/material/dialog';
 import { AdvancedTaskFormDialogueModule } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.module';
@@ -21,7 +20,6 @@ import { CronStrModule } from 'src/app/pipes/cron-str/cron-str.module';
     MatButtonModule,
     MatSelectModule,
     MatIconModule,
-    FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
     CronStrModule,

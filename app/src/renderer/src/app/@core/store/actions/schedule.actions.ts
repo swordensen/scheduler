@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import {
   Schedule,
   Task,
+  TaskGroup,
   Trigger,
   UTrigger,
 } from '../../../../../../main/types';
@@ -60,8 +61,13 @@ export const stopTask = createAction(
 
 export const deleteTask = createAction(
   '[Schedule] Delete Job',
-  props<{ task: Task }>()
+  props<{ task: Task  }>()
 );
+
+export const deleteTaskGroup = createAction(
+  '[Schedule] Delete Task Group',
+  props<{taskGroup:TaskGroup}>()
+)
 
 export const updateTaskState = createAction(
   '[Schedule] Update Task State',

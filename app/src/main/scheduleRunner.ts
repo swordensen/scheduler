@@ -1,9 +1,11 @@
-import { Task, UTrigger } from "./types";
+import { Task, TaskGroup, UTrigger } from "./types";
 import { spawn, spawnSync, ChildProcess } from "child_process";
 import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
 import { killProcess, spacesNotInQuotesRegex } from "./helpers";
 import { normalize } from "path";
+import Queue from "queue";
+import { cpus } from "os";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -12,13 +14,18 @@ import { normalize } from "path";
  */
 export class ScheduleRunner {
   public scheduleController = new ScheduleController();
+  private taskQueue = new Queue({
+    concurrency: cpus().length,
+    timeout: 1000,
+    autostart: true,
+  })
   private INTERVAL_PERIOD = 15000; // 15 seconds
   private interval?: NodeJS.Timeout = this.mainInterval();
   private taskStartedListeners: Array<(task: Task) => void> = [];
   private taskFailedListeners: Array<(task: Task) => void> = [];
   private taskWaitingListeners: Array<(task: Task) => void> = [];
   private taskAddedListeners: Array<(task: Task) => void> = [];
-  private taskDeletedListeners: Array<(task: Task) => void> = [];
+  private taskDeletedListeners: Array<(task: Task | TaskGroup) => void> = [];
   private taskUpdatedListeners: Array<(task: Task) => void> = [];
   private taskStoppedListeners: Array<(task: Task) => void> = [];
 
@@ -34,30 +41,59 @@ export class ScheduleRunner {
    * run startup triggers at startup
    */
   private runStartupTasks() {
-    this.schedule.forEach((task) => {
+    function triggerTask(task:Task){
       const startupTrigger = task.triggers.find((trigger) => trigger.type === "startup");
       if (startupTrigger) {
         this.scheduleController.triggerTask(task, startupTrigger);
-        this._startTask(task);
+        this.queueTask(task);
       }
-    });
+    }
+
+    this.scheduleController.forEachTask(task => {
+      if(task.type === 'task'){
+        triggerTask(task);
+      }
+      return task;
+    })
+
+  }
+
+  public queueTask(task:Task){
+    this.taskQueue.push(()=>{
+      return new Promise((resolve, reject)=>{
+        const _process = this._startTask(task);
+        _process.on('spawn', ()=>{
+          resolve(true)
+        });
+        _process.on('error', ()=>{
+          reject(false);
+        })
+      })
+    })
   }
 
   /**
    * this is our main interval loop
    */
   private mainInterval(): NodeJS.Timeout {
+    const triggerTask = (task:Task) =>{
+      LOGGER.info(`checking task ${task.name}`);
+      task.triggers.forEach((trigger) => {
+        if (this.checkTrigger(trigger)) {
+          this.scheduleController.triggerTask(task, trigger);
+          this.queueTask(task);
+        }
+      });
+    }
+
     return setInterval(() => {
       LOGGER.info("MAIN INTERVAL LOOP");
-      this.schedule.forEach((task) => {
-        LOGGER.info(`checking task ${task.name}`);
-        task.triggers.forEach((trigger) => {
-          if (this.checkTrigger(trigger)) {
-            this.scheduleController.triggerTask(task, trigger);
-            this._startTask(task);
-          }
-        });
-      });
+      this.scheduleController.forEachTask(task => {
+        if(task.type === 'task'){
+          triggerTask(task);
+        }
+        return task;
+      })
       LOGGER.info("MAIN INTERVAL LOOP END");
     }, this.INTERVAL_PERIOD);
   }
@@ -90,8 +126,8 @@ export class ScheduleRunner {
     this.taskUpdatedListeners.push(cb);
   }
 
-  public createTask(task: Task) {
-    this.scheduleController.addTask(task);
+  public createTask(task: Task, taskGroup:TaskGroup) {
+    this.scheduleController.addTask(task, taskGroup);
     this.taskAddedListeners.forEach((cb) => {
       cb(task);
     });
@@ -104,7 +140,7 @@ export class ScheduleRunner {
     });
   }
 
-  public deleteTask(task: Task) {
+  public deleteTask(task: Task | TaskGroup) {
     this.scheduleController.deleteTask(task);
     this.taskDeletedListeners.forEach((cb) => {
       cb(task);
@@ -112,11 +148,7 @@ export class ScheduleRunner {
   }
 
   public startTask(task: Task) {
-    const pid = this._startTask(task);
-    this.scheduleController.startTask({
-      ...task,
-      pids: [...task.pids, pid],
-    });
+    const process = this.queueTask(task);
   }
 
   /**
@@ -124,9 +156,16 @@ export class ScheduleRunner {
    * @param task
    */
   public stopTask(task: Task) {
-    task.pids.forEach((pid) => {
-      killProcess(pid);
-    });
+    if(task.pids.length){
+      for(const pid of task.pids){
+        try{
+          killProcess(pid);
+        }catch(e){
+          LOGGER.error(e);
+        }
+      }
+    }
+
     this.scheduleController.stopTask({
       ...task,
       pids: [],
@@ -157,7 +196,11 @@ export class ScheduleRunner {
       }, []);
 
 
-      const _process = spawn(command, commandArgs, task.spawnOptions)
+      const _process = spawn(command, commandArgs, {
+        ...task.spawnOptions,
+        detached: true
+      })
+
 
       const logger = taskLogger(task, _process);
 
@@ -182,9 +225,12 @@ export class ScheduleRunner {
           this.scheduleController.updateTask(__task);
         }
       });
-
+      this.scheduleController.startTask({
+        ...task,
+        pids: [...task.pids, _process.pid],
+      });
       // _process.unref();
-      return _process.pid;
+      return _process;
     } catch (e) {
       console.log(e);
       throw `could not start task ${e}`;

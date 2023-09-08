@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { ipcRenderer } from 'electron';
 import {
   deleteTask,
+  deleteTaskGroup,
   getSchedule,
   openLogFile,
   startTask,
@@ -13,6 +14,7 @@ import {
 } from '../actions/schedule.actions';
 import {
   DELETE_TASK_EVENT,
+  DELETE_TASK_GROUP_EVENT,
   GET_SCHEDULE_EVENT,
   OPEN_TASK_LOG_FILE_EVENT,
   START_TASK_EVENT,
@@ -64,12 +66,16 @@ export class ScheduleEffects {
     { dispatch: false }
   );
 
-  deleteTask$ = createEffect(
+  deleteTaskOrGroup$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(deleteTask),
-        map(({ task }) => {
-          ipcRenderer.send(DELETE_TASK_EVENT, task);
+        ofType(deleteTask, deleteTaskGroup),
+        map((data) => {
+          if(data.type === '[Schedule] Delete Job'){
+            ipcRenderer.send(DELETE_TASK_EVENT, data.task);
+          } else if(data.type === '[Schedule] Delete Task Group'){
+            ipcRenderer.send(DELETE_TASK_EVENT, data.taskGroup);
+          }
           this.store$.dispatch(startLoading());
         })
       ),

@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CronStrModule } from 'src/app/pipes/cron-str/cron-str.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
+
 @NgModule({
   declarations: [AdvancedTaskFormComponent],
   imports: [
@@ -25,7 +25,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatCheckboxModule,
     MatSlideToggleModule,
     CronStrModule,
-    FlexLayoutModule
   ],
   exports: [AdvancedTaskFormComponent],
 })

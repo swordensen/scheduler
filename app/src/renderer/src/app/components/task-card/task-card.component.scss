@@ -1,14 +1,24 @@
+
+
 mat-card {
+
   border-width: 2px;
   border-color: rgba(0, 0, 0, 0);
   border-style: solid;
   cursor: pointer;
-  * {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+
 }
+
+.mat-card-header{
+  display:flex;
+  padding: 0 16px;
+  width: calc(100% - 32px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position:relative;
+}
+
 .active {
   animation: pulse 2s infinite;
 }
@@ -33,4 +43,35 @@ mat-card {
 
 :host {
   display: block;
+}
+
+mat-card-title{
+  width: 100%;
+  span{
+    vertical-align: middle;
+    line-height: 14px;
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.title{
+  width: 100%;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 14px;
+}
+div[fxLayout="row"]{
+  display:flex;
+  flex-direction: row;
+}
+
+div[fxLayoutAlign="space-between center"]{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
 }
