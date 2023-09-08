@@ -61,11 +61,11 @@ export class ScheduleRunner {
   public queueTask(task:Task){
     this.taskQueue.push(()=>{
       return new Promise((resolve, reject)=>{
-        const process = this._startTask(task);
-        process.on('spawn', ()=>{
+        const _process = this._startTask(task);
+        _process.on('spawn', ()=>{
           resolve(true)
         });
-        process.on('error', ()=>{
+        _process.on('error', ()=>{
           reject(false);
         })
       })
@@ -158,7 +158,11 @@ export class ScheduleRunner {
   public stopTask(task: Task) {
     if(task.pids.length){
       for(const pid of task.pids){
-        killProcess(pid);
+        try{
+          killProcess(pid);
+        }catch(e){
+          LOGGER.error(e);
+        }
       }
     }
 
@@ -192,7 +196,11 @@ export class ScheduleRunner {
       }, []);
 
 
-      const _process = spawn(command, commandArgs, task.spawnOptions)
+      const _process = spawn(command, commandArgs, {
+        ...task.spawnOptions,
+        detached: true
+      })
+
 
       const logger = taskLogger(task, _process);
 
@@ -219,7 +227,7 @@ export class ScheduleRunner {
       });
       this.scheduleController.startTask({
         ...task,
-        pids: [...task.pids, process.pid],
+        pids: [...task.pids, _process.pid],
       });
       // _process.unref();
       return _process;
