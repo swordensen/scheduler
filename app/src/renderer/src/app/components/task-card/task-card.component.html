@@ -1,37 +1,35 @@
-<mat-card
-  [ngClass]="task.status"
-  (click)="task.status != 'active' ? _startTask($event) : _stopTask($event)"
->
-  <mat-card-title fxLayout="row" fxLayoutAlign="space-between center">
-    <span>{{ task.name }}</span>
-    <div>
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="menu"
-        (click)="$event.stopPropagation()"
-      >
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="_editTask()">
-          <mat-icon>edit</mat-icon>
-          <span>edit</span>
-        </button>
-        <button mat-menu-item (click)="_openLogFile()">
-          <mat-icon>text_snippet</mat-icon>
-          <span>logs</span>
-        </button>
-        <button mat-menu-item (click)="_deleteTask()">
-          <mat-icon>delete</mat-icon>
-          <span>delete</span>
-        </button>
-      </mat-menu>
-    </div>
-  </mat-card-title>
+<mat-card [ngClass]="task.status" (click)="task.status != 'active' ? _startTask($event) : _stopTask($event)">
+  <div class="mat-card-header">
+    <mat-card-title >
+      <div class="title" fxLayout="row" fxLayoutAlign="space-between center">
+        <span>{{ task.name }}</span>
+        <div>
+          <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="_editTask()">
+              <mat-icon>edit</mat-icon>
+              <span>edit</span>
+            </button>
+            <button mat-menu-item (click)="_openLogFile()">
+              <mat-icon>text_snippet</mat-icon>
+              <span>logs</span>
+            </button>
+            <button mat-menu-item (click)="_deleteTask()">
+              <mat-icon>delete</mat-icon>
+              <span>delete</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </mat-card-title>
+
+  </div>
   <mat-card-content>
     <p>{{ task.command }}</p>
-    <p>last ran: {{ task.lastExecuted | date: "medium" }}</p>
-    <p *ngIf="next">next: {{ next | date: "medium" }}</p>
-    <p *ngIf="!next && hasStartupTrigger">next: startup</p>
+    <!-- <p>last ran: {{ task.lastExecuted | date: "medium" }}</p> -->
+    <!-- <p *ngIf="next">next: {{ next | date: "medium" }}</p>
+    <p *ngIf="!next && hasStartupTrigger">next: startup</p> -->
   </mat-card-content>
 </mat-card>

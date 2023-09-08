@@ -6,6 +6,8 @@ export const STOP_TASK_EVENT = 'stop-task';
 
 export const DELETE_TASK_EVENT = "delete-task";
 
+export const DELETE_TASK_GROUP_EVENT = "delete-task-group"
+
 export const GET_SCHEDULE_EVENT = "get-schedule";
 
 export const SEND_SCHEDULE_EVENT = "send-schedule";

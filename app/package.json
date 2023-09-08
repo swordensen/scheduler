@@ -45,6 +45,7 @@
     "cron": "^1.8.2",
     "electron-squirrel-startup": "^1.0.0",
     "open": "^7.4.2",
+    "queue": "^6.0.2",
     "update-electron-app": "^2.0.1",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
