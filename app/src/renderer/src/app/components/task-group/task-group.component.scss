@@ -1,0 +1,17 @@
+.taskGroup{
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.flex{
+    display: flex;
+}
+
+.row{
+    flex-direction: row;
+}
+
+.space-between{
+    justify-content: space-between;
+}

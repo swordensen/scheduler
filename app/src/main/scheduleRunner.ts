@@ -1,4 +1,4 @@
-import { Task, UTrigger } from "./types";
+import { Task, TaskGroup, UTrigger } from "./types";
 import { spawn, spawnSync, ChildProcess } from "child_process";
 import { ScheduleController } from "./controllers/schedule.controller";
 import LOGGER, { taskLogger } from "./logger";
@@ -25,7 +25,7 @@ export class ScheduleRunner {
   private taskFailedListeners: Array<(task: Task) => void> = [];
   private taskWaitingListeners: Array<(task: Task) => void> = [];
   private taskAddedListeners: Array<(task: Task) => void> = [];
-  private taskDeletedListeners: Array<(task: Task) => void> = [];
+  private taskDeletedListeners: Array<(task: Task | TaskGroup) => void> = [];
   private taskUpdatedListeners: Array<(task: Task) => void> = [];
   private taskStoppedListeners: Array<(task: Task) => void> = [];
 
@@ -41,13 +41,21 @@ export class ScheduleRunner {
    * run startup triggers at startup
    */
   private runStartupTasks() {
-    this.schedule.forEach((task) => {
+    function triggerTask(task:Task){
       const startupTrigger = task.triggers.find((trigger) => trigger.type === "startup");
       if (startupTrigger) {
         this.scheduleController.triggerTask(task, startupTrigger);
         this.queueTask(task);
       }
-    });
+    }
+
+    this.scheduleController.forEachTask(task => {
+      if(task.type === 'task'){
+        triggerTask(task);
+      }
+      return task;
+    })
+
   }
 
   public queueTask(task:Task){
@@ -68,17 +76,24 @@ export class ScheduleRunner {
    * this is our main interval loop
    */
   private mainInterval(): NodeJS.Timeout {
+    const triggerTask = (task:Task) =>{
+      LOGGER.info(`checking task ${task.name}`);
+      task.triggers.forEach((trigger) => {
+        if (this.checkTrigger(trigger)) {
+          this.scheduleController.triggerTask(task, trigger);
+          this.queueTask(task);
+        }
+      });
+    }
+
     return setInterval(() => {
       LOGGER.info("MAIN INTERVAL LOOP");
-      this.schedule.forEach((task) => {
-        LOGGER.info(`checking task ${task.name}`);
-        task.triggers.forEach((trigger) => {
-          if (this.checkTrigger(trigger)) {
-            this.scheduleController.triggerTask(task, trigger);
-            this.queueTask(task);
-          }
-        });
-      });
+      this.scheduleController.forEachTask(task => {
+        if(task.type === 'task'){
+          triggerTask(task);
+        }
+        return task;
+      })
       LOGGER.info("MAIN INTERVAL LOOP END");
     }, this.INTERVAL_PERIOD);
   }
@@ -111,8 +126,8 @@ export class ScheduleRunner {
     this.taskUpdatedListeners.push(cb);
   }
 
-  public createTask(task: Task) {
-    this.scheduleController.addTask(task);
+  public createTask(task: Task, taskGroup:TaskGroup) {
+    this.scheduleController.addTask(task, taskGroup);
     this.taskAddedListeners.forEach((cb) => {
       cb(task);
     });
@@ -125,7 +140,7 @@ export class ScheduleRunner {
     });
   }
 
-  public deleteTask(task: Task) {
+  public deleteTask(task: Task | TaskGroup) {
     this.scheduleController.deleteTask(task);
     this.taskDeletedListeners.forEach((cb) => {
       cb(task);
@@ -134,7 +149,6 @@ export class ScheduleRunner {
 
   public startTask(task: Task) {
     const process = this.queueTask(task);
-
   }
 
   /**

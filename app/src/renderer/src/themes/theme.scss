@@ -74,6 +74,7 @@ $light-theme: mat.define-light-theme((
 @include mat.toolbar-theme($dark-theme);
 @include mat.form-field-theme($dark-theme);
 @include mat.snack-bar-theme($dark-theme);
+@include mat.expansion-theme($dark-theme);
 
 @include mat.all-component-colors($dark-theme);
 

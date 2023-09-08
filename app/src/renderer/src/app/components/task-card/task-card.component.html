@@ -28,8 +28,8 @@
   </div>
   <mat-card-content>
     <p>{{ task.command }}</p>
-    <p>last ran: {{ task.lastExecuted | date: "medium" }}</p>
-    <p *ngIf="next">next: {{ next | date: "medium" }}</p>
-    <p *ngIf="!next && hasStartupTrigger">next: startup</p>
+    <!-- <p>last ran: {{ task.lastExecuted | date: "medium" }}</p> -->
+    <!-- <p *ngIf="next">next: {{ next | date: "medium" }}</p>
+    <p *ngIf="!next && hasStartupTrigger">next: startup</p> -->
   </mat-card-content>
 </mat-card>

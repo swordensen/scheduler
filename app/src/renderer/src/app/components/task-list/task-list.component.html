@@ -6,11 +6,8 @@
       <input matInput (keyup)="onKey($event)">
       <mat-hint>filter by task name</mat-hint>
     </mat-form-field>
-    <ng-container *ngIf="schedule.length; else noTasks">
-        <ng-container *ngFor="let task of schedule">
-          <app-task-card [task]="task"></app-task-card>
-        </ng-container>
-    </ng-container>
-    <ng-template #noTasks> ...no tasks to display </ng-template>
+    <app-task-group [taskGroup]="schedule" [expanded]="true">
+
+    </app-task-group>
   </div>
 </ng-container>

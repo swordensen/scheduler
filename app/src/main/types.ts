@@ -1,7 +1,16 @@
 import { SpawnOptions } from "child_process";
 
 
+export type TaskGroup = {
+  type: "taskGroup"
+  id:string;
+  name:string;
+  description?:string;
+  tasks: Array<Task | TaskGroup>
+}
+
 export interface Task {
+  type: "task";
   id: string;
   name: string;
   description?: string;
@@ -39,7 +48,7 @@ export interface CRONTrigger extends Trigger {
   next: number;
 }
 
-export type Schedule = Array<Task>;
+export type Schedule = TaskGroup;
 
 export interface Config {
   scheduleFilePath: string;

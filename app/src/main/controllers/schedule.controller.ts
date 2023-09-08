@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, watchFile, writeFileSync } from "fs";
 import { scheduleFile } from "../defaults";
 import { LOGGER } from "../logger";
-import { Schedule, Task, Trigger } from "../types";
+import { Schedule, Task, TaskGroup, Trigger } from "../types";
 import { sendAt } from "cron";
 import { v4 as uuid } from "uuid";
 
@@ -35,11 +35,48 @@ export class ScheduleController {
   }
 
   clearActiveTasks() {
-    this._schedule = this.schedule.map((task) => ({
+    this._schedule = this.forEachTask(task => ({
       ...task,
       status: "waiting",
-    }));
+    }))
   }
+
+  /**
+   * a helper function that makes it easy to perform some update on each task
+   * returns a fresh mutable list to use for
+   * @param cb 
+   */
+  forEachTask(cb:(task:Readonly<Task | TaskGroup>)=>Task | TaskGroup ){
+    function recurse(taskGroup:Readonly<TaskGroup>):TaskGroup{
+      return {
+        ...taskGroup,
+        tasks: taskGroup.tasks.reduce((acc, cur) => {
+          if(cur.type === 'task'){
+            const newTask = cb(cur);
+            if(newTask){
+              acc.push(newTask);
+            }
+          }else if(cur.type === 'taskGroup'){
+            const newTaskGroup = Object.freeze(cb(cur) as TaskGroup)
+            if(newTaskGroup){
+              acc.push(recurse(newTaskGroup));
+            }
+          } else {
+            acc.push(cur)
+          }
+
+          return acc;
+        }, [] as (Task|TaskGroup)[])
+      }
+    }
+
+
+    const newSchedule:Schedule = recurse(this.schedule);
+
+    return newSchedule;
+
+  }
+
 
   /**
    * creates the schedule file if it doesn't exist.
@@ -76,46 +113,53 @@ export class ScheduleController {
    * Keep in mind we only want to read from the file once.
    * @param task
    */
-  public addTask(task: Task): number {
-    const currentSchedule = this.schedule;
-    this._schedule = [
-      ...currentSchedule,
-      {
-        ...task,
-        id: uuid(),
-        pids: [],
-        triggers: task.triggers.map((trigger) => {
-          switch (trigger.type) {
-            case "CRON":
-              trigger.next = sendAt(trigger.value).unix() * 1000;
-              break;
-            case "interval":
-              trigger.next = Date.now() + trigger.value;
-              break;
-          }
-          trigger.id = uuid();
-          return trigger;
-        }),
-      },
-    ];
-    return currentSchedule.length;
+  public addTask(task: Task, targetTaskGroup:TaskGroup) {
+    this._schedule = this.forEachTask(taskGroup => {
+      if(task.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
+        return {
+          ...taskGroup,
+          tasks: [
+            ...taskGroup.tasks,
+            {
+              ...task,
+              id: uuid(),
+              pids: [],
+              triggers: task.triggers.map((trigger) => {
+                switch (trigger.type) {
+                  case "CRON":
+                    trigger.next = sendAt(trigger.value).unix() * 1000;
+                    break;
+                  case "interval":
+                    trigger.next = Date.now() + trigger.value;
+                    break;
+                }
+                trigger.id = uuid();
+                return trigger;
+              }),
+            },
+          ]
+        }
+      }
+
+
+    })
   }
+
 
   /**
    * deletes a task from the schedule file
    * also notifies any listeners, the index of the task that was deleted
    * @param index
    */
-  public deleteTask(task: Task) {
-    const currentSchedule = this.schedule;
-    this._schedule = currentSchedule.reduce((accumulator, current) => {
-      if (current.id !== task.id) accumulator.push(current);
-      return accumulator;
-    }, [] as Schedule);
+  public deleteTask(task: Task | TaskGroup) {
+    this._schedule = this.forEachTask(_task => {
+      if(_task.id !== task.id) return _task;
+    })
   }
 
-  public updateTask(task: Task) {
-    this._schedule = this.schedule.map((_task, i) => {
+  public updateTask(task: Task | TaskGroup) {
+
+    this._schedule = this.forEachTask((_task) => {
       if (task.id === _task.id) {
         return task;
       }
@@ -134,7 +178,7 @@ export class ScheduleController {
       status: "active",
       lastExecuted: Date.now(),
     };
-    this._schedule = this.schedule.map((_task, i) => {
+    this._schedule = this.forEachTask((_task) => {
       if (task.id == _task.id) {
         return modTask;
       }
@@ -148,7 +192,7 @@ export class ScheduleController {
       ...task,
       status: "waiting",
     };
-    this._schedule = this.schedule.map((_task) => {
+    this._schedule = this.forEachTask((_task) => {
       if (task.id == _task.id) {
         return modTask;
       }
@@ -183,7 +227,7 @@ export class ScheduleController {
       }),
     };
     // save the modifications to the database
-    this._schedule = this.schedule.map((_task) => {
+    this._schedule = this.forEachTask((_task) => {
       if (task.id === _task.id) {
         return modTask;
       }
@@ -194,7 +238,7 @@ export class ScheduleController {
   }
 
   public endTask(task: Task) {
-    this._schedule = this.schedule.map((_task, i) => {
+    this._schedule = this.forEachTask((_task) => {
       if (task.id === _task.id) {
         return {
           ...task,
@@ -220,7 +264,10 @@ export class ScheduleController {
    */
   public clearSchedule() {
     LOGGER.info(`clearing schedule file`);
-    this._schedule = [];
+    this._schedule = {
+      ...this.schedule,
+      tasks:[]
+    }
   }
 
   /**
@@ -229,6 +276,11 @@ export class ScheduleController {
    */
   private initScheduleFile() {
     LOGGER.info(`initializing schedule file`);
-    this._schedule = [];
+    this._schedule = {
+      id: "task schedule",
+      type: 'taskGroup',
+      name: 'Schedule',
+      tasks: []
+    };
   }
 }

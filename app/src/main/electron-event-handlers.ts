@@ -1,10 +1,11 @@
-import { Task } from "./types";
+import { Task, TaskGroup } from "./types";
 import { ipcMain } from "electron";
 import { mainWindow } from "./window-setup";
 import { ScheduleRunner } from "./scheduleRunner";
 import {
   ADD_TASK_EVENT,
   DELETE_TASK_EVENT,
+  DELETE_TASK_GROUP_EVENT,
   ERROR_EVENT,
   GET_SCHEDULE_EVENT,
   OPEN_TASK_LOG_FILE_EVENT,
@@ -55,12 +56,15 @@ ipcMain.on(GET_SCHEDULE_EVENT, async () => {
   mainWindow.webContents.send(SEND_SCHEDULE_EVENT, schedule);
 });
 
-ipcMain.on(ADD_TASK_EVENT, async (event, task: Task) => {
+ipcMain.on(ADD_TASK_EVENT, async (event, data:{
+  task:Task,
+  taskGroup: TaskGroup
+}) => {
   try {
-    if (task.id) {
-      scheduleRunner.updateTask(task);
+    if (data.task.id) {
+      scheduleRunner.updateTask(data.task);
     } else {
-      scheduleRunner.createTask(task);
+      scheduleRunner.createTask(data.task, data.taskGroup);
     }
   } catch (e) {
     console.log(e);
@@ -83,6 +87,10 @@ ipcMain.on(UPDATE_TASK_EVENT, async (event, task: Task) => {
 ipcMain.on(DELETE_TASK_EVENT, async (event, task: Task) => {
   scheduleRunner.deleteTask(task);
 });
+
+ipcMain.on(DELETE_TASK_GROUP_EVENT, async(event, taskGroup:TaskGroup)=>{
+  scheduleRunner.deleteTask(taskGroup)
+})
 
 ipcMain.on(OPEN_TASK_LOG_FILE_EVENT, (event, task: Task) => {
   openLogFile(task);
