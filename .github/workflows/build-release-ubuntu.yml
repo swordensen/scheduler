@@ -22,7 +22,7 @@ jobs:
       - name: Install Node.js, NPM
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "20"
 
       - name: Install rpm if necessary
         if: matrix.os == 'ubuntu-latest'
