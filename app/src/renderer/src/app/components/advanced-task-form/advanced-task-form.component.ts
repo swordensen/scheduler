@@ -86,7 +86,7 @@ export class AdvancedTaskFormComponent implements OnInit {
             : [],
           triggers: task.triggers
             ? this.fb.array(
-                task.triggers.map((trigger) => this.fb.group(trigger))
+                task.triggers?.map((trigger) => this.fb.group(trigger))
               )
             : [],
           spawnOptions: task.spawnOptions ? this.fb.group(task.spawnOptions) : {}

@@ -23,7 +23,7 @@
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
             <div class="taskGroup">
-                <ng-container *ngFor="let task of taskGroup.tasks">
+                <ng-container *ngFor="let task of taskGroup.tasks; trackBy:trackByFunction">
                     <ng-container *ngIf="task.type === 'task'">
                         <app-task-card [task]="task"></app-task-card>
                     </ng-container>

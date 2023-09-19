@@ -24,6 +24,7 @@
     "@ngrx/effects": "^16.2.0",
     "@ngrx/store": "^16.2.0",
     "@svgdotjs/svg.js": "^3.2.0",
+    "angular-resizable-element": "^7.0.2",
     "cronstrue": "^1.113.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

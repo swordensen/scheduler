@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { TaskGroup } from '../../../../../main/types';
+import { Component, Input, TrackByFunction } from '@angular/core';
+import { Task, TaskGroup } from '../../../../../main/types';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
 import { deleteTaskGroup } from 'src/app/@core/store/actions/schedule.actions';
@@ -20,5 +20,9 @@ export class TaskGroupComponent {
 
   _deleteTaskGroup(){
     this.store.dispatch(deleteTaskGroup({taskGroup: this.taskGroup}));
+  }
+
+  trackByFunction(i:number, task:Task | TaskGroup){
+    return task.id;
   }
 }

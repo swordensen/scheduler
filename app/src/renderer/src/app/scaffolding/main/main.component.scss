@@ -6,3 +6,20 @@ mat-sidenav-content {
   height: 100%;
   flex-direction: column;
 }
+
+
+
+mwlResizable {
+  box-sizing: border-box; // required for the enableGhostResize option to work
+}
+
+.resize-handle-right {
+  position: absolute;
+  height: 100%;
+  cursor: col-resize;
+  width: 5px;
+}
+
+.resize-handle-right {
+  right: 0;
+}
