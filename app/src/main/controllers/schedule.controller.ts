@@ -89,7 +89,13 @@ export class ScheduleController {
       return JSON.parse(readFileSync(scheduleFile, "utf8"));
     } catch (e) {
       LOGGER.error(`unable to parse schedule file ${scheduleFile}`);
-      throw e;
+      // throw e;
+      return {
+        type: 'taskGroup',
+        name: 'schedule',
+        id: uuid(),
+        tasks: []
+      }
     }
   }
 

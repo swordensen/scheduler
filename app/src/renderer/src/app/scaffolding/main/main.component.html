@@ -1,5 +1,17 @@
 <mat-sidenav-container autosize>
-  <mat-sidenav [opened]="sideNavOpened$ | async" mode="side">
+  <mat-sidenav 
+    [ngStyle]="{'width': sideNavWidth }" 
+    [opened]="sideNavOpened$ | async" 
+    mode="side" 
+    mwlResizable 
+    [enableGhostResize]="true"    
+    (resizeEnd)="handleSideNavResize($event)"
+  >
+    <div
+    class="resize-handle-right"
+    mwlResizeHandle
+    [resizeEdges]="{ right: true }"
+  ></div>
     <app-task-list></app-task-list>
   </mat-sidenav>
   <mat-sidenav-content>

@@ -78,7 +78,7 @@ export class TaskFormComponent implements OnInit {
             : [],
           triggers: task.triggers
             ? this.fb.array(
-                task.triggers.map((trigger) => this.fb.group(trigger))
+                task.triggers?.map((trigger) => this.fb.group(trigger))
               )
             : [],
         });
