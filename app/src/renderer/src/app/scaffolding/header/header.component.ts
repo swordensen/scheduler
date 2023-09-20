@@ -14,8 +14,10 @@ import { selectLoading } from 'src/app/@core/store/selectors/gui.selectors';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  loading$ = this.store.select(selectLoading);
-  constructor(private store: Store<{ gui: GUIState }>) {}
+  loading$ 
+  constructor(private store: Store<{ gui: GUIState }>) {
+    this.loading$ = this.store.select(selectLoading);
+  }
 
   minimize() {
     this.store.dispatch(minimizeWindow());
