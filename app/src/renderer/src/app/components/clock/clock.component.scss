@@ -1,6 +1,28 @@
-:host,
-div {
-  display: block;
-  height: 100%;
-  width: 100%;
+.clock-toggle{
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 16px;
+    display:flex;
+    gap: 8px;
+}
+
+.clock-container{
+    display:flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+}
+
+app-digital-clock, app-analog-clock{
+    flex: 1;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.clock{
+    flex: 1 1 0;
+    width: 100%;
 }

@@ -3,18 +3,21 @@ import {
   setFilter,
   startLoading,
   stopLoading,
+  toggleClock,
   toggleSideNav,
 } from '../actions/gui.actions';
 
 export interface GUIState {
   sideNavOpen: boolean;
   loading: boolean;
+  isClockAnalog:boolean;
   scheduleFilter:string;
 }
 
 const initialGUIState: GUIState = {
   sideNavOpen: true,
   loading: false,
+  isClockAnalog: false,
   scheduleFilter: '',
 };
 
@@ -35,6 +38,10 @@ const _guiReducer = createReducer(
   on(setFilter,(state, props)=> ({
     ...state,
     scheduleFilter: props.filter
+  })),
+  on(toggleClock, (state) => ({
+    ...state,
+    isClockAnalog: !state.isClockAnalog
   }))
 );
 

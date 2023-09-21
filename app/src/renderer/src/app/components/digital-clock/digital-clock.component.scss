@@ -1,0 +1,29 @@
+
+.digital{
+    font-family: "Digital", serif;
+}
+
+.container{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.clock{
+    position:relative;
+    font-size: calc(8vh + 8vw);
+}
+
+.monospace{
+    display:inline-block;
+    text-align: end;
+    width: 6vw;
+}
+
+.ampm{
+    position: absolute;
+    font-size: calc(2vh + 2vw);
+
+    left: 105%;
+}

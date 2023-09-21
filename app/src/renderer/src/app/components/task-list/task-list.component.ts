@@ -13,9 +13,11 @@ import { GUIState } from 'src/app/@core/store/reducers/gui.reducer';
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent implements OnInit {
-  schedule$ = this.store.select(selectSchedule)
+  schedule$ 
 
-  constructor(private store: Store<{ schedule: Schedule, gui:GUIState }>) {}
+  constructor(private store: Store<{ schedule: Schedule, gui:GUIState }>) {
+    this.schedule$ = this.store.select(selectSchedule);
+  }
 
   ngOnInit(): void {
     this.store.dispatch(getSchedule());

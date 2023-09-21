@@ -25,9 +25,10 @@
     "@ngrx/store": "^16.2.0",
     "@svgdotjs/svg.js": "^3.2.0",
     "angular-resizable-element": "^7.0.2",
-    "cronstrue": "^1.113.0",
+    "cronstrue": "^2.32.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "xterm": "^5.3.0",
     "zone.js": "^0.13.1"
   },
   "devDependencies": {
