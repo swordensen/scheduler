@@ -8,8 +8,8 @@ import {BehaviorSubject} from 'rxjs'
 })
 export class DigitalClockComponent {
   interval:NodeJS.Timeout | null;
-  clockString$ = new BehaviorSubject("00:00:00");
-  ampmString$ = new BehaviorSubject("AM");
+  clockString$ = new BehaviorSubject(this.getClockString().clockString);
+  ampmString$ = new BehaviorSubject(this.getClockString().isAm ? 'AM' : 'PM');
 
   ngAfterViewInit(){
     this.startClock()
@@ -21,17 +21,26 @@ export class DigitalClockComponent {
       this.interval = null;
     }
 
-    this.interval = setInterval(()=>{this.getClockString()}, 1000)
+    this.interval = setInterval(()=>{
+      const {clockString, isAm} = this.getClockString()
+      this.clockString$.next(clockString)
+      this.ampmString$.next(isAm ? 'AM' : 'PM')
+    }, 1000)
 
   }
 
   getClockString(){
     const date = new Date();
-    const hours = (date.getHours() % 12) .toString().padStart(2, '0');
+    const hours = (date.getHours() !== 12 ? date.getHours() % 12 : 12).toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const seconds = date.getSeconds().toString().padStart(2, '0');
+    const isAm = (date.getHours() / 12) < 1;
 
-    this.clockString$.next(`${hours}:${minutes}:${seconds}`)
-    this.ampmString$.next((date.getHours() / 12) > 1 ? 'PM' : 'AM')
+    return {
+      clockString:`${hours}:${minutes}:${seconds}`,
+      isAm,
+    }
+
+
   }
 }
