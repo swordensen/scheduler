@@ -1,0 +1,8 @@
+<div class="digital container">
+    <span class="clock">
+        <ng-container *ngFor="let character of (clockString$ | async)?.split('')" >
+            <span class="monospace">{{character}}</span>
+        </ng-container>
+        <span class="ampm">{{ampmString$ | async}}</span>
+    </span>
+</div>

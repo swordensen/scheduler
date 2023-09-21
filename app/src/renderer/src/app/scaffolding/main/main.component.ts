@@ -10,9 +10,11 @@ import { MatSidenav } from '@angular/material/sidenav';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent {
-  sideNavOpened$ = this.store.select(selectSideNavOpen);
+  sideNavOpened$ 
   sideNavWidth = "300px";
-  constructor(private store: Store<{ gui: GUIState }>) {}
+  constructor(private store: Store<{ gui: GUIState }>) {
+    this.sideNavOpened$ = store.select(selectSideNavOpen);
+  }
 
   handleSideNavResize(event:ResizeEvent){
     console.log(event);

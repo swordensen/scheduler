@@ -1,1 +1,17 @@
-<div #clock id="clock"></div>
+<div class="clock-container">
+    <div class="clock-toggle">
+        <mat-label class="mat-slide-toggle-content" >Digital</mat-label>
+        <mat-slide-toggle [checked]="isClockAnalog$ | async" [hideIcon]="true" (toggleChange)="toggleClock()"></mat-slide-toggle>
+        <mat-label class="mat-slide-toggle-content">Analog</mat-label>
+    </div>
+    <div class="clock">
+        <ng-container *ngIf="isClockAnalog$ | async; else digital">
+            <app-analog-clock></app-analog-clock>
+        </ng-container>
+
+        <ng-template #digital>
+            <app-digital-clock></app-digital-clock>
+        </ng-template>
+    </div>
+    
+</div>
