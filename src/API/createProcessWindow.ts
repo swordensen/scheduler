@@ -13,7 +13,7 @@ export function createProcessWindow(_process:ChildProcess){
   
       if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
           console.log(MAIN_WINDOW_VITE_DEV_SERVER_URL);
-          processWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL + '/terminal');
+          processWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL + '/terminal/');
         } else {
           processWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/terminal/index.html`));
         }

@@ -6,6 +6,7 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
+    "test-process-window": "electron-forge start -p .vite/build/createProcessWindow.test.js",
     "build": "tsc ",
     "build-watch" : "tsc --watch",
     "package": "electron-forge package",
