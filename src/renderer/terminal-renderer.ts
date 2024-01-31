@@ -27,5 +27,5 @@
  */
 
 import './index.css';
-import './app.tsx';
+import './terminal.tsx';
 

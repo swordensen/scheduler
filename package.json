@@ -6,6 +6,8 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
+    "build": "tsc ",
+    "build-watch" : "tsc --watch",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -25,6 +27,7 @@
     "@electron-forge/maker-zip": "^7.2.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
     "@electron-forge/plugin-vite": "^7.2.0",
+    "@playwright/test": "^1.41.1",
     "@types/node": "^20.11.6",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
@@ -33,12 +36,14 @@
     "electron": "28.2.0",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
+    "playwright": "^1.41.1",
     "ts-node": "^10.9.2",
     "typescript": "~4.5.4"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "xterm": "^4.19.0"
   }
 }
