@@ -46,7 +46,11 @@ function taskMap(schedule:Schedule,cb:(task:Task)=>Task | undefined){
 
 const _scheduleReducer = createReducer(
   initialScheduleState,
-  on(setSchedule, (state, { schedule }) => schedule),
+  on(setSchedule, (state, { schedule }) => {
+    console.log('updating schedule state with new schedule')
+    
+    return schedule
+  }),
   on(taskStarted, (state, { task }) => 
     taskMap(state, (_task)=>{
       if(_task.id === task.id) return task;

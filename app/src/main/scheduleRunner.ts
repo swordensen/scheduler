@@ -6,6 +6,7 @@ import { killProcess, spacesNotInQuotesRegex } from "./helpers";
 import { normalize } from "path";
 import Queue from "queue";
 import { cpus } from "os";
+import { bashPath, iconPath, middleManPath } from "./defaults";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -195,16 +196,40 @@ export class ScheduleRunner {
         return a;
       }, []);
 
+      const mySpawnOptions = {
+        command,
+        arguments: commandArgs,
+        spawnOptions: task.spawnOptions
+      }
 
-      const _process = spawn(command, commandArgs, {
-        ...task.spawnOptions,
-        detached: true
+      const nodePath = `"${process.argv[0].replace(/\\/g, "\\\\")}"`
+      const spawnOptionsStr = JSON.stringify(mySpawnOptions);
+
+      const bufferSpawnOptions = Buffer.from(spawnOptionsStr);
+      const _middleManPath = `"${middleManPath.replace(/\\/g, "\\\\")}"`;
+      const encodedSpawnOptions = bufferSpawnOptions.toString('base64');
+      console.log("STARTING PROCESS");
+
+      console.log(`${nodePath} ${_middleManPath} ${encodedSpawnOptions}`)
+      console.log({shell: bashPath})
+
+      // const _process = spawn(bashPath, [], {stdio: 'inherit'});
+      const _process = spawn(nodePath, [_middleManPath, encodedSpawnOptions],{
+        detached: true,
+        shell: bashPath
       })
+
+
+      // const _process = spawn(command, commandArgs, {
+      //   ...task.spawnOptions,
+      //   detached: true
+      // })
 
 
       const logger = taskLogger(task, _process);
 
       _process.on("exit", (code) => {
+        console.log({code});
         if (code === 0) {
           const __task: Task = {
             ...task,

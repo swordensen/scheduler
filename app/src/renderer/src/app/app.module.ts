@@ -9,7 +9,7 @@ import { HeaderModule } from './scaffolding/header/header.module';
 import { MainModule } from './scaffolding/main/main.module';
 import { EffectsModule } from '@ngrx/effects';
 import { ElectronEffects } from './@core/store/effects/electron.effects';
-import { scheduleReducer } from './@core/store/reducers/schedule.reducer';
+import {  scheduleReducer } from './@core/store/reducers/schedule.reducer';
 import { taskFormReducer } from './@core/store/reducers/taskForm.reducer';
 import { APP_INITIALIZER } from '@angular/core';
 import { ScheduleListenerService } from './@core/services/schedule-listener.service';
