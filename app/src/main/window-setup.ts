@@ -1,5 +1,5 @@
 import { app, BrowserWindow, Menu, Tray } from "electron";
-import { iconPath } from "./defaults";
+import { iconPath, middleManPath } from "./defaults";
 import "./electron-event-handlers";
 import { resolve } from "path";
 /**
@@ -28,10 +28,12 @@ export function setup() {
       nodeIntegration: true,
       enableRemoteModule: true,
     },
+    icon: iconPath,
     title: "scheduler",
     frame: false,
     show: shouldHide ? false : true,
   });
+
   mainWindow.webContents.openDevTools();
   tray = new Tray(iconPath);
   tray.setToolTip("scheduler");
