@@ -1,6 +1,6 @@
 {
   "name": "scheduler",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "Open source application for scheduling tasks (processes)",
   "main": "dist/main",
   "authors": "michael sorensen",
@@ -54,7 +54,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "asar": true,
+        "asar": false,
         "osxSign": {
           "identity": "",
           "hardened-runtime": true,
