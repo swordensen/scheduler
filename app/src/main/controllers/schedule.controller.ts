@@ -114,6 +114,7 @@ export class ScheduleController {
         cb(this.schedule);
       });
     } catch (e) {
+      console.log(e);
       LOGGER.error("unable to establish schedule watch file listener");
     }
   }

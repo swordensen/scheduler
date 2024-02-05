@@ -6,7 +6,8 @@ import { killProcess, spacesNotInQuotesRegex } from "./helpers";
 import { normalize } from "path";
 import Queue from "queue";
 import { cpus } from "os";
-import { bashPath, iconPath, middleManPath } from "./defaults";
+import {  iconPath, middleManPath } from "./defaults";
+import { ConfigController } from "./controllers/config.controller";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -15,6 +16,7 @@ import { bashPath, iconPath, middleManPath } from "./defaults";
  */
 export class ScheduleRunner {
   public scheduleController = new ScheduleController();
+  public configController = new ConfigController();
   private taskQueue = new Queue({
     concurrency: cpus().length,
     timeout: 1000,
@@ -209,7 +211,7 @@ export class ScheduleRunner {
       const _middleManPath = `"${middleManPath.replace(/\\/g, "\\\\")}"`;
       const encodedSpawnOptions = bufferSpawnOptions.toString('base64');
       console.log("STARTING PROCESS");
-
+      const bashPath = this.configController.config.bashPath;
       console.log(`${nodePath} ${_middleManPath} ${encodedSpawnOptions}`)
       console.log({shell: bashPath})
 

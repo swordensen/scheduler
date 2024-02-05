@@ -47,7 +47,10 @@ export interface CRONTrigger extends Trigger {
   value: string;
   next: number;
 }
-
+export interface Config {
+  bashPath:string;
+  theme?: "dark" | "light"
+}
 export type Schedule = TaskGroup;
 
 export interface Config {

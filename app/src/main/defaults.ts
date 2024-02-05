@@ -17,6 +17,5 @@ export const iconPath = resolve(__dirname, "assets/icon.png");
 
 export const middleManPath = resolve(__dirname, 'assets/middleMan.js');
 
-export const bashPath = resolve(__dirname, "assets/git/git-bash.exe")
 
 export const scheduleFile = resolve(appFolder, "schedule.json");
