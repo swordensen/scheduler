@@ -21,10 +21,8 @@ import {
   UPDATE_TASK_EVENT,
 } from "../event-names";
 import { openLogFile } from "./logger";
-import { ConfigController } from "./controllers/config.controller";
 
 const scheduleRunner = new ScheduleRunner();
-const configController = new ConfigController();
 
 scheduleRunner.onTaskStarted((task) => {
   mainWindow.webContents.send(TASK_STARTED_EVENT, task);

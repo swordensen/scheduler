@@ -70,10 +70,6 @@ export class ScheduleController {
       }
     }
 
-    const newTaskGroup = cb(this.schedule);
-    if(newTaskGroup){
-      return Object.freeze(newTaskGroup) as Schedule;
-    }
 
     const newSchedule:Schedule = recurse(this.schedule);
 
@@ -114,7 +110,6 @@ export class ScheduleController {
         cb(this.schedule);
       });
     } catch (e) {
-      console.log(e);
       LOGGER.error("unable to establish schedule watch file listener");
     }
   }
@@ -125,15 +120,14 @@ export class ScheduleController {
    * @param task
    */
   public addTask(task: Task, targetTaskGroup:TaskGroup) {
-    const newSchedule = this.forEachTask(taskGroup => {
-      if(taskGroup.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
+    this._schedule = this.forEachTask(taskGroup => {
+      if(task.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
         return {
           ...taskGroup,
           tasks: [
             ...taskGroup.tasks,
             {
               ...task,
-              type: 'task',
               id: uuid(),
               pids: [],
               triggers: task.triggers.map((trigger) => {
@@ -152,9 +146,9 @@ export class ScheduleController {
           ]
         }
       }
-    })
 
-    return this._schedule = newSchedule;
+
+    })
   }
 
 

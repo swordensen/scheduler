@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { ipcRenderer } from 'electron';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { ADD_TASK_EVENT } from '../../../../../../event-names';
-import { Schedule, Task } from '../../../../../../main/types';
+import { Task } from '../../../../../../main/types';
 import { startLoading } from '../actions/gui.actions';
 import {
   addTask,
@@ -18,10 +18,7 @@ import { UPDATE_TASK_EVENT } from '../../../../../../event-names';
 export class TaskFormEffects {
   constructor(
     private actions$: Actions,
-    private store$: Store<{ 
-      taskForm: Partial<Task>,
-      schedule: Schedule
-     }>
+    private store$: Store<{ taskForm: Partial<Task> }>
   ) {}
 
   addTask$ = createEffect(
@@ -29,13 +26,10 @@ export class TaskFormEffects {
       this.actions$.pipe(
         ofType(addTask),
         withLatestFrom(this.store$, (action, state) => {
-          return {
-            task: state.taskForm,
-            taskGroup: state.schedule
-          };
+          return state.taskForm;
         }),
-        map(({task, taskGroup}) => {
-          ipcRenderer.send(ADD_TASK_EVENT, {task,taskGroup});
+        map((task) => {
+          ipcRenderer.send(ADD_TASK_EVENT, task);
           this.store$.dispatch(resetTaskForm());
           this.store$.dispatch(startLoading());
         })

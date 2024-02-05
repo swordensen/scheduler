@@ -2,9 +2,6 @@ import { Schedule, Task, TaskGroup } from '../../../../../../main/types';
 import { GUIState } from '../reducers/gui.reducer';
 
 function recursiveFilter(taskGroup:TaskGroup, filter:string){
-    console.log("FILTER");
-    console.log(taskGroup);
-    if(!filter) return taskGroup;
     return {
         ...taskGroup,
         tasks: taskGroup.tasks.reduce((acc, cur)=>{
