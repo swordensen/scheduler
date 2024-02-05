@@ -7,9 +7,13 @@ import { resolve } from "path";
  */
 app.setLoginItemSettings({
   openAtLogin: true,
-  openAsHidden: process.platform === "darwin",
-  args: ["hide"],
+  // openAsHidden: process.platform === "darwin",
+  // args: ["hide"],
 });
+
+app.on('ready', ()=>{
+
+})
 
 const shouldHide = process.argv[2];
 
@@ -33,6 +37,7 @@ export function setup() {
     frame: false,
     show: shouldHide ? false : true,
   });
+  
 
   mainWindow.webContents.openDevTools();
   tray = new Tray(iconPath);
