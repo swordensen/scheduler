@@ -54,7 +54,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "asar": false,
+        "asar": true,
         "osxSign": {
           "identity": "",
           "hardened-runtime": true,
