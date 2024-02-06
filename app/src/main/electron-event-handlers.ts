@@ -104,9 +104,10 @@ ipcMain.on(OPEN_TASK_LOG_FILE_EVENT, (event, task: Task) => {
 const logFileListeners:{[key:string]: StatWatcher } = {}
 
 ipcMain.on(START_LISTENING_TO_LOG_FILE, (event, task:Task)=>{
-  console.log('start listening to log file');
   if(!task) return;
   const logFileController = new LogFileController(task.logFilePath);
+  if(logFileListeners[task.id]) logFileListeners[task.id].removeAllListeners();
+  console.log("ESTABLISHING LOG FILE WATCHER");
   const watcher = logFileController.onChange((text)=>{
     mainWindow.webContents.send(TASK_LOG_FILE_UPDATED, text)
   })

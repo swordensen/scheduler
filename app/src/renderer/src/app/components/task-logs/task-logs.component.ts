@@ -5,7 +5,7 @@ import {ipcRenderer} from 'electron'
 import { Store } from '@ngrx/store';
 import { Schedule, Task } from '../../../../../main/types';
 import { selectTaskById } from 'src/app/@core/store/selectors/schedule.selectors';
-import { first } from 'rxjs/operators';
+import { first, take } from 'rxjs/operators';
 import { START_LISTENING_TO_LOG_FILE, STOP_LISTENING_TO_LOG_FILE, TASK_LOG_FILE_UPDATED } from '../../../../../event-names';
 
 @Component({
@@ -20,18 +20,15 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
   @ViewChild("xterm") xtermContainer: ElementRef;
     
 
-  constructor(private router:Router, private route:ActivatedRoute, private store:Store<{schedule:Schedule}>){
+  constructor( private route:ActivatedRoute, private store:Store<{schedule:Schedule}>){
 
   }
 
   ngOnInit(){
-
     this.route.parent?.parent?.params.subscribe(parentParams => {
-      console.log(parentParams);
       const taskId = parentParams.id
       if(!taskId) return;
-      this.store.select(selectTaskById(taskId)).subscribe(task => {
-        console.log(task);
+      this.store.select(selectTaskById(taskId)).pipe(take(1)).subscribe(task => {
         if(!task) return;
         this.task = task;
         this.startListeningToLogFile(task)
@@ -42,11 +39,18 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
 
   }
 
-  handleLogFileUpdateEvent(){
-    ipcRenderer.on(TASK_LOG_FILE_UPDATED, (event, text)=>{
-      console.log("TASK_LOG_FILE_UPDATED");
-      this.term.write(text);
+
+
+  async onTaskFileUpdated(event:Electron.IpcRendererEvent, text:string){
+    console.log("TASK_LOG_FILE_UPDATED");
+    await new Promise((resolve, reject)=>{
+      this.term.write('\u001B[2J', ()=>resolve(true));
     })
+    this.term.write(text);
+  }
+
+  handleLogFileUpdateEvent(){
+     ipcRenderer.on(TASK_LOG_FILE_UPDATED, this.onTaskFileUpdated.bind(this))
   }
 
   startListeningToLogFile(task:Task){
@@ -61,12 +65,12 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.stopListeningToLogFile();
+    ipcRenderer.removeListener(TASK_LOG_FILE_UPDATED, this.onTaskFileUpdated.bind(this));
   }
 
 
   ngAfterViewInit(): void {
     this.term = new Terminal();
     this.term.open(this.xtermContainer.nativeElement);
-    this.term.writeln("HELLO WORLD!");
   }
 }
