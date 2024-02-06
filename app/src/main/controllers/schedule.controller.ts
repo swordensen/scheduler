@@ -129,16 +129,17 @@ export class ScheduleController {
     this._schedule = this.forEachTask(taskGroup => {
       if(taskGroup.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
         console.log("FOUND TASK GROUP TO UPDATE");
+        const id = uuid()
         return {
           ...taskGroup,
           tasks: [
             ...taskGroup.tasks,
             {
               ...task,
-              id: uuid(),
+              id: id,
               type: 'task',
               pids: [],
-              logFilePath: resolve(logFolder, `./commands/${task.name}-${task.id}.log`),
+              logFilePath: resolve(logFolder, `./commands/${task.name}-${id}.log`),
               triggers: task.triggers.map((trigger) => {
                 switch (trigger.type) {
                   case "CRON":
