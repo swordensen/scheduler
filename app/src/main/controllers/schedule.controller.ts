@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, watchFile, writeFileSync } from "fs";
-import { scheduleFile } from "../defaults";
+import { logFolder, scheduleFile } from "../defaults";
 import { LOGGER } from "../logger";
 import { Schedule, Task, TaskGroup, Trigger } from "../types";
 import { sendAt } from "cron";
 import { v4 as uuid } from "uuid";
+import { resolve } from "path";
 
 /**
  * this singleton is responsible for managing the schedule file to ensure no
@@ -70,11 +71,11 @@ export class ScheduleController {
       }
     }
 
+
     const newTaskGroup = cb(this.schedule);
     if(newTaskGroup){
-      return Object.freeze(newTaskGroup) as Schedule;
+      return Object.freeze(newTaskGroup) as Schedule
     }
-
     const newSchedule:Schedule = recurse(this.schedule);
 
     return newSchedule;
@@ -114,7 +115,6 @@ export class ScheduleController {
         cb(this.schedule);
       });
     } catch (e) {
-      console.log(e);
       LOGGER.error("unable to establish schedule watch file listener");
     }
   }
@@ -125,17 +125,20 @@ export class ScheduleController {
    * @param task
    */
   public addTask(task: Task, targetTaskGroup:TaskGroup) {
-    const newSchedule = this.forEachTask(taskGroup => {
+
+    this._schedule = this.forEachTask(taskGroup => {
       if(taskGroup.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
+        console.log("FOUND TASK GROUP TO UPDATE");
         return {
           ...taskGroup,
           tasks: [
             ...taskGroup.tasks,
             {
               ...task,
-              type: 'task',
               id: uuid(),
+              type: 'task',
               pids: [],
+              logFilePath: resolve(logFolder, `./commands/${task.name}-${task.id}.log`),
               triggers: task.triggers.map((trigger) => {
                 switch (trigger.type) {
                   case "CRON":
@@ -152,9 +155,9 @@ export class ScheduleController {
           ]
         }
       }
-    })
 
-    return this._schedule = newSchedule;
+
+    })
   }
 
 

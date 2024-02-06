@@ -18,10 +18,7 @@ import { UPDATE_TASK_EVENT } from '../../../../../../event-names';
 export class TaskFormEffects {
   constructor(
     private actions$: Actions,
-    private store$: Store<{ 
-      taskForm: Partial<Task>,
-      schedule: Schedule
-     }>
+    private store$: Store<{ taskForm: Partial<Task>, schedule:Schedule }>
   ) {}
 
   addTask$ = createEffect(
@@ -31,11 +28,11 @@ export class TaskFormEffects {
         withLatestFrom(this.store$, (action, state) => {
           return {
             task: state.taskForm,
-            taskGroup: state.schedule
-          };
+            schedule: state.schedule,
+          }
         }),
-        map(({task, taskGroup}) => {
-          ipcRenderer.send(ADD_TASK_EVENT, {task,taskGroup});
+        map(({task, schedule}) => {
+          ipcRenderer.send(ADD_TASK_EVENT, {task, taskGroup:schedule});
           this.store$.dispatch(resetTaskForm());
           this.store$.dispatch(startLoading());
         })

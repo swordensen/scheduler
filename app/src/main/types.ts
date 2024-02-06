@@ -13,6 +13,7 @@ export interface Task {
   type: "task";
   id: string;
   name: string;
+  logFilePath:string;
   description?: string;
   command: string;
   arguments?: string[];
@@ -47,10 +48,7 @@ export interface CRONTrigger extends Trigger {
   value: string;
   next: number;
 }
-export interface Config {
-  bashPath:string;
-  theme?: "dark" | "light"
-}
+
 export type Schedule = TaskGroup;
 
 export interface Config {

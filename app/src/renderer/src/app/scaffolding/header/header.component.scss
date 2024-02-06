@@ -14,3 +14,12 @@ mat-progress-bar {
   position: absolute;
   bottom: 0px;
 }
+a{
+  -webkit-user-select: auto;
+  -webkit-app-region: no-drag;
+  color: inherit;
+  text-decoration: none;
+  :hover{
+    cursor: pointer;
+  }
+}

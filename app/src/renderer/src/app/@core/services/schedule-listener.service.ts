@@ -50,8 +50,6 @@ export class ScheduleListenerService {
 
   registerScheduleListener() {
     ipcRenderer.on(SEND_SCHEDULE_EVENT, (event: any, schedule: Schedule) => {
-      console.log("SCHEDULE UPDATING")
-      console.log(schedule);
       this.store.dispatch(setSchedule({ schedule }));
       this.store.dispatch(stopLoading());
     });
@@ -86,4 +84,6 @@ export class ScheduleListenerService {
       this.openSnackBar(`task: ${task.name} has completed`);
     });
   }
+
+  
 }

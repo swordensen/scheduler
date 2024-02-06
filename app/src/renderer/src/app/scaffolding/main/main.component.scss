@@ -11,7 +11,9 @@ app-clock{
   flex: 1;
 }
 
-
+:host{
+  flex: 1;
+}
 mwlResizable {
   box-sizing: border-box; // required for the enableGhostResize option to work
 }
@@ -26,3 +28,4 @@ mwlResizable {
 .resize-handle-right {
   right: 0;
 }
+
