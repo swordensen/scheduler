@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { AdvancedTaskFormDialogueModule } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.module';
+import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [TaskCardComponent],
   imports: [
@@ -15,6 +16,7 @@ import { AdvancedTaskFormDialogueModule } from 'src/app/dialogues/advanced-task-
     MatIconModule,
     MatMenuModule,
     AdvancedTaskFormDialogueModule,
+    RouterModule
   ],
   exports: [TaskCardComponent],
 })

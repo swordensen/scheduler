@@ -6,10 +6,13 @@ import { TaskFormModule } from 'src/app/components/task-form/task-form.module';
 import { TaskListModule } from 'src/app/components/task-list/task-list.module';
 import { ResizableModule } from 'angular-resizable-element';
 import { ClockModule } from 'src/app/components/clock/clock.module';
+import { MainRoutingModule } from './main-routing.module';
 
 @NgModule({
+  
   declarations: [MainComponent],
   imports: [
+    MainRoutingModule,
     CommonModule,
     MatSidenavModule,
     ClockModule,

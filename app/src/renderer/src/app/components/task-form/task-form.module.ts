@@ -10,9 +10,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { MatDialogModule } from '@angular/material/dialog';
 import { AdvancedTaskFormDialogueModule } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.module';
 import { CronStrModule } from 'src/app/pipes/cron-str/cron-str.module';
+import { TaskFormRoutingModule } from './task-form-routing.module';
+import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [TaskFormComponent],
   imports: [
+    RouterModule,
+    TaskFormRoutingModule,
     AdvancedTaskFormDialogueModule,
     CommonModule,
     MatFormFieldModule,

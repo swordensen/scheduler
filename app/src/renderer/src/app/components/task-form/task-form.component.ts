@@ -27,6 +27,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { initialTaskFormState } from '../../@core/store/reducers/taskForm.reducer';
 import { resetTaskForm } from 'src/app/@core/store/actions/schedule.actions';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
@@ -60,6 +61,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   constructor(
+    private router:Router,
     private store: Store<{ taskForm: Partial<Task> }>,
     public dialog: MatDialog,
     private fb: FormBuilder
@@ -126,6 +128,7 @@ export class TaskFormComponent implements OnInit {
   reset(){
     this.store.dispatch(resetTaskForm())
     this.taskForm.setValue(initialTaskFormState);
+    this.router.navigate(['/']);
   }
 
   create() {

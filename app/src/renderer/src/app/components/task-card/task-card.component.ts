@@ -10,6 +10,7 @@ import {
 } from 'src/app/@core/store/actions/schedule.actions';
 import { AdvancedTaskFormDialogueComponent } from 'src/app/dialogues/advanced-task-form-dialogue/advanced-task-form-dialogue.component';
 import { Task } from '../../../../../main/types';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-card',
@@ -33,7 +34,7 @@ export class TaskCardComponent {
   get hasStartupTrigger() {
     return this.task.triggers?.some((trigger) => trigger.type === 'startup');
   }
-  constructor(private store: Store, public dialog: MatDialog) {}
+  constructor(private router:Router, private store: Store, public dialog: MatDialog) {}
 
   _startTask(event: any) {
     event.stopPropagation();
@@ -56,5 +57,6 @@ export class TaskCardComponent {
 
   _editTask() {
     this.store.dispatch(updateTaskForm({ taskForm: this.task }));
+    this.router.navigate(['details',this.task.id])
   }
 }

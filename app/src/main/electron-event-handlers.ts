@@ -10,17 +10,21 @@ import {
   GET_SCHEDULE_EVENT,
   OPEN_TASK_LOG_FILE_EVENT,
   SEND_SCHEDULE_EVENT,
+  START_LISTENING_TO_LOG_FILE,
   START_TASK_EVENT,
+  STOP_LISTENING_TO_LOG_FILE,
   STOP_TASK_EVENT,
   TASK_ADDED_EVENT,
   TASK_DELETED_EVENT,
   TASK_FAILED_EVENT,
+  TASK_LOG_FILE_UPDATED,
   TASK_STARTED_EVENT,
   TASK_UPDATED_EVENT,
   TASK_WAITING_EVENT,
   UPDATE_TASK_EVENT,
 } from "../event-names";
-import { openLogFile } from "./logger";
+import { LogFileController } from "./controllers/logFile.controller";
+import { StatWatcher } from "fs";
 
 const scheduleRunner = new ScheduleRunner();
 
@@ -93,8 +97,30 @@ ipcMain.on(DELETE_TASK_GROUP_EVENT, async(event, taskGroup:TaskGroup)=>{
 })
 
 ipcMain.on(OPEN_TASK_LOG_FILE_EVENT, (event, task: Task) => {
-  openLogFile(task);
+  const logFileController = new LogFileController(task.logFilePath);
+  logFileController.openLogFile();
 });
+
+const logFileListeners:{[key:string]: StatWatcher } = {}
+
+ipcMain.on(START_LISTENING_TO_LOG_FILE, (event, task:Task)=>{
+  console.log('start listening to log file');
+  if(!task) return;
+  const logFileController = new LogFileController(task.logFilePath);
+  const watcher = logFileController.onChange((text)=>{
+    mainWindow.webContents.send(TASK_LOG_FILE_UPDATED, text)
+  })
+  logFileListeners[task.id] = watcher;
+})
+
+ipcMain.on(STOP_LISTENING_TO_LOG_FILE, (event, task:Task)=>{
+  try{
+    if(!task) return;
+    logFileListeners[task.id].removeAllListeners();
+  }catch(e){
+    console.log('could not stop listening to task')
+  }
+})
 
 scheduleRunner.scheduleController.onChange((schedule) => {
   mainWindow.webContents.send(SEND_SCHEDULE_EVENT, schedule);

@@ -13,6 +13,7 @@ export interface Task {
   type: "task";
   id: string;
   name: string;
+  logFilePath:string;
   description?: string;
   command: string;
   arguments?: string[];

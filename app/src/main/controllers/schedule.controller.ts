@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, watchFile, writeFileSync } from "fs";
-import { scheduleFile } from "../defaults";
+import { logFolder, scheduleFile } from "../defaults";
 import { LOGGER } from "../logger";
 import { Schedule, Task, TaskGroup, Trigger } from "../types";
 import { sendAt } from "cron";
 import { v4 as uuid } from "uuid";
+import { resolve } from "path";
 
 /**
  * this singleton is responsible for managing the schedule file to ensure no
@@ -71,6 +72,10 @@ export class ScheduleController {
     }
 
 
+    const newTaskGroup = cb(this.schedule);
+    if(newTaskGroup){
+      return Object.freeze(newTaskGroup) as Schedule
+    }
     const newSchedule:Schedule = recurse(this.schedule);
 
     return newSchedule;
@@ -120,8 +125,10 @@ export class ScheduleController {
    * @param task
    */
   public addTask(task: Task, targetTaskGroup:TaskGroup) {
+
     this._schedule = this.forEachTask(taskGroup => {
-      if(task.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
+      if(taskGroup.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
+        console.log("FOUND TASK GROUP TO UPDATE");
         return {
           ...taskGroup,
           tasks: [
@@ -129,7 +136,9 @@ export class ScheduleController {
             {
               ...task,
               id: uuid(),
+              type: 'task',
               pids: [],
+              logFilePath: resolve(logFolder, `./commands/${task.name}-${task.id}.log`),
               triggers: task.triggers.map((trigger) => {
                 switch (trigger.type) {
                   case "CRON":

@@ -196,45 +196,55 @@ export class ScheduleRunner {
       }, []);
 
 
-      const _process = spawn(command, commandArgs, {
-        ...task.spawnOptions,
-        detached: true
-      })
-
-
-      const logger = taskLogger(task, _process);
-
-      _process.on("exit", (code) => {
-        if (code === 0) {
-          const __task: Task = {
-            ...task,
-            status: "waiting",
-          };
-          this.taskWaitingListeners.forEach((cb) => {
-            cb(__task);
-          });
-          this.scheduleController.updateTask(__task);
-        } else {
-          const __task: Task = {
-            ...task,
-            status: "failed",
-          };
-          this.taskFailedListeners.forEach((cb) => {
-            cb(__task);
-          });
-          this.scheduleController.updateTask(__task);
-        }
-      });
-      this.scheduleController.startTask({
+      try{
+        const _process = spawn(command, commandArgs, task.spawnOptions)
+        
+        const logger = taskLogger(task, _process);
+  
+        _process.on("exit", (code) => {
+          if (code === 0) {
+            const __task: Task = {
+              ...task,
+              status: "waiting",
+            };
+            this.taskWaitingListeners.forEach((cb) => {
+              cb(__task);
+            });
+            this.scheduleController.updateTask(__task);
+          } else {
+            const __task: Task = {
+              ...task,
+              status: "failed",
+            };
+            this.taskFailedListeners.forEach((cb) => {
+              cb(__task);
+            });
+            this.scheduleController.updateTask(__task);
+          }
+        });
+        this.scheduleController.startTask({
+          ...task,
+          pids: [...task.pids, _process.pid],
+        });
+        // _process.unref();
+        return _process;
+      } catch (e) {
+        console.log(e);
+        throw `could not start task ${e}`;
+      }
+    }catch(e){
+      const __task: Task = {
         ...task,
-        pids: [...task.pids, _process.pid],
+        status: "failed",
+      };
+      this.taskFailedListeners.forEach((cb) => {
+        cb(__task);
       });
-      // _process.unref();
-      return _process;
-    } catch (e) {
+      this.scheduleController.updateTask(__task);
       console.log(e);
       throw `could not start task ${e}`;
     }
+
   }
 
   /**
