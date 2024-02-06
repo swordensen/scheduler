@@ -5,6 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [HeaderComponent],
   imports: [
@@ -13,6 +14,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatIconModule,
     MatButtonModule,
     MatProgressBarModule,
+    RouterModule
   ],
   exports: [HeaderComponent],
 })

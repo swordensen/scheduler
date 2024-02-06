@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { getSchedule } from 'src/app/@core/store/actions/schedule.actions';
 import { selectSchedule } from 'src/app/@core/store/selectors/schedule.selectors';
-import { Schedule, TaskGroup } from '../../../../../main/types';
+import { Schedule } from '../../../../../main/types';
 import { setFilter } from 'src/app/@core/store/actions/gui.actions';
 import { selectFilter } from 'src/app/@core/store/selectors/gui.selectors';
 import { GUIState } from 'src/app/@core/store/reducers/gui.reducer';
@@ -13,11 +13,10 @@ import { GUIState } from 'src/app/@core/store/reducers/gui.reducer';
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent implements OnInit {
-  schedule$ ;
+  schedule$ 
 
   constructor(private store: Store<{ schedule: Schedule, gui:GUIState }>) {
     this.schedule$ = this.store.select(selectSchedule);
-
   }
 
   ngOnInit(): void {

@@ -6,8 +6,6 @@ import { killProcess, spacesNotInQuotesRegex } from "./helpers";
 import { normalize } from "path";
 import Queue from "queue";
 import { cpus } from "os";
-import {  iconPath, middleManPath } from "./defaults";
-import { ConfigController } from "./controllers/config.controller";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -16,7 +14,6 @@ import { ConfigController } from "./controllers/config.controller";
  */
 export class ScheduleRunner {
   public scheduleController = new ScheduleController();
-  public configController = new ConfigController();
   private taskQueue = new Queue({
     concurrency: cpus().length,
     timeout: 1000,
@@ -198,70 +195,56 @@ export class ScheduleRunner {
         return a;
       }, []);
 
-      const mySpawnOptions = {
-        command,
-        arguments: commandArgs,
-        spawnOptions: task.spawnOptions
+
+      try{
+        const _process = spawn(command, commandArgs, task.spawnOptions)
+        
+        const logger = taskLogger(task, _process);
+  
+        _process.on("exit", (code) => {
+          if (code === 0) {
+            const __task: Task = {
+              ...task,
+              status: "waiting",
+            };
+            this.taskWaitingListeners.forEach((cb) => {
+              cb(__task);
+            });
+            this.scheduleController.updateTask(__task);
+          } else {
+            const __task: Task = {
+              ...task,
+              status: "failed",
+            };
+            this.taskFailedListeners.forEach((cb) => {
+              cb(__task);
+            });
+            this.scheduleController.updateTask(__task);
+          }
+        });
+        this.scheduleController.startTask({
+          ...task,
+          pids: [...task.pids, _process.pid],
+        });
+        // _process.unref();
+        return _process;
+      } catch (e) {
+        console.log(e);
+        throw `could not start task ${e}`;
       }
-
-      const nodePath = `"${process.argv[0].replace(/\\/g, "\\\\")}"`
-      const spawnOptionsStr = JSON.stringify(mySpawnOptions);
-
-      const bufferSpawnOptions = Buffer.from(spawnOptionsStr);
-      const _middleManPath = `"${middleManPath.replace(/\\/g, "\\\\")}"`;
-      const encodedSpawnOptions = bufferSpawnOptions.toString('base64');
-      console.log("STARTING PROCESS");
-      const bashPath = this.configController.config.bashPath;
-      console.log(`${nodePath} ${_middleManPath} ${encodedSpawnOptions}`)
-      console.log({shell: bashPath})
-
-      // const _process = spawn(bashPath, [], {stdio: 'inherit'});
-      const _process = spawn(nodePath, [_middleManPath, encodedSpawnOptions],{
-        detached: true,
-        shell: bashPath
-      })
-
-
-      // const _process = spawn(command, commandArgs, {
-      //   ...task.spawnOptions,
-      //   detached: true
-      // })
-
-
-      const logger = taskLogger(task, _process);
-
-      _process.on("exit", (code) => {
-        console.log({code});
-        if (code === 0) {
-          const __task: Task = {
-            ...task,
-            status: "waiting",
-          };
-          this.taskWaitingListeners.forEach((cb) => {
-            cb(__task);
-          });
-          this.scheduleController.updateTask(__task);
-        } else {
-          const __task: Task = {
-            ...task,
-            status: "failed",
-          };
-          this.taskFailedListeners.forEach((cb) => {
-            cb(__task);
-          });
-          this.scheduleController.updateTask(__task);
-        }
-      });
-      this.scheduleController.startTask({
+    }catch(e){
+      const __task: Task = {
         ...task,
-        pids: [...task.pids, _process.pid],
+        status: "failed",
+      };
+      this.taskFailedListeners.forEach((cb) => {
+        cb(__task);
       });
-      // _process.unref();
-      return _process;
-    } catch (e) {
+      this.scheduleController.updateTask(__task);
       console.log(e);
       throw `could not start task ${e}`;
     }
+
   }
 
   /**

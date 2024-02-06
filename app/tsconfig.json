@@ -16,6 +16,5 @@
       "*": ["node_modules/*"]
     }
   },
-  "exclude": ["src/main/assets"],
   "include": ["src/main/**/*"]
 }

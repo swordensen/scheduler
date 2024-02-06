@@ -28,4 +28,10 @@ export const TASK_ADDED_EVENT = "task-added";
 
 export const TASK_UPDATED_EVENT = "task-updated";
 
+export const START_LISTENING_TO_LOG_FILE = "start-listening-to-log-file";
+
+export const STOP_LISTENING_TO_LOG_FILE = "stop-listening-to-log-file";
+
+export const TASK_LOG_FILE_UPDATED = "task-log-file-updated";
+
 export const ERROR_EVENT = "error";

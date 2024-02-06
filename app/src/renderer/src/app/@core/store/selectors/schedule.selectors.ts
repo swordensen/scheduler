@@ -2,9 +2,6 @@ import { Schedule, Task, TaskGroup } from '../../../../../../main/types';
 import { GUIState } from '../reducers/gui.reducer';
 
 function recursiveFilter(taskGroup:TaskGroup, filter:string){
-    console.log("FILTER");
-    console.log(taskGroup);
-    if(!filter) return taskGroup;
     return {
         ...taskGroup,
         tasks: taskGroup.tasks.reduce((acc, cur)=>{
@@ -21,4 +18,18 @@ function recursiveFilter(taskGroup:TaskGroup, filter:string){
     }
 }
 
+function getTaskByTaskId(taskGroup:TaskGroup, id:string){
+    for(const subTask of taskGroup.tasks){
+        if(subTask.type === 'task' && subTask.id == id) return subTask;
+        if(subTask.type === 'taskGroup'){
+            return getTaskByTaskId(subTask, id);
+        }
+    }
+    return null;
+}
+
+
+
 export const selectSchedule = (state: { schedule: Schedule, gui:GUIState }) => recursiveFilter(state.schedule, state.gui.scheduleFilter);
+
+export const selectTaskById = (id:string) => (state: {schedule:Schedule}) => getTaskByTaskId(state.schedule, id)

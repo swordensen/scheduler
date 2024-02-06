@@ -6,7 +6,11 @@
     (click)="_toggleSideNav()"
   >
     <mat-icon>menu</mat-icon></button
-  ><span>Scheduler</span><span class="spacer"></span>
+  >
+  <a [routerLink]="['/']">
+    <span>Scheduler</span>
+  </a>
+  <span class="spacer"></span>
   <button
     mat-icon-button
     class="example-icon favorite-icon"
@@ -32,6 +36,6 @@
     <mat-icon>close</mat-icon>
   </button>
 </mat-toolbar>
-<!-- <ng-container *ngIf="loading$ | async">
+<ng-container *ngIf="loading$ | async">
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-</ng-container> -->
+</ng-container>
