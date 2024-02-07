@@ -45,8 +45,7 @@ export class ScheduleRunner {
       const startupTrigger = task.triggers.find((trigger) => trigger.type === "startup");
       if (startupTrigger) {
         this.scheduleController.triggerTask(task, startupTrigger);
-        this.startTask(task);
-        // this.queueTask(task);
+        this.queueTask(task);
       }
     }
 
@@ -60,18 +59,15 @@ export class ScheduleRunner {
   }
 
   public queueTask(task:Task){
-    this._startTask(task);
-    // this.taskQueue.push(()=>{
-    //   return new Promise((resolve, reject)=>{
-    //     const _process = this._startTask(task);
-    //     _process.on('spawn', ()=>{
-    //       resolve(true)
-    //     });
-    //     _process.on('error', ()=>{
-    //       reject(false);
-    //     })
-    //   })
-    // })
+    // this._startTask(task);
+    this.taskQueue.push(()=>{
+      return new Promise((resolve, reject)=>{
+        const _process = this._startTask(task);
+        _process.on('spawn', ()=>{
+          resolve(true)
+        });
+      })
+    })
   }
 
   /**
@@ -151,8 +147,7 @@ export class ScheduleRunner {
   }
 
   public startTask(task: Task) {
-    this._startTask(task);
-    // const process = this.queueTask(task);
+    const process = this.queueTask(task);
   }
 
   /**
