@@ -59,15 +59,13 @@ export class ScheduleRunner {
   }
 
   public queueTask(task:Task){
+    // this._startTask(task);
     this.taskQueue.push(()=>{
       return new Promise((resolve, reject)=>{
         const _process = this._startTask(task);
         _process.on('spawn', ()=>{
           resolve(true)
         });
-        _process.on('error', ()=>{
-          reject(false);
-        })
       })
     })
   }
@@ -81,7 +79,8 @@ export class ScheduleRunner {
       task.triggers.forEach((trigger) => {
         if (this.checkTrigger(trigger)) {
           this.scheduleController.triggerTask(task, trigger);
-          this.queueTask(task);
+          this._startTask(task)
+          // this.queueTask(task);
         }
       });
     }
@@ -199,9 +198,24 @@ export class ScheduleRunner {
       try{
         const _process = spawn(command, commandArgs, task.spawnOptions)
         
-        const logger = taskLogger(task, _process);
+        const loggerWriteStream = taskLogger(task, _process);
+        _process.on('error', (err)=>{
+          loggerWriteStream.write(err.name + '\n');
+          loggerWriteStream.write(err.message + '\n');
+          if(err.stack) loggerWriteStream.write(err.stack + '\n');
+          const __task: Task = {
+            ...task,
+            status: "failed",
+          };
+          this.taskFailedListeners.forEach((cb) => {
+            cb(__task);
+          });
+          this.scheduleController.updateTask(__task);
+        })
   
         _process.on("exit", (code) => {
+          loggerWriteStream.write(`Process Completed with code: ${code}`);
+          loggerWriteStream.close();
           if (code === 0) {
             const __task: Task = {
               ...task,
@@ -211,12 +225,12 @@ export class ScheduleRunner {
               cb(__task);
             });
             this.scheduleController.updateTask(__task);
-          } else {
+          }else {
             const __task: Task = {
               ...task,
               status: "failed",
             };
-            this.taskFailedListeners.forEach((cb) => {
+            this.taskWaitingListeners.forEach((cb) => {
               cb(__task);
             });
             this.scheduleController.updateTask(__task);

@@ -1,5 +1,6 @@
 import { closeSync, openSync, readFileSync, readSync, statSync, watchFile } from "fs";
 import LOGGER from "../logger";
+import open from 'open';
 
 const memoryCutoff = 2 * 1024 * 1024 // 2 megabytes
 
