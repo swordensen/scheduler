@@ -48,7 +48,9 @@ export class ScheduleController {
    * @param cb 
    */
   forEachTask(cb:(task:Readonly<Task | TaskGroup>)=>Task | TaskGroup ){
+    
     function recurse(taskGroup:Readonly<TaskGroup>):TaskGroup{
+      // const _newTaskGroup = cb(taskGroup) as TaskGroup;
       return {
         ...taskGroup,
         tasks: taskGroup.tasks.reduce((acc, cur) => {
@@ -72,11 +74,11 @@ export class ScheduleController {
     }
 
 
-    const newTaskGroup = cb(this.schedule);
-    if(newTaskGroup){
-      return Object.freeze(newTaskGroup) as Schedule
-    }
-    const newSchedule:Schedule = recurse(this.schedule);
+    const _newSchedule = Object.freeze(cb(this.schedule) as TaskGroup);
+
+    const newSchedule:Schedule = recurse(_newSchedule);
+
+
 
     return newSchedule;
 
@@ -128,7 +130,6 @@ export class ScheduleController {
 
     this._schedule = this.forEachTask(taskGroup => {
       if(taskGroup.id === targetTaskGroup.id && taskGroup.type === 'taskGroup'){
-        console.log("FOUND TASK GROUP TO UPDATE");
         const id = uuid()
         return {
           ...taskGroup,
@@ -155,6 +156,8 @@ export class ScheduleController {
             },
           ]
         }
+      }else {
+        return taskGroup
       }
 
 

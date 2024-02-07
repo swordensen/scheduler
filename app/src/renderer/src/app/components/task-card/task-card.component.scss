@@ -18,7 +18,9 @@ mat-card {
   text-overflow: ellipsis;
   position:relative;
 }
-
+.no-overflow{
+  overflow: hidden;
+}
 .active {
   animation: pulse 2s infinite;
 }
