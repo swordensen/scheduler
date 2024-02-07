@@ -17,7 +17,6 @@ export class ClockComponent {
   }
 
   toggleClock(){
-    console.log('toggle clock triggered');
     this.store.dispatch(toggleClock());
   }
 }

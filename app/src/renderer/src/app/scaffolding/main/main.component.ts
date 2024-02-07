@@ -18,7 +18,6 @@ export class MainComponent {
   }
 
   handleSideNavResize(event:ResizeEvent){
-    console.log(event);
     this.sideNavWidth = event.rectangle.width + "px";
   }
 }

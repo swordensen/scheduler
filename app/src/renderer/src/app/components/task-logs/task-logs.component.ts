@@ -42,7 +42,6 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
 
 
   async onTaskFileUpdated(event:Electron.IpcRendererEvent, text:string){
-    console.log("TASK_LOG_FILE_UPDATED");
     await new Promise((resolve, reject)=>{
       this.term.write('\u001B[2J', ()=>resolve(true));
     })
@@ -54,7 +53,6 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
   }
 
   startListeningToLogFile(task:Task){
-    console.log("START LISTENING TO LOG FILE");
     ipcRenderer.send(START_LISTENING_TO_LOG_FILE, task);
   }
 
