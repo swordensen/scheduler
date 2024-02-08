@@ -6,6 +6,7 @@ import { killProcess, spacesNotInQuotesRegex } from "./helpers";
 import { normalize } from "path";
 import Queue from "queue";
 import { cpus } from "os";
+import { WriteStream } from "fs";
 
 /**
  * this singleton is responsible for running the commands at the appropriate time
@@ -171,6 +172,28 @@ export class ScheduleRunner {
     });
   }
 
+  private handleTaskError(task:Task, err:Error, loggerWriteStream:WriteStream){
+    try{
+      console.log(err);
+      if(loggerWriteStream.writable){
+        loggerWriteStream.write(err.name + '\n');
+        loggerWriteStream.write(err.message + '\n');
+        if(err.stack) loggerWriteStream.write(err.stack + '\n');
+      }
+
+      const __task: Task = {
+        ...task,
+        status: "failed",
+      };
+      this.taskFailedListeners.forEach((cb) => {
+        cb(__task);
+      });
+      this.scheduleController.updateTask(__task);
+    }catch(e){
+      console.log('unable to handle process error');
+      console.log(e);
+    }
+  }
   /**
    * this is the main start task function
    * @param task
@@ -199,42 +222,35 @@ export class ScheduleRunner {
         const _process = spawn(command, commandArgs, task.spawnOptions)
         
         const loggerWriteStream = taskLogger(task, _process);
-        _process.on('error', (err)=>{
-          loggerWriteStream.write(err.name + '\n');
-          loggerWriteStream.write(err.message + '\n');
-          if(err.stack) loggerWriteStream.write(err.stack + '\n');
-          const __task: Task = {
-            ...task,
-            status: "failed",
-          };
-          this.taskFailedListeners.forEach((cb) => {
-            cb(__task);
-          });
-          this.scheduleController.updateTask(__task);
-        })
+        _process.on('error', (err)=>this.handleTaskError(task, err, loggerWriteStream))
   
         _process.on("exit", (code) => {
-          loggerWriteStream.write(`Process Completed with code: ${code}`);
-          loggerWriteStream.close();
-          if (code === 0) {
-            const __task: Task = {
-              ...task,
-              status: "waiting",
-            };
-            this.taskWaitingListeners.forEach((cb) => {
-              cb(__task);
-            });
-            this.scheduleController.updateTask(__task);
-          }else {
-            const __task: Task = {
-              ...task,
-              status: "failed",
-            };
-            this.taskWaitingListeners.forEach((cb) => {
-              cb(__task);
-            });
-            this.scheduleController.updateTask(__task);
+          try{
+            
+            if(loggerWriteStream.writable) loggerWriteStream.write(`Process Completed with code: ${code}`);
+            if (code === 0) {
+              const __task: Task = {
+                ...task,
+                status: "waiting",
+              };
+              this.taskWaitingListeners.forEach((cb) => {
+                cb(__task);
+              });
+              this.scheduleController.updateTask(__task);
+            }else {
+              const __task: Task = {
+                ...task,
+                status: "failed",
+              };
+              this.taskWaitingListeners.forEach((cb) => {
+                cb(__task);
+              });
+              this.scheduleController.updateTask(__task);
+            }
+          }catch(err){
+            this.handleTaskError(task, err, loggerWriteStream)
           }
+
         });
         this.scheduleController.startTask({
           ...task,
