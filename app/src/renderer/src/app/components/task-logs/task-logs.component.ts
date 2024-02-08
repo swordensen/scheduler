@@ -45,7 +45,7 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
     await new Promise((resolve, reject)=>{
       this.term.write('\u001B[2J', ()=>resolve(true));
     })
-    this.term.write(text);
+    this.term.write(text.replace(/\r(?!\n)/g, '\r\n'));
   }
 
   handleLogFileUpdateEvent(){
@@ -68,7 +68,14 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
 
 
   ngAfterViewInit(): void {
-    this.term = new Terminal();
+    this.term = new Terminal({
+      disableStdin: true,
+      convertEol: true,
+      windowsPty: {
+        backend: 'conpty',
+        buildNumber: 19045,
+      },
+    });
     this.term.open(this.xtermContainer.nativeElement);
   }
 }
