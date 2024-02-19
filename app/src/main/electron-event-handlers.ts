@@ -103,7 +103,10 @@ ipcMain.on(OPEN_TASK_LOG_FILE_EVENT, (event, task: Task) => {
 
 const logFileListeners:{[key:string]: StatWatcher } = {}
 
-ipcMain.on(START_LISTENING_TO_LOG_FILE, (event, task:Task)=>{
+
+ipcMain.on(START_LISTENING_TO_LOG_FILE, logFileListener );
+
+function logFileListener(event:Event, task:Task){
   if(!task) return;
   const logFileController = new LogFileController(task.logFilePath);
   if(logFileListeners[task.id]) logFileListeners[task.id].removeAllListeners();
@@ -112,12 +115,15 @@ ipcMain.on(START_LISTENING_TO_LOG_FILE, (event, task:Task)=>{
     mainWindow.webContents.send(TASK_LOG_FILE_UPDATED, text)
   })
   logFileListeners[task.id] = watcher;
-})
+}
 
 ipcMain.on(STOP_LISTENING_TO_LOG_FILE, (event, task:Task)=>{
   try{
-    if(!task) return;
-    logFileListeners[task.id].removeAllListeners();
+    for(const key in logFileListeners){
+      logFileListeners[key].removeAllListeners();
+      ipcMain.on(START_LISTENING_TO_LOG_FILE, logFileListener );
+    }
+    
   }catch(e){
     console.log('could not stop listening to task')
   }

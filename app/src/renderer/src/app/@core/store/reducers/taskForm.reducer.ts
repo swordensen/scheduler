@@ -55,7 +55,7 @@ const _taskFormReducer = createReducer(
     triggers: state.triggers?.map((_trigger, i) => {
       if (index === i) return trigger;
       return trigger;
-    }),
+    }) ?? [],
   })),
   on(resetTaskForm, (state, data) => initialTaskFormState)
 );

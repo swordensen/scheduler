@@ -22,13 +22,13 @@
 
   <!-- only the first trigger -->
   <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
-    <div formArrayName="triggers">
+    <div formArrayName="triggers" *ngIf="triggers?.controls">
       <ng-container
-        *ngFor="let trigger of triggers.controls | slice: 0:1; let i = index"
+        *ngFor="let trigger of triggers.controls | slice: 0:1; let i = index;"
       >
         <div
-          fxLayout="row"
-          [formGroupName]="i"
+          [formGroup]="trigger"
+          #triggerGroup
           fxLayout="row"
           fxLayoutGap="16px"
           fxLayoutAlign="start center"

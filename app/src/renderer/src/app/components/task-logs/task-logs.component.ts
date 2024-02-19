@@ -27,8 +27,12 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
   ngOnInit(){
     this.route.parent?.parent?.params.subscribe(parentParams => {
       const taskId = parentParams.id
+      console.log("ROUTE UPDATED", taskId);
+
       if(!taskId) return;
       this.store.select(selectTaskById(taskId)).pipe(take(1)).subscribe(task => {
+        console.log("RECEIVED TASK");
+        console.log(task);
         if(!task) return;
         this.task = task;
         this.startListeningToLogFile(task)
@@ -53,6 +57,7 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
   }
 
   startListeningToLogFile(task:Task){
+    console.log("START LISTENING TO LOG FILE", task.id);
     ipcRenderer.send(START_LISTENING_TO_LOG_FILE, task);
   }
 
@@ -62,6 +67,7 @@ export class TaskLogsComponent implements  OnInit, AfterViewInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
+    console.log('ON DESTROY CALLED');
     this.stopListeningToLogFile();
     ipcRenderer.removeListener(TASK_LOG_FILE_UPDATED, this.onTaskFileUpdated.bind(this));
   }

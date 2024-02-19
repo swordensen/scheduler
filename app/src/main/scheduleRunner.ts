@@ -254,7 +254,7 @@ export class ScheduleRunner {
         });
         this.scheduleController.startTask({
           ...task,
-          pids: [...task.pids, _process.pid],
+          pids: [...task?.pids ?? [], _process.pid],
         });
         // _process.unref();
         return _process;
