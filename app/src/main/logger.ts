@@ -34,6 +34,7 @@ export function taskLogger(task: Task, _process: ChildProcess) {
   const logFilePath = task.logFilePath;
   const logFileWriteStream = createWriteStream(logFilePath, {flags: 'a'});
   _process.stdout.pipe(logFileWriteStream);
+  _process.stderr.pipe(logFileWriteStream);
   return logFileWriteStream;
 }
 
